@@ -19,7 +19,7 @@
 + (long long)getNowTime1000{
     NSDate *datenow = [NSDate date];
     NSTimeInterval timeinterval = [datenow timeIntervalSince1970]*1000;
-    return timeinterval;
+    return timeinterval; 
 }
 + (long long)getNowTimeDelta{
     return [CNUtil getNowTime]+kApp.deltaTime;
