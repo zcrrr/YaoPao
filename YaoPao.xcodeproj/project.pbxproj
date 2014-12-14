@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9A092F221A38281E0046335D /* goto.png in Resources */ = {isa = PBXBuildFile; fileRef = 9A092F211A38281E0046335D /* goto.png */; };
 		9A0AFAA319EE5E2600B39F7C /* LunYang.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9A0AFAA219EE5E2600B39F7C /* LunYang.txt */; };
 		9A0D85A619BAB02600861C78 /* CNNoRunMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A0D85A419BAB02600861C78 /* CNNoRunMapViewController.m */; };
 		9A0D85A719BAB02600861C78 /* CNNoRunMapViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9A0D85A519BAB02600861C78 /* CNNoRunMapViewController.xib */; };
@@ -545,6 +546,12 @@
 		9ABA407119DF9E83001C2B46 /* CNWebViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9ABA406F19DF9E83001C2B46 /* CNWebViewController.xib */; };
 		9AC1D9A119C01CA4008FD9C4 /* CNMatchMainRecomeViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9AC1D99F19C01CA4008FD9C4 /* CNMatchMainRecomeViewController.mm */; };
 		9AC1D9A219C01CA4008FD9C4 /* CNMatchMainRecomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9AC1D9A019C01CA4008FD9C4 /* CNMatchMainRecomeViewController.xib */; };
+		9AC9AED31A36E821002BFB46 /* SectionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9AC9AED21A36E821002BFB46 /* SectionsViewController.m */; };
+		9AC9AED61A36E8E7002BFB46 /* NSDictionary-DeepMutableCopy.m in Sources */ = {isa = PBXBuildFile; fileRef = 9AC9AED51A36E8E7002BFB46 /* NSDictionary-DeepMutableCopy.m */; };
+		9AC9AEDA1A36EBA8002BFB46 /* country.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9AC9AED91A36EBA8002BFB46 /* country.plist */; };
+		9ACC09731A3558760037E6BB /* SMS_SDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9ACC09721A3558760037E6BB /* SMS_SDK.framework */; };
+		9ACC09751A3558AE0037E6BB /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9ACC09741A3558AE0037E6BB /* AddressBook.framework */; };
+		9ACC09771A3558B40037E6BB /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9ACC09761A3558B40037E6BB /* AddressBookUI.framework */; };
 		9ACEC1ED19ACC78F00F36770 /* CNGiveRelayViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9ACEC1EB19ACC78F00F36770 /* CNGiveRelayViewController.mm */; };
 		9ACEC1EE19ACC78F00F36770 /* CNGiveRelayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9ACEC1EC19ACC78F00F36770 /* CNGiveRelayViewController.xib */; };
 		9ACEC1F219AD80D800F36770 /* CNFinishViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9ACEC1F019AD80D800F36770 /* CNFinishViewController.mm */; };
@@ -603,6 +610,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		9A092F211A38281E0046335D /* goto.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = goto.png; sourceTree = "<group>"; };
 		9A0AFAA219EE5E2600B39F7C /* LunYang.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LunYang.txt; sourceTree = "<group>"; };
 		9A0D85A319BAB02600861C78 /* CNNoRunMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CNNoRunMapViewController.h; sourceTree = "<group>"; };
 		9A0D85A419BAB02600861C78 /* CNNoRunMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CNNoRunMapViewController.m; sourceTree = "<group>"; };
@@ -1602,6 +1610,14 @@
 		9AC1D99E19C01CA4008FD9C4 /* CNMatchMainRecomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CNMatchMainRecomeViewController.h; sourceTree = "<group>"; };
 		9AC1D99F19C01CA4008FD9C4 /* CNMatchMainRecomeViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CNMatchMainRecomeViewController.mm; sourceTree = "<group>"; };
 		9AC1D9A019C01CA4008FD9C4 /* CNMatchMainRecomeViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CNMatchMainRecomeViewController.xib; sourceTree = "<group>"; };
+		9AC9AED11A36E821002BFB46 /* SectionsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SectionsViewController.h; sourceTree = "<group>"; };
+		9AC9AED21A36E821002BFB46 /* SectionsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SectionsViewController.m; sourceTree = "<group>"; };
+		9AC9AED41A36E8E7002BFB46 /* NSDictionary-DeepMutableCopy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary-DeepMutableCopy.h"; sourceTree = "<group>"; };
+		9AC9AED51A36E8E7002BFB46 /* NSDictionary-DeepMutableCopy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary-DeepMutableCopy.m"; sourceTree = "<group>"; };
+		9AC9AED91A36EBA8002BFB46 /* country.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = country.plist; sourceTree = "<group>"; };
+		9ACC09721A3558760037E6BB /* SMS_SDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SMS_SDK.framework; sourceTree = "<group>"; };
+		9ACC09741A3558AE0037E6BB /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
+		9ACC09761A3558B40037E6BB /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
 		9ACEC1EA19ACC78F00F36770 /* CNGiveRelayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CNGiveRelayViewController.h; sourceTree = "<group>"; };
 		9ACEC1EB19ACC78F00F36770 /* CNGiveRelayViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CNGiveRelayViewController.mm; sourceTree = "<group>"; };
 		9ACEC1EC19ACC78F00F36770 /* CNGiveRelayViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CNGiveRelayViewController.xib; sourceTree = "<group>"; };
@@ -1661,6 +1677,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9ACC09771A3558B40037E6BB /* AddressBookUI.framework in Frameworks */,
+				9ACC09751A3558AE0037E6BB /* AddressBook.framework in Frameworks */,
+				9A72E14919D3EA2B008533F5 /* MessageUI.framework in Frameworks */,
 				9AD4D9BA19DB9B1D00426488 /* MAMapKit.framework in Frameworks */,
 				9A72E14719D3EA1D008533F5 /* AVFoundation.framework in Frameworks */,
 				9A11A78319E2773D00937C1B /* WeChatConnection.framework in Frameworks */,
@@ -1672,7 +1691,6 @@
 				9AF861EE19D5719900C8C6DF /* libicucore.dylib in Frameworks */,
 				9A67405B1989F22F006E12CC /* CoreTelephony.framework in Frameworks */,
 				9A72E14B19D3EA3A008533F5 /* StoreKit.framework in Frameworks */,
-				9A72E14919D3EA2B008533F5 /* MessageUI.framework in Frameworks */,
 				9A11A78019E2773D00937C1B /* QQConnection.framework in Frameworks */,
 				9A11A78F19E2773D00937C1B /* ShareSDKFlatShareViewUI.framework in Frameworks */,
 				9A11A78C19E2773D00937C1B /* libWeChatSDK.a in Frameworks */,
@@ -1700,6 +1718,7 @@
 				9A4A143C197406DF00F2EF04 /* CFNetwork.framework in Frameworks */,
 				9A4A13B91973FFD500F2EF04 /* UIKit.framework in Frameworks */,
 				9A4A13B51973FFD500F2EF04 /* Foundation.framework in Frameworks */,
+				9ACC09731A3558760037E6BB /* SMS_SDK.framework in Frameworks */,
 				9A11A78A19E2773D00937C1B /* libSinaWeiboSDK.a in Frameworks */,
 				9A4A140B1974028D00F2EF04 /* libasirequest.a in Frameworks */,
 			);
@@ -2744,6 +2763,7 @@
 		9A30FB0719B618B600D0869F /* other */ = {
 			isa = PBXGroup;
 			children = (
+				9A092F211A38281E0046335D /* goto.png */,
 				9A7A1C9219F6071D00A9FA9E /* logo.png */,
 				9AD88EF219E5432900DE28E1 /* matchicon.png */,
 				9A562B0919E381EC008D2DA7 /* takeover1.png */,
@@ -2983,6 +3003,9 @@
 		9A4A13B31973FFD500F2EF04 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9ACC09761A3558B40037E6BB /* AddressBookUI.framework */,
+				9ACC09741A3558AE0037E6BB /* AddressBook.framework */,
+				9ACC09721A3558760037E6BB /* SMS_SDK.framework */,
 				9AD4D9B919DB9B1D00426488 /* MAMapKit.framework */,
 				9AF861F519D5720300C8C6DF /* CoreMotion.framework */,
 				9AF861F319D571EC00C8C6DF /* libsqlite3.dylib */,
@@ -3031,6 +3054,7 @@
 		9A4A13BB1973FFD500F2EF04 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				9AC9AED91A36EBA8002BFB46 /* country.plist */,
 				9A4A13BC1973FFD500F2EF04 /* YaoPao-Info.plist */,
 				9A4A13BD1973FFD500F2EF04 /* InfoPlist.strings */,
 				9A4A13C01973FFD500F2EF04 /* main.m */,
@@ -3365,6 +3389,8 @@
 		9A8C63801987ECC40082AE4E /* catagory */ = {
 			isa = PBXGroup;
 			children = (
+				9AC9AED41A36E8E7002BFB46 /* NSDictionary-DeepMutableCopy.h */,
+				9AC9AED51A36E8E7002BFB46 /* NSDictionary-DeepMutableCopy.m */,
 				9A8C63811987ECE40082AE4E /* UIImage+Rescale.h */,
 				9A8C63821987ECE40082AE4E /* UIImage+Rescale.m */,
 			);
@@ -3476,6 +3502,8 @@
 		9AE542161980ED1F00C86BF0 /* user */ = {
 			isa = PBXGroup;
 			children = (
+				9AC9AED11A36E821002BFB46 /* SectionsViewController.h */,
+				9AC9AED21A36E821002BFB46 /* SectionsViewController.m */,
 				9A86B8B4197BF34600701324 /* CNRegisterPhoneViewController.h */,
 				9A86B8B5197BF34600701324 /* CNRegisterPhoneViewController.m */,
 				9A86B8B6197BF34600701324 /* CNRegisterPhoneViewController.xib */,
@@ -3640,6 +3668,7 @@
 				9A2CCAFC199D06B4002E8AF0 /* Makefile.in in Resources */,
 				9A2CCB4C199D06B4002E8AF0 /* Makefile.am in Resources */,
 				9A2CCAD8199D06B4002E8AF0 /* MultiPolygon.inl in Resources */,
+				9AC9AEDA1A36EBA8002BFB46 /* country.plist in Resources */,
 				9A2CCB3F199D06B4002E8AF0 /* Makefile.am in Resources */,
 				9A2CCB1A199D06B4002E8AF0 /* Makefile.am in Resources */,
 				9A7D3689199DA17200044F6E /* button_start_h.png in Resources */,
@@ -3989,6 +4018,7 @@
 				9A11A87719E290F100937C1B /* 120104.mp3 in Resources */,
 				9A2CCAF9199D06B4002E8AF0 /* Makefile.in in Resources */,
 				9A11A87319E290F100937C1B /* 120003.mp3 in Resources */,
+				9A092F221A38281E0046335D /* goto.png in Resources */,
 				9A2CCAC4199D06B4002E8AF0 /* ConvexHull.inl in Resources */,
 				9A2CCB06199D06B4002E8AF0 /* Makefile.am in Resources */,
 				9AD57FAB19B741C900A98FB3 /* runtype_ride_s.png in Resources */,
@@ -4068,6 +4098,7 @@
 				9A2CCAF4199D06B4002E8AF0 /* Makefile in Sources */,
 				9A319B5519BA999B00D982D5 /* CNMatchMapViewController.m in Sources */,
 				9A8C6388198881860082AE4E /* CNStartRunViewController.m in Sources */,
+				9AC9AED61A36E8E7002BFB46 /* NSDictionary-DeepMutableCopy.m in Sources */,
 				9A8C6392198893FA0082AE4E /* CNRunTypeViewController.m in Sources */,
 				9A2CCAEB199D06B4002E8AF0 /* Makefile in Sources */,
 				9A2CCAC5199D06B4002E8AF0 /* Makefile in Sources */,
@@ -4101,6 +4132,7 @@
 				9A6A1C0519B45C6D00C3D2F9 /* CNWarningBackGroundViewController.m in Sources */,
 				9A28835D19B22E0E0014EA9A /* CustomAnnotationView.m in Sources */,
 				9A621A3A19B07828001AF9CC /* AMBlurView.m in Sources */,
+				9AC9AED31A36E821002BFB46 /* SectionsViewController.m in Sources */,
 				9A2CCB16199D06B4002E8AF0 /* Makefile in Sources */,
 				9A4A1435197402F800F2EF04 /* CNMainViewController.mm in Sources */,
 				9A8C639C1988D98A0082AE4E /* CNRunMainViewController.m in Sources */,
@@ -4216,8 +4248,8 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Lu Li (JK69KECQMM)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Lu Li (JK69KECQMM)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Shan Dong (385C8B4E53)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Shan Dong (385C8B4E53)";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -4261,8 +4293,8 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Starz Sports International Management Co., Ltd (DRTM6N857E)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Starz Sports International Management Co., Ltd (DRTM6N857E)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Starz Sports International Management Co., Ltd";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Starz Sports International Management Co., Ltd";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -4287,8 +4319,8 @@
 				ARCHS = armv7;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Shan Dong (385C8B4E53)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Shan Dong (385C8B4E53)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"/Users/zhangchi/Desktop/yaopao/高德地图/AMap_iOS_API_Lib_V2.2.1/2D",
 					"$(PROJECT_DIR)/YaoPao/ShareSDK/Connection",
@@ -4297,6 +4329,7 @@
 					"$(PROJECT_DIR)/YaoPao/ShareSDK",
 					"$(PROJECT_DIR)/YaoPao/ShareSDK/UI",
 					"/Users/zhangchi/Desktop/yaopao/高德地图",
+					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "YaoPao/YaoPao-Prefix.pch";
@@ -4328,8 +4361,8 @@
 				ARCHS = armv7;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Starz Sports International Management Co., Ltd";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Starz Sports International Management Co., Ltd";
 				FRAMEWORK_SEARCH_PATHS = (
 					"/Users/zhangchi/Desktop/yaopao/高德地图/AMap_iOS_API_Lib_V2.2.1/2D",
 					"$(PROJECT_DIR)/YaoPao/ShareSDK/Connection",
@@ -4338,6 +4371,7 @@
 					"$(PROJECT_DIR)/YaoPao/ShareSDK",
 					"$(PROJECT_DIR)/YaoPao/ShareSDK/UI",
 					"/Users/zhangchi/Desktop/yaopao/高德地图",
+					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "YaoPao/YaoPao-Prefix.pch";

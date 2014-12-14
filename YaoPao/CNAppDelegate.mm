@@ -38,6 +38,7 @@
 #import "CNFinishTeamMatchViewController.h"
 #import "CNWarningNotInStartZoneViewController.h"
 #import "CNWarningCheckTimeViewController.h"
+#import <SMS_SDK/SMS_SDK.h>
 
 @implementation CNAppDelegate
 @synthesize navigationController;
@@ -149,7 +150,7 @@
     self.showad = [MobClick getConfigParams:@"showad"];
     NSLog(@"self.showad is %@",self.showad);
     if (self.showad == nil || ([NSNull null] == (NSNull *)self.showad)) {
-        self.showad = @"1.0.4,1";
+        self.showad = @"1.0.5,1";
     }
 //#ifdef SIMULATORTEST
 //
@@ -160,6 +161,9 @@
 //    if (self.match_start_time == nil || ([NSNull null] == (NSNull *)self.match_start_time)) {
 //        self.match_start_time = kStartTime;
 //    }
+    //mob
+    [SMS_SDK registerApp:@"3289fdd0ca3b" withSecret:@"78b2977ac2193fe84a48b76595e1267d"];
+    
     self.match_start_time = kStartTime;
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
