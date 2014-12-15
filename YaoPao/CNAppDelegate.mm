@@ -40,6 +40,7 @@
 #import "CNWarningCheckTimeViewController.h"
 #import <SMS_SDK/SMS_SDK.h>
 
+
 @implementation CNAppDelegate
 @synthesize navigationController;
 @synthesize networkHandler;
@@ -186,10 +187,20 @@
     //自动登录一下
     NSString* filePath = [CNPersistenceHandler getDocument:@"userinfo.plist"];
     NSMutableDictionary* userInfo = [NSMutableDictionary dictionaryWithContentsOfFile:filePath];
-    if(userInfo){
-        NSMutableDictionary* params = [[NSMutableDictionary alloc]init];
-        [params setObject:[userInfo objectForKey:@"uid"] forKey:@"uid"];
-        [kApp.networkHandler doRequest_autoLogin:params];
+    if(userInfo){//需要自动登录
+        NSString* filePath2 = [CNPersistenceHandler getDocument:@"newVersionLogin.plist"];
+        NSMutableDictionary* dic2 = [NSMutableDictionary dictionaryWithContentsOfFile:filePath2];
+        if(dic2){
+            NSString* code = [dic2 objectForKey:@"isLogin"];
+            if([code isEqualToString:@"11"]){//新版本的登陆
+                NSMutableDictionary* params = [[NSMutableDictionary alloc]init];
+                [params setObject:[userInfo objectForKey:@"uid"] forKey:@"uid"];
+                [kApp.networkHandler doRequest_autoLogin:params];
+                kApp.isLogin = 2;
+            }
+        }else{//旧版本的自动登陆
+            kApp.isLogin = 11;
+        }
     }
     CNMainViewController* mainVC = [[CNMainViewController alloc]init];
     self.navigationController = [[UINavigationController alloc] initWithRootViewController:mainVC];
@@ -314,7 +325,6 @@
     NSLog(@"ua is %@",self.ua);
     kApp.geosHandler = [[CNTestGEOS alloc]init];
     [kApp.geosHandler initFromFile:kTrackName];
-    self.userInfoDic = [[NSMutableDictionary alloc]init];
     self.avatarDic = [[NSMutableDictionary alloc]init];
     [MAMapServices sharedServices].apiKey =@"0f3dad31deac3acd29ce27c3c2a265f2";
 }

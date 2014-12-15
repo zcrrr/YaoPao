@@ -30,6 +30,7 @@
 #import "CNVoiceHandler.h"
 #import "CNLocationHandler.h"
 #import "CNUtil.h"
+#import "CNVCodeViewController.h"
 
 @interface CNMainViewController ()
 
@@ -65,7 +66,7 @@
             }
         }
     }
-
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(loginDone) name:@"loginDone" object:nil];
     [self.button_setting addTarget:self action:@selector(button_blue_down:) forControlEvents:UIControlEventTouchDown];
     [self.button_record addTarget:self action:@selector(button_white_down:) forControlEvents:UIControlEventTouchDown];
     [self.button_message addTarget:self action:@selector(button_white_down:) forControlEvents:UIControlEventTouchDown];
@@ -87,6 +88,20 @@
     
     self.niv = [[CNNumImageView alloc]initWithFrame:CGRectMake(25, 5, 50, 16)];
     [self.view_total_score addSubview:self.niv];
+    
+    if(kApp.isLogin == 2){//正在登录
+        [self displayLoading];
+    }else{
+        if(kApp.isLogin == 11){//老用户需要自动登录
+            CNVCodeViewController* vcodeVC = [[CNVCodeViewController alloc]init];
+            [self.navigationController pushViewController:vcodeVC animated:YES];
+        }
+    }
+}
+- (void)loginDone{
+    [self hideLoading];
+    //加载用户信息
+    [self initUI];
 }
 - (void)initData{
     NSString* filePath_record = [CNPersistenceHandler getDocument:@"all_record.plist"];
@@ -143,21 +158,17 @@
     [self initData];
 }
 - (void)initUI{
-    NSString* filePath = [CNPersistenceHandler getDocument:@"userinfo.plist"];
-    NSMutableDictionary* userInfo = [NSMutableDictionary dictionaryWithContentsOfFile:filePath];
-    if(userInfo){//已经登录状态
+    if(kApp.userInfoDic != nil){//已经登录状态
         if(kApp.hasMessage){
             self.imageview_dot.hidden = NO;
         }else{
             self.imageview_dot.hidden = YES;
         }
-        kApp.isLogin = 1;
-        kApp.userInfoDic = userInfo;
-        NSString* nickname = [userInfo objectForKey:@"nickname"];
-        nickname = (nickname == nil ? [userInfo objectForKey:@"phone"] : nickname);
+        NSString* nickname = [kApp.userInfoDic objectForKey:@"nickname"];
+        nickname = (nickname == nil ? [kApp.userInfoDic objectForKey:@"phone"] : nickname);
         self.label_username.text = nickname;
-        NSString* signature = [userInfo objectForKey:@"signature"];
-        signature = (signature == nil ? @"什么都没写" : signature);
+        NSString* signature = [kApp.userInfoDic objectForKey:@"signature"];
+        signature = ((signature == nil || [signature isEqualToString:@""])? @"什么都没写" : signature);
         self.label_des.text = signature;
         self.button_goLogin.hidden = YES;
         NSString* imgpath = [kApp.userInfoDic objectForKey:@"imgpath"];
@@ -179,8 +190,6 @@
             }
         }
     }else{//未登录状态
-        kApp.isLogin = 0;
-        kApp.userInfoDic = [[NSMutableDictionary alloc]init];
         self.image_avatar.image = [UIImage imageNamed:@"avatar_default.png"];
         self.label_username.text = @"未登录";
         self.label_des.text = @"轻触以登录要跑";
@@ -358,4 +367,29 @@
     [self.view addSubview:bannerView_];    
     [bannerView_ loadRequest:[GADRequest request]];
 }
+- (void)displayLoading{
+    self.loadingImage.hidden = NO;
+    [self.indicator startAnimating];
+    [self disableAllButton];
+}
+- (void)hideLoading{
+    self.loadingImage.hidden = YES;
+    [self.indicator stopAnimating];
+    [self enableAllButton];
+}
+- (void)disableAllButton{
+    self.button_goLogin.enabled = NO;
+    self.button_match.enabled = NO;
+    self.button_message.enabled = NO;
+    self.button_record.enabled = NO;
+    self.button_setting.enabled = NO;
+}
+- (void)enableAllButton{
+    self.button_goLogin.enabled = YES;
+    self.button_match.enabled = YES;
+    self.button_message.enabled = YES;
+    self.button_record.enabled = YES;
+    self.button_setting.enabled = YES;
+}
+
 @end

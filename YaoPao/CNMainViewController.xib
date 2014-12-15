@@ -14,8 +14,10 @@
                 <outlet property="button_setting" destination="977-1z-fDf" id="ydM-j9-Lba"/>
                 <outlet property="image_avatar" destination="zgf-lR-4uf" id="WjW-wK-Z09"/>
                 <outlet property="imageview_dot" destination="ei9-Rn-P7K" id="6sW-7m-ME8"/>
+                <outlet property="indicator" destination="00j-jN-lwX" id="tRT-vV-aCK"/>
                 <outlet property="label_des" destination="I78-hV-QMo" id="5lw-q5-r2s"/>
                 <outlet property="label_username" destination="Q8V-0c-LfQ" id="Pff-L0-1qi"/>
+                <outlet property="loadingImage" destination="OEY-FJ-Jxc" id="9GW-dv-lnV"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="aCM-52-7Q2"/>
                 <outlet property="view_match" destination="HAI-TY-DZW" id="lpU-Oq-8XF"/>
                 <outlet property="view_message" destination="fqF-Ra-Qba" id="bpt-DV-atA"/>
@@ -270,6 +272,14 @@
                         <action selector="logout:" destination="-1" eventType="touchUpInside" id="Nk4-jV-IXN"/>
                     </connections>
                 </button>
+                <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" image="netProcess.png" id="OEY-FJ-Jxc">
+                    <rect key="frame" x="113" y="230" width="94" height="89"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                </imageView>
+                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" hidesWhenStopped="YES" style="whiteLarge" id="00j-jN-lwX">
+                    <rect key="frame" x="141" y="256" width="37" height="37"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                </activityIndicatorView>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
         </view>
@@ -280,6 +290,7 @@
         <image name="button_start.png" width="240" height="240"/>
         <image name="button_start_h.png" width="240" height="240"/>
         <image name="message.png" width="160" height="160"/>
+        <image name="netProcess.png" width="85" height="85"/>
         <image name="record.png" width="160" height="160"/>
         <image name="red_dot.png" width="50" height="50"/>
     </resources>

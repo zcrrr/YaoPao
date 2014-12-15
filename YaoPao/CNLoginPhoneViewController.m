@@ -14,6 +14,8 @@
 #import "CNServiceViewController.h"
 #import "Toast+UIView.h"
 #import "CNRegisterPhoneViewController.h"
+#import "SMS_SDK/SMS_SDK.h"
+#import "SectionsViewController.h"
 
 @interface CNLoginPhoneViewController ()
 
@@ -21,6 +23,8 @@
 
 @implementation CNLoginPhoneViewController
 @synthesize agree;
+@synthesize timer;
+@synthesize count;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -37,11 +41,12 @@
     // Do any additional setup after loading the view from its nib.
     self.agree = 1;
     self.textfield_pwd.delegate = self;
+    self.textfield_phone.delegate = self;
+    self.textfield_vcode.delegate = self;
     [self.button_back addTarget:self action:@selector(button_blue_down:) forControlEvents:UIControlEventTouchDown];
     [self.button_goFindPwdPage addTarget:self action:@selector(button_blue_down:) forControlEvents:UIControlEventTouchDown];
     [self.button_goRegister addTarget:self action:@selector(button_blue_down:) forControlEvents:UIControlEventTouchDown];
-    
-    
+    [self.button_vcode addTarget:self action:@selector(button_green_down:) forControlEvents:UIControlEventTouchDown];
     [self.button_login addTarget:self action:@selector(button_green_down:) forControlEvents:UIControlEventTouchDown];
 }
 - (void)button_blue_down:(id)sender{
@@ -71,13 +76,8 @@
             if ([self checkPhoneNO]) {
                 if ([self checkPwd]) {
                     if(self.agree == 1){
-                        //登录
-                        NSMutableDictionary* params = [[NSMutableDictionary alloc]init];
-                        [params setObject:self.textfield_phone.text forKey:@"phone"];
-                        [params setObject:self.textfield_pwd.text forKey:@"passwd"];
-                        kApp.networkHandler.delegate_loginPhone = self;
-                        [kApp.networkHandler doRequest_loginPhone:params];
-                        [self displayLoading];
+                        //先验证验证码
+                        [self verifyVCode];
                     }else{
                         [kApp.window makeToast:@"您需要同意要跑服务协议才能进行后续操作"];
                     }
@@ -106,12 +106,83 @@
             [self.navigationController pushViewController:registerVC animated:YES];
             break;
         }
-
+        case 5:
+        {
+            self.button_login.backgroundColor = [UIColor colorWithRed:143.0/255.0 green:195.0/255.0 blue:31.0/255.0 alpha:1];
+            if ([self checkPhoneNO]) {
+                NSLog(@"获取验证码");
+                [self getVCode];
+            }
+            break;
+        }
         default:
             break;
     }
 }
-
+- (void)getVCode{
+    NSString* str2=[self.label_code.text stringByReplacingOccurrencesOfString:@"+" withString:@""];
+    NSLog(@"code is %@",str2);
+    [SMS_SDK getVerifyCodeByPhoneNumber:self.textfield_phone.text AndZone:str2 result:^(enum SMS_GetVerifyCodeResponseState state) {
+        if (1==state) {
+            NSLog(@"block 获取验证码成功");
+            UIAlertView* alert=[[UIAlertView alloc] initWithTitle:@"" message:@"获取验证码成功" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+            [alert show];
+            self.button_vcode.userInteractionEnabled = NO;
+            //            [self.button_vcode setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+            self.count = 60;
+            self.timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(countdown) userInfo:nil repeats:YES];
+        }
+        else if(0==state)
+        {
+            NSLog(@"block 获取验证码失败");
+            NSString* str=[NSString stringWithFormat:@"验证码发送失败 请稍后重试"];
+            UIAlertView* alert=[[UIAlertView alloc] initWithTitle:@"发送失败" message:str delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+            [alert show];
+        }
+        else if (SMS_ResponseStateMaxVerifyCode==state)
+        {
+            NSString* str=[NSString stringWithFormat:@"请求验证码超上限 请稍后重试"];
+            UIAlertView* alert=[[UIAlertView alloc] initWithTitle:@"超过上限" message:str delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+            [alert show];
+        }
+        else if(SMS_ResponseStateGetVerifyCodeTooOften==state)
+        {
+            NSString* str=[NSString stringWithFormat:@"客户端请求发送短信验证过于频繁"];
+            UIAlertView* alert=[[UIAlertView alloc] initWithTitle:@"提示" message:str delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+            [alert show];
+        }
+    }];
+}
+- (void)countdown{
+    [self.button_vcode setTitle:[NSString stringWithFormat:@"%i",self.count] forState:UIControlStateNormal];
+    self.count -- ;
+    if(self.count == 0){
+        [self.timer invalidate];
+        [self.button_vcode setTitle:@"获取验证码" forState:UIControlStateNormal];
+        self.button_vcode.userInteractionEnabled = YES;
+    }
+}
+- (void)verifyVCode{
+    [SMS_SDK commitVerifyCode:self.textfield_vcode.text result:^(enum SMS_ResponseState state) {
+        if (1==state) {
+            NSLog(@"block 验证成功");
+            //登录
+            NSMutableDictionary* params = [[NSMutableDictionary alloc]init];
+            [params setObject:self.textfield_phone.text forKey:@"phone"];
+            [params setObject:self.textfield_pwd.text forKey:@"passwd"];
+            kApp.networkHandler.delegate_loginPhone = self;
+            [kApp.networkHandler doRequest_loginPhone:params];
+            [self displayLoading];
+            
+        }
+        else if(0==state)
+        {
+            NSLog(@"block 验证失败");
+            UIAlertView* alert=[[UIAlertView alloc] initWithTitle:@"" message:@"验证码验证失败" delegate:self cancelButtonTitle:@"确定"  otherButtonTitles:nil, nil];
+            [alert show];
+        }
+    }];
+}
 - (IBAction)button_checkbox_clicked:(id)sender {
     if(self.agree == 0){
         self.agree = 1;
@@ -128,12 +199,6 @@
 - (void)resignAllText{
     [self.textfield_phone resignFirstResponder];
     [self.textfield_pwd resignFirstResponder];
-}
-#pragma mark- textfiled delegate
-- (BOOL)textFieldShouldReturn:(UITextField *)textField
-{
-    [textField resignFirstResponder];
-    return YES;
 }
 - (BOOL)checkPhoneNO{
     NSString* string_alert = @"";
@@ -206,6 +271,27 @@
     }
     return result;
 }
+- (IBAction)button_country_clicked:(id)sender {
+    [SMS_SDK getZone:^(enum SMS_ResponseState state, NSArray *array) {
+        if (1==state)
+        {
+            NSLog(@"block 获取区号成功");
+            //区号数据
+            NSMutableArray* areaArray=[NSMutableArray arrayWithArray:array];
+            NSLog(@"弹出国家和地区列表用于选择区号");
+            SectionsViewController* country2=[[SectionsViewController alloc] init];
+            country2.delegate=self;
+            [country2 setAreaArray:areaArray];
+            [self presentViewController:country2 animated:YES completion:^{
+                ;
+            }];
+        }
+        else if (0==state)
+        {
+            NSLog(@"block 获取区号失败");
+        }
+    }];
+}
 - (void)loginPhoneDidSuccess:(NSDictionary *)resultDic{
     //测试账号：18611101410
     if([self.textfield_phone.text isEqualToString:@"18611101410"]){
@@ -229,5 +315,56 @@
 - (void)hideLoading{
     self.loadingImage.hidden = YES;
     [self.indicator stopAnimating];
+}
+#pragma mark - SecondViewControllerDelegate的方法
+- (void)setSecondData:(CountryAndAreaCode *)data {
+    NSLog(@"从Second传过来的数据：%@,%@", data.areaCode,data.countryName);
+    self.label_code.text = [NSString stringWithFormat:@"+%@",data.areaCode];
+    self.label_country.text = [NSString stringWithFormat:@"%@",data.countryName];
+}
+#pragma mark- textfiled delegate
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [textField resignFirstResponder];
+    [self resetViewFrame];
+    return YES;
+}
+- (void)keyboardWillShow:(NSNotification *)noti
+{
+    //键盘输入的界面调整
+    //键盘的高度
+    float height = 216.0;
+    CGRect frame = self.view.frame;
+    frame.size = CGSizeMake(frame.size.width, frame.size.height - height);
+    [UIView beginAnimations:@"Curl"context:nil];//动画开始
+    [UIView setAnimationDuration:0.30];
+    [UIView setAnimationDelegate:self];
+    [self.view setFrame:frame];
+    [UIView commitAnimations];
+    
+}
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    CGPoint point = [textField.superview convertPoint:textField.frame.origin toView:nil];
+    int offset = point.y + 80 - (self.view.frame.size.height - 216.0);//键盘高度216
+    NSTimeInterval animationDuration = 0.30f;
+    [UIView beginAnimations:@"ResizeForKeyBoard" context:nil];
+    [UIView setAnimationDuration:animationDuration];
+    float width = self.view.frame.size.width;
+    float height = self.view.frame.size.height;
+    if(offset > 0)
+    {
+        CGRect rect = CGRectMake(0.0f, -offset,width,height);
+        self.view.frame = rect;
+    }
+    [UIView commitAnimations];
+}
+- (void)resetViewFrame{
+    NSTimeInterval animationDuration = 0.30f;
+    [UIView beginAnimations:@"ResizeForKeyboard" context:nil];
+    [UIView setAnimationDuration:animationDuration];
+    CGRect rect = CGRectMake(0.0f, 0.0f, self.view.frame.size.width, self.view.frame.size.height);
+    self.view.frame = rect;
+    [UIView commitAnimations];
 }
 @end

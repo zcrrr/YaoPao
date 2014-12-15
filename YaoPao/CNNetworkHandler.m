@@ -111,6 +111,10 @@
             kApp.userInfoDic = [result objectForKey:@"userinfo"];
             NSString* filePath = [CNPersistenceHandler getDocument:@"userinfo.plist"];
             [kApp.userInfoDic writeToFile:filePath atomically:YES];
+            //新版本增加标志，登录成功新增一个标志位
+            NSString* filePath2 = [CNPersistenceHandler getDocument:@"newVersionLogin.plist"];
+            NSDictionary* dic2 = [[NSDictionary alloc]initWithObjectsAndKeys:@"11",@"isLogin", nil];
+            [dic2 writeToFile:filePath2 atomically:YES];
         }
         if([result objectForKey:@"announcement"]){
             NSDictionary* messageDic = [result objectForKey:@"announcement"];
@@ -181,6 +185,7 @@
         }
         case TAG_AUTO_LOGIN:
         {
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"loginDone" object:nil];
             break;
         }
         case TAG_FIND_PWD_VCODE:
@@ -354,6 +359,8 @@
         }
         case TAG_AUTO_LOGIN:
         {
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"loginDone" object:nil];
+            kApp.isLogin = 0;
             break;
         }
         case TAG_FIND_PWD:

@@ -39,6 +39,9 @@
 @property (strong, nonatomic) CNNumImageView* niv;
 @property (strong, nonatomic) GADBannerView *bannerView_;
 
+@property (strong, nonatomic) IBOutlet UIActivityIndicatorView *indicator;
+@property (strong, nonatomic) IBOutlet UIImageView *loadingImage;
+
 - (IBAction)logout:(id)sender;
 
 - (IBAction)button_clicked:(id)sender;

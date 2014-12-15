@@ -29,7 +29,7 @@
 @property (nonatomic, strong) NSString* showgame;
 @property (nonatomic, assign) int score;//积分
 //用户信息
-@property (assign, nonatomic) int isLogin;//0-未登录，1-已经登录，目前就这两种状态
+@property (assign, nonatomic) int isLogin;//0-未登录，1-已经登录，2-正在登录
 @property (strong, nonatomic) NSMutableDictionary* userInfoDic;
 @property (nonatomic, strong) NSData* imageData;//保存用户头像
 @property (nonatomic, assign) BOOL hasMessage;

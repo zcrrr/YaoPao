@@ -461,6 +461,8 @@
 		9A72E14719D3EA1D008533F5 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A72E14619D3EA1D008533F5 /* AVFoundation.framework */; };
 		9A72E14919D3EA2B008533F5 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A72E14819D3EA2B008533F5 /* MessageUI.framework */; };
 		9A72E14B19D3EA3A008533F5 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A72E14A19D3EA3A008533F5 /* StoreKit.framework */; };
+		9A7540401A3DC3CA00221B3D /* CNVCodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A75403E1A3DC3CA00221B3D /* CNVCodeViewController.m */; };
+		9A7540411A3DC3CA00221B3D /* CNVCodeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9A75403F1A3DC3CA00221B3D /* CNVCodeViewController.xib */; };
 		9A77BFD319F163DF0025EFC6 /* css in Resources */ = {isa = PBXBuildFile; fileRef = 9A77BFC419F163DF0025EFC6 /* css */; };
 		9A77BFD419F163DF0025EFC6 /* images in Resources */ = {isa = PBXBuildFile; fileRef = 9A77BFC519F163DF0025EFC6 /* images */; };
 		9A77BFD519F163DF0025EFC6 /* js in Resources */ = {isa = PBXBuildFile; fileRef = 9A77BFC619F163DF0025EFC6 /* js */; };
@@ -1510,6 +1512,9 @@
 		9A72E14619D3EA1D008533F5 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		9A72E14819D3EA2B008533F5 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		9A72E14A19D3EA3A008533F5 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		9A75403D1A3DC3CA00221B3D /* CNVCodeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CNVCodeViewController.h; sourceTree = "<group>"; };
+		9A75403E1A3DC3CA00221B3D /* CNVCodeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CNVCodeViewController.m; sourceTree = "<group>"; };
+		9A75403F1A3DC3CA00221B3D /* CNVCodeViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CNVCodeViewController.xib; sourceTree = "<group>"; };
 		9A77BFC419F163DF0025EFC6 /* css */ = {isa = PBXFileReference; lastKnownFileType = folder; path = css; sourceTree = "<group>"; };
 		9A77BFC519F163DF0025EFC6 /* images */ = {isa = PBXFileReference; lastKnownFileType = folder; path = images; sourceTree = "<group>"; };
 		9A77BFC619F163DF0025EFC6 /* js */ = {isa = PBXFileReference; lastKnownFileType = folder; path = js; sourceTree = "<group>"; };
@@ -3516,6 +3521,9 @@
 				9A8C637719855C2A0082AE4E /* CNForgetPwdViewController.h */,
 				9A8C637819855C2A0082AE4E /* CNForgetPwdViewController.m */,
 				9A8C637919855C2A0082AE4E /* CNForgetPwdViewController.xib */,
+				9A75403D1A3DC3CA00221B3D /* CNVCodeViewController.h */,
+				9A75403E1A3DC3CA00221B3D /* CNVCodeViewController.m */,
+				9A75403F1A3DC3CA00221B3D /* CNVCodeViewController.xib */,
 			);
 			name = user;
 			sourceTree = "<group>";
@@ -3971,6 +3979,7 @@
 				9AB78E5219DBFE3E006E14AB /* account.png in Resources */,
 				9A11A83E19E290F100937C1B /* 100040.mp3 in Resources */,
 				9A2CCB0F199D06B4002E8AF0 /* Makefile.in in Resources */,
+				9A7540411A3DC3CA00221B3D /* CNVCodeViewController.xib in Resources */,
 				9A2CCB4F199D06B4002E8AF0 /* version.h.vc in Resources */,
 				9A28834E19B1E1ED0014EA9A /* gps2.png in Resources */,
 				9A11A86D19E290F100937C1B /* 110102.mp3 in Resources */,
@@ -4148,6 +4157,7 @@
 				9A5F49A1198E70BC00D990F0 /* MBSliderView.m in Sources */,
 				9A2CCB2F199D06B4002E8AF0 /* Makefile in Sources */,
 				9A8C637A19855C2A0082AE4E /* CNForgetPwdViewController.m in Sources */,
+				9A7540401A3DC3CA00221B3D /* CNVCodeViewController.m in Sources */,
 				9A72CE0C19C5672B0035A1DA /* CNNotRunTransmitRelayViewController.m in Sources */,
 				9A2CCAFE199D06B4002E8AF0 /* Makefile in Sources */,
 				9A4A1426197402C600F2EF04 /* NSObject+SBJson.m in Sources */,
@@ -4319,8 +4329,8 @@
 				ARCHS = armv7;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Shan Dong (385C8B4E53)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Shan Dong (385C8B4E53)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"/Users/zhangchi/Desktop/yaopao/高德地图/AMap_iOS_API_Lib_V2.2.1/2D",
 					"$(PROJECT_DIR)/YaoPao/ShareSDK/Connection",
@@ -4361,8 +4371,8 @@
 				ARCHS = armv7;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Starz Sports International Management Co., Ltd";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Starz Sports International Management Co., Ltd";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"/Users/zhangchi/Desktop/yaopao/高德地图/AMap_iOS_API_Lib_V2.2.1/2D",
 					"$(PROJECT_DIR)/YaoPao/ShareSDK/Connection",

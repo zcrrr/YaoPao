@@ -318,11 +318,6 @@
 #pragma mark- userinfo delegate
 - (void)updateUserinfoDidSuccess:(NSDictionary *)resultDic{
     [self hideLoading];
-    kApp.userInfoDic = [resultDic objectForKey:@"userinfo"];
-    NSString* filePath = [CNPersistenceHandler getDocument:@"userinfo.plist"];
-    [kApp.userInfoDic writeToFile:filePath atomically:YES];
-    NSLog(@"写入plist:%@",kApp.userInfoDic);
-    
     CNMainViewController* mainVC = [[CNMainViewController alloc]init];
     [self.navigationController pushViewController:mainVC animated:YES];
 }
