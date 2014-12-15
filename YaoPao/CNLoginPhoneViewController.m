@@ -25,6 +25,7 @@
 @synthesize agree;
 @synthesize timer;
 @synthesize count;
+@synthesize isVerify;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -77,7 +78,18 @@
                 if ([self checkPwd]) {
                     if(self.agree == 1){
                         //先验证验证码
-                        [self verifyVCode];
+                        if(self.isVerify){//已经验证
+                            //登录
+                            NSMutableDictionary* params = [[NSMutableDictionary alloc]init];
+                            [params setObject:self.textfield_phone.text forKey:@"phone"];
+                            [params setObject:self.textfield_pwd.text forKey:@"passwd"];
+                            kApp.networkHandler.delegate_loginPhone = self;
+                            [kApp.networkHandler doRequest_loginPhone:params];
+                            [self displayLoading];
+                        }else{//未验证
+                            [self verifyVCode];
+                        }
+                        
                     }else{
                         [kApp.window makeToast:@"您需要同意要跑服务协议才能进行后续操作"];
                     }
@@ -111,6 +123,7 @@
             self.button_login.backgroundColor = [UIColor colorWithRed:143.0/255.0 green:195.0/255.0 blue:31.0/255.0 alpha:1];
             if ([self checkPhoneNO]) {
                 NSLog(@"获取验证码");
+                self.button_vcode.backgroundColor = [UIColor colorWithRed:143.0/255.0 green:195.0/255.0 blue:31.0/255.0 alpha:1];
                 [self getVCode];
             }
             break;
@@ -128,7 +141,6 @@
             UIAlertView* alert=[[UIAlertView alloc] initWithTitle:@"" message:@"获取验证码成功" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
             [alert show];
             self.button_vcode.userInteractionEnabled = NO;
-            //            [self.button_vcode setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
             self.count = 60;
             self.timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(countdown) userInfo:nil repeats:YES];
         }
@@ -166,6 +178,7 @@
     [SMS_SDK commitVerifyCode:self.textfield_vcode.text result:^(enum SMS_ResponseState state) {
         if (1==state) {
             NSLog(@"block 验证成功");
+            self.isVerify = YES;
             //登录
             NSMutableDictionary* params = [[NSMutableDictionary alloc]init];
             [params setObject:self.textfield_phone.text forKey:@"phone"];
@@ -205,22 +218,22 @@
     BOOL result = NO;
     if (self.textfield_phone.text != nil && ![self.textfield_phone.text isEqualToString:@""])
     {
-        if ([self.textfield_phone.text length] != 11)
-        {
-            string_alert = @"手机号码不符合规范，应为11位的数字";
-        }
-        else
-        {
+//        if ([self.textfield_phone.text length] != 11)
+//        {
+//            string_alert = @"手机号码不符合规范，应为11位的数字";
+//        }
+//        else
+//        {
             for (int i = 0; i < [self.textfield_phone.text length]; i++)
             {
                 char c = [self.textfield_phone.text characterAtIndex:i];
                 if (c <'0' || c >'9')
                 {
-                    string_alert = @"手机号码不符合规范，应为11位的数字";
+                    string_alert = @"手机号码不符合规范，应全部为数字";
                     break;
                 }
             }
-        }
+//        }
     }else{
         string_alert = @"手机号不能为空";
     }

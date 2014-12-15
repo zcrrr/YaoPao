@@ -14,6 +14,7 @@
 @property (strong, nonatomic) NSTimer* timer;
 @property (assign, nonatomic) int count;
 @property (assign, nonatomic) int agree;
+@property (assign, nonatomic) BOOL isVerify;
 @property (strong, nonatomic) IBOutlet UITextField *textfield_phone;
 @property (strong, nonatomic) IBOutlet UITextField *textfield_pwd;
 @property (strong, nonatomic) IBOutlet UITextField *textfield_vcode;

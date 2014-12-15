@@ -10,6 +10,9 @@
 #import "SectionsViewController.h"
 
 @interface CNVCodeViewController : UIViewController<UITextFieldDelegate,SecondViewControllerDelegate>
+@property (assign, nonatomic) BOOL isVerify;
+@property (strong, nonatomic) NSTimer* timer;
+@property (assign, nonatomic) int count;
 @property (strong, nonatomic) IBOutlet UIButton *button_back;
 @property (strong, nonatomic) IBOutlet UIButton *button_vcode;
 @property (strong, nonatomic) IBOutlet UIButton *button_ok;

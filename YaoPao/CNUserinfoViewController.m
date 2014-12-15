@@ -54,7 +54,7 @@
         self.button_back.hidden = YES;
     }
     //赋值：应该从plist？
-    self.textfield_phone.text = [kApp.userInfoDic objectForKey:@"phone"];
+    self.textfield_phone.text = [self codeAndPhone];
     NSString* username = [kApp.userInfoDic objectForKey:@"nickname"];
     self.textfield_username.text = username == nil?self.textfield_phone.text:username;
     NSString* gender = [kApp.userInfoDic objectForKey:@"gender"];
@@ -490,5 +490,26 @@ numberOfRowsInComponent:(NSInteger)component {
     self.loadingImage.hidden = YES;
     [self.indicator stopAnimating];
 }
-
+- (NSString*)codeAndPhone{
+    NSString* country = [kApp.userInfoDic objectForKey:@"country"];
+    country = @"澳大利亚";
+    if(country == nil || [country isEqualToString:@""] || [country isEqualToString:@"中国"]){
+        return [NSString stringWithFormat:@"+86 %@",[kApp.userInfoDic objectForKey:@"phone"]];
+    }else{
+        NSString *path_cn = [[NSBundle mainBundle] pathForResource:@"country"
+                                                            ofType:@"plist"];
+        NSDictionary *dic_cn = [[NSDictionary alloc]
+                                initWithContentsOfFile:path_cn];
+        NSMutableDictionary *dic2 = [[NSMutableDictionary alloc]init];
+        for (NSString *key in dic_cn) {
+            NSArray* array = [dic_cn objectForKey:key];
+            for(int i=0;i<[array count];i++){
+                NSString* info = [array objectAtIndex:i];
+                NSArray* tempArray = [info componentsSeparatedByString:@"+"];
+                [dic2 setObject:[tempArray objectAtIndex:1] forKey:[tempArray objectAtIndex:0]];
+            }
+        }
+        return [NSString stringWithFormat:@"+%@ %@",[dic2 objectForKey:country],[kApp.userInfoDic objectForKey:@"phone"]];
+    }
+}
 @end

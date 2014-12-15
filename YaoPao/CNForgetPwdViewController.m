@@ -12,11 +12,15 @@
 #import "SMS_SDK/SMS_SDK.h"
 #import "SectionsViewController.h"
 
+
 @interface CNForgetPwdViewController ()
 
 @end
 
 @implementation CNForgetPwdViewController
+@synthesize isVerify;
+@synthesize timer;
+@synthesize count;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -75,7 +79,17 @@
             if([self checkPhoneNO]){
                 if([self checkPwd]){
                     if ([self checkVcode]) {
-                        [self verifyVCode];
+                        if(self.isVerify){//已经验证
+                            NSMutableDictionary* params = [[NSMutableDictionary alloc]init];
+                            [params setObject:self.textfield_phone.text forKey:@"phone"];
+                            [params setObject:self.textfield_pwd.text forKey:@"passwd"];
+                            [params setObject:self.textfield_vcode.text forKey:@"vcode"];
+                            kApp.networkHandler.delegate_findPwd = self;
+                            [kApp.networkHandler doRequest_findPwd:params];
+                        }else{//未验证
+                            [self verifyVCode];
+                        }
+                        
                     }
                 }
             }
@@ -92,6 +106,15 @@
     [self.textfield_vcode resignFirstResponder];
     [self resetViewFrame];
 }
+- (void)countdown{
+    [self.button_vcode setTitle:[NSString stringWithFormat:@"%i",self.count] forState:UIControlStateNormal];
+    self.count -- ;
+    if(self.count == 0){
+        [self.timer invalidate];
+        [self.button_vcode setTitle:@"获取验证码" forState:UIControlStateNormal];
+        self.button_vcode.userInteractionEnabled = YES;
+    }
+}
 - (void)getVCode{
     NSString* str2=[self.label_code.text stringByReplacingOccurrencesOfString:@"+" withString:@""];
     NSLog(@"code is %@",str2);
@@ -100,6 +123,9 @@
             NSLog(@"block 获取验证码成功");
             UIAlertView* alert=[[UIAlertView alloc] initWithTitle:@"" message:@"获取验证码成功" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
             [alert show];
+            self.button_vcode.userInteractionEnabled = NO;
+            self.count = 60;
+            self.timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(countdown) userInfo:nil repeats:YES];
         }
         else if(0==state)
         {
@@ -126,6 +152,7 @@
     [SMS_SDK commitVerifyCode:self.textfield_vcode.text result:^(enum SMS_ResponseState state) {
         if (1==state) {
             NSLog(@"block 验证成功");
+            self.isVerify = YES;
             NSMutableDictionary* params = [[NSMutableDictionary alloc]init];
             [params setObject:self.textfield_phone.text forKey:@"phone"];
             [params setObject:self.textfield_pwd.text forKey:@"passwd"];
@@ -175,22 +202,22 @@
     BOOL result = NO;
     if (self.textfield_phone.text != nil && ![self.textfield_phone.text isEqualToString:@""])
     {
-        if ([self.textfield_phone.text length] != 11)
-        {
-            string_alert = @"手机号码不符合规范，应为11位的数字";
-        }
-        else
-        {
+//        if ([self.textfield_phone.text length] != 11)
+//        {
+//            string_alert = @"手机号码不符合规范，应为11位的数字";
+//        }
+//        else
+//        {
             for (int i = 0; i < [self.textfield_phone.text length]; i++)
             {
                 char c = [self.textfield_phone.text characterAtIndex:i];
                 if (c <'0' || c >'9')
                 {
-                    string_alert = @"手机号码不符合规范，应为11位的数字";
+                    string_alert = @"手机号码不符合规范，应全部为数字";
                     break;
                 }
             }
-        }
+//        }
     }else{
         string_alert = @"手机号不能为空";
     }

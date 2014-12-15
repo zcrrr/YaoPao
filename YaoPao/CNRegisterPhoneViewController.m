@@ -22,6 +22,7 @@
 @implementation CNRegisterPhoneViewController
 @synthesize timer;
 @synthesize count;
+@synthesize isVerify;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -122,6 +123,7 @@
 - (void)verifyVCode{
     [SMS_SDK commitVerifyCode:self.textfield_vcode.text result:^(enum SMS_ResponseState state) {
         if (1==state) {
+            self.isVerify = YES;
             NSLog(@"block 验证成功");
             NSMutableDictionary* params = [[NSMutableDictionary alloc]init];
             [params setObject:self.textfield_phone.text forKey:@"phone"];
@@ -169,7 +171,19 @@
                     if ([self checkVcode]) {
                         if(self.agree == 1){
                             //先验证验证码
-                            [self verifyVCode];
+                            if(self.isVerify){//已经验证
+                                NSMutableDictionary* params = [[NSMutableDictionary alloc]init];
+                                [params setObject:self.textfield_phone.text forKey:@"phone"];
+                                [params setObject:self.textfield_pwd.text forKey:@"passwd"];
+                                [params setObject:self.textfield_vcode.text forKey:@"vcode"];
+                                [params setObject:self.label_country.text forKey:@"country"];
+                                kApp.networkHandler.delegate_registerPhone = self;
+                                [kApp.networkHandler doRequest_registerPhone:params];
+                                [self displayLoading];
+                            }else{//未验证
+                                [self verifyVCode];
+                            }
+                            
                         }else{
                             [kApp.window makeToast:@"您需要同意要跑服务协议才能进行后续操作"];
                         }
@@ -229,22 +243,22 @@
     BOOL result = NO;
     if (self.textfield_phone.text != nil && ![self.textfield_phone.text isEqualToString:@""])
     {
-        if ([self.textfield_phone.text length] != 11)
-        {
-            string_alert = @"手机号码不符合规范，应为11位的数字";
-        }
-        else
-        {
+//        if ([self.textfield_phone.text length] != 11)
+//        {
+//            string_alert = @"手机号码不符合规范，应为11位的数字";
+//        }
+//        else
+//        {
             for (int i = 0; i < [self.textfield_phone.text length]; i++)
             {
                 char c = [self.textfield_phone.text characterAtIndex:i];
                 if (c <'0' || c >'9')
                 {
-                    string_alert = @"手机号码不符合规范，应为11位的数字";
+                    string_alert = @"手机号码不符合规范，应全部为数字";
                     break;
                 }
             }
-        }
+//        }
     }else{
         string_alert = @"手机号不能为空";
     }
