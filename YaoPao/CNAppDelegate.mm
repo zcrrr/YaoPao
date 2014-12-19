@@ -39,6 +39,7 @@
 #import "CNWarningNotInStartZoneViewController.h"
 #import "CNWarningCheckTimeViewController.h"
 #import <SMS_SDK/SMS_SDK.h>
+#import <GoogleMaps/GoogleMaps.h>
 
 
 @implementation CNAppDelegate
@@ -49,6 +50,8 @@
 @synthesize pid;
 @synthesize userInfoDic;
 @synthesize imageData;
+@synthesize vcodeSecond;
+@synthesize vcodeTimer;
 @synthesize locationHandler;
 @synthesize oneRunPointList;
 @synthesize runStatusChangeIndex;
@@ -130,6 +133,9 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    //google map
+    [GMSServices provideAPIKey:@"AIzaSyCyYR5Ih3xP0rpYMaF1qAsInxFyqvaCJIY"];
+    
     //设置时区
     [NSTimeZone setDefaultTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"GMT+0800"]];
     

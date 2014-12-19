@@ -22,9 +22,12 @@
 @property (strong, nonatomic) IBOutlet UIButton *button_reg;
 @property (strong, nonatomic) IBOutlet UIButton *button_goLogin;
 @property (strong, nonatomic) IBOutlet UILabel *label_goLogin;
-@property (strong, nonatomic) IBOutlet UILabel *label_country;
 @property (strong, nonatomic) IBOutlet UILabel *label_code;
+
 @property (strong, nonatomic) IBOutlet UIActivityIndicatorView *indicator;
+@property (strong, nonatomic) IBOutlet UILabel *label_countryandarea;
+@property (strong, nonatomic) IBOutlet UILabel *label_country;
+@property (strong, nonatomic) IBOutlet UIButton *button_country;
 @property (strong, nonatomic) IBOutlet UIImageView *loadingImage;
 - (IBAction)view_touched:(id)sender;
 @property (strong, nonatomic) IBOutlet UIButton *button_checkbox;

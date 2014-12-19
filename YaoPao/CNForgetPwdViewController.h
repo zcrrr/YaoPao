@@ -23,6 +23,9 @@
 @property (strong, nonatomic) IBOutlet UIActivityIndicatorView *indicator;
 @property (strong, nonatomic) IBOutlet UIImageView *loadingImage;
 @property (strong, nonatomic) IBOutlet UILabel *label_country;
+@property (strong, nonatomic) IBOutlet UILabel *label_countryandarea;
+@property (strong, nonatomic) IBOutlet UIButton *button_country;
+
 @property (strong, nonatomic) IBOutlet UILabel *label_code;
 - (IBAction)button_clicked:(id)sender;
 - (IBAction)view_touched:(id)sender;

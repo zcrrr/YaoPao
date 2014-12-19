@@ -33,6 +33,8 @@
 @property (strong, nonatomic) NSMutableDictionary* userInfoDic;
 @property (nonatomic, strong) NSData* imageData;//保存用户头像
 @property (nonatomic, assign) BOOL hasMessage;
+@property (assign, nonatomic) int vcodeSecond;
+@property (strong, nonatomic) NSTimer* vcodeTimer;
 //运动相关
 @property (assign, nonatomic) int isRunning;//是否在运动，为了判断如果没有在运动，则退到后台应该关掉gps
 @property (strong, nonatomic) NSMutableArray* oneRunPointList;//一次运动的轨迹点记录，整个软件声明周期只有一个

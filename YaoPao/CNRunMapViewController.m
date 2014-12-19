@@ -22,8 +22,6 @@
 
 @implementation CNRunMapViewController
 @synthesize mapView;
-@synthesize last_lat;
-@synthesize last_lon;
 @synthesize timer_map;
 @synthesize lastDrawPoint;
 

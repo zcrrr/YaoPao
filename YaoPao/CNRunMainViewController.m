@@ -18,6 +18,7 @@
 #import "CNMainViewController.h"
 #import "Toast+UIView.h"
 #import "CNVoiceHandler.h"
+#import "CNRunMapGoogleViewController.h"
 #define kInterval 3
 
 @interface CNRunMainViewController ()
@@ -359,8 +360,14 @@
     }
 }
 - (IBAction)button_map_clicked:(id)sender {
-    CNRunMapViewController* mapVC = [[CNRunMapViewController alloc]init];
-    [self.navigationController pushViewController:mapVC animated:YES];
+    BOOL inChina = YES;
+    if(inChina){
+        CNRunMapViewController* mapVC = [[CNRunMapViewController alloc]init];
+        [self.navigationController pushViewController:mapVC animated:YES];
+    }else{
+        CNRunMapGoogleViewController* mapVC = [[CNRunMapGoogleViewController alloc]init];
+        [self.navigationController pushViewController:mapVC animated:YES];
+    }
 }
 - (void)viewWillDisappear:(BOOL)animated{
     [self.timer_dispalyTime invalidate];

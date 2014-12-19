@@ -57,7 +57,7 @@
         NSString* NOTIFICATION_GPS = @"gps";
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_GPS object:nil];
     }
-    if(self.rank >= 3 && newLocation.coordinate.latitude > 1 && newLocation.coordinate.longitude > 1){//误差小于50米
+    if(self.rank >= 2 && newLocation.coordinate.latitude > 1 && newLocation.coordinate.longitude > 1){//误差小于50米
         self.userLocation_lat = newLocation.coordinate.latitude;
         self.userLocation_lon = newLocation.coordinate.longitude;
         self.altitude = newLocation.altitude;

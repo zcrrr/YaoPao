@@ -492,7 +492,6 @@ numberOfRowsInComponent:(NSInteger)component {
 }
 - (NSString*)codeAndPhone{
     NSString* country = [kApp.userInfoDic objectForKey:@"country"];
-    country = @"澳大利亚";
     if(country == nil || [country isEqualToString:@""] || [country isEqualToString:@"中国"]){
         return [NSString stringWithFormat:@"+86 %@",[kApp.userInfoDic objectForKey:@"phone"]];
     }else{

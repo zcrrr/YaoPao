@@ -408,6 +408,14 @@
 		9A4BD5521997730E003FC164 /* CNRecordMapViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9A4BD5501997730E003FC164 /* CNRecordMapViewController.xib */; };
 		9A4BD55519977ADD003FC164 /* CNEncryption.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A4BD55419977ADD003FC164 /* CNEncryption.m */; };
 		9A52C7BC1979160C004C89CF /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A52C7BB1979160C004C89CF /* AdSupport.framework */; };
+		9A532DAD1A3FC8D800483A35 /* CNRunMapGoogleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A532DAB1A3FC8D800483A35 /* CNRunMapGoogleViewController.m */; };
+		9A532DAE1A3FC8D800483A35 /* CNRunMapGoogleViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9A532DAC1A3FC8D800483A35 /* CNRunMapGoogleViewController.xib */; };
+		9A54A7BA1A3EE39B00D09D80 /* GoogleMaps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A54A7B91A3EE39B00D09D80 /* GoogleMaps.framework */; };
+		9A54A7BD1A3EE3E700D09D80 /* GoogleMaps.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 9A54A7BC1A3EE3E700D09D80 /* GoogleMaps.bundle */; };
+		9A54A7BF1A3EE4ED00D09D80 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A54A7BE1A3EE4EC00D09D80 /* CoreData.framework */; };
+		9A54A7C11A3EE4FD00D09D80 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A54A7C01A3EE4FD00D09D80 /* GLKit.framework */; };
+		9A54A7C31A3EE50400D09D80 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A54A7C21A3EE50400D09D80 /* ImageIO.framework */; };
+		9A54A7C51A3EE51D00D09D80 /* libc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A54A7C41A3EE51D00D09D80 /* libc++.dylib */; };
 		9A562B0B19E381EC008D2DA7 /* takeover1.png in Resources */ = {isa = PBXBuildFile; fileRef = 9A562B0919E381EC008D2DA7 /* takeover1.png */; };
 		9A562B0C19E381EC008D2DA7 /* takeover2.png in Resources */ = {isa = PBXBuildFile; fileRef = 9A562B0A19E381EC008D2DA7 /* takeover2.png */; };
 		9A5B312119C7D12600F09127 /* checkbox_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 9A5B311F19C7D12600F09127 /* checkbox_selected.png */; };
@@ -1440,6 +1448,15 @@
 		9A4BD55319977ADD003FC164 /* CNEncryption.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CNEncryption.h; sourceTree = "<group>"; };
 		9A4BD55419977ADD003FC164 /* CNEncryption.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CNEncryption.m; sourceTree = "<group>"; };
 		9A52C7BB1979160C004C89CF /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
+		9A532DAA1A3FC8D800483A35 /* CNRunMapGoogleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CNRunMapGoogleViewController.h; sourceTree = "<group>"; };
+		9A532DAB1A3FC8D800483A35 /* CNRunMapGoogleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CNRunMapGoogleViewController.m; sourceTree = "<group>"; };
+		9A532DAC1A3FC8D800483A35 /* CNRunMapGoogleViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CNRunMapGoogleViewController.xib; sourceTree = "<group>"; };
+		9A54A7B91A3EE39B00D09D80 /* GoogleMaps.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleMaps.framework; sourceTree = "<group>"; };
+		9A54A7BC1A3EE3E700D09D80 /* GoogleMaps.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = GoogleMaps.bundle; sourceTree = "<group>"; };
+		9A54A7BE1A3EE4EC00D09D80 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		9A54A7C01A3EE4FD00D09D80 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
+		9A54A7C21A3EE50400D09D80 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
+		9A54A7C41A3EE51D00D09D80 /* libc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libc++.dylib"; path = "usr/lib/libc++.dylib"; sourceTree = SDKROOT; };
 		9A562B0919E381EC008D2DA7 /* takeover1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = takeover1.png; sourceTree = "<group>"; };
 		9A562B0A19E381EC008D2DA7 /* takeover2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = takeover2.png; sourceTree = "<group>"; };
 		9A5B311F19C7D12600F09127 /* checkbox_selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = checkbox_selected.png; sourceTree = "<group>"; };
@@ -1682,6 +1699,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9A6740591989F21E006E12CC /* QuartzCore.framework in Frameworks */,
+				9A67405D1989F23F006E12CC /* OpenGLES.framework in Frameworks */,
+				9A4A14421974070A00F2EF04 /* libz.dylib in Frameworks */,
+				9AF861EE19D5719900C8C6DF /* libicucore.dylib in Frameworks */,
+				9A54A7C51A3EE51D00D09D80 /* libc++.dylib in Frameworks */,
+				9A54A7C31A3EE50400D09D80 /* ImageIO.framework in Frameworks */,
+				9A54A7C11A3EE4FD00D09D80 /* GLKit.framework in Frameworks */,
+				9A54A7BF1A3EE4ED00D09D80 /* CoreData.framework in Frameworks */,
 				9ACC09771A3558B40037E6BB /* AddressBookUI.framework in Frameworks */,
 				9ACC09751A3558AE0037E6BB /* AddressBook.framework in Frameworks */,
 				9A72E14919D3EA2B008533F5 /* MessageUI.framework in Frameworks */,
@@ -1693,7 +1718,6 @@
 				9A11A79219E2773D00937C1B /* ShareSDKShareActionSheet.framework in Frameworks */,
 				9A11A78819E2773D00937C1B /* TencentOpenAPI.framework in Frameworks */,
 				9AF861F019D571A400C8C6DF /* libz.1.2.5.dylib in Frameworks */,
-				9AF861EE19D5719900C8C6DF /* libicucore.dylib in Frameworks */,
 				9A67405B1989F22F006E12CC /* CoreTelephony.framework in Frameworks */,
 				9A72E14B19D3EA3A008533F5 /* StoreKit.framework in Frameworks */,
 				9A11A78019E2773D00937C1B /* QQConnection.framework in Frameworks */,
@@ -1707,14 +1731,12 @@
 				9A11A78D19E2773D00937C1B /* ShareSDK.framework in Frameworks */,
 				9A11A78119E2773D00937C1B /* QZoneConnection.framework in Frameworks */,
 				9A67405F1989F24B006E12CC /* libstdc++.6.0.9.dylib in Frameworks */,
-				9A67405D1989F23F006E12CC /* OpenGLES.framework in Frameworks */,
 				9A11A78419E2773D00937C1B /* AGCommon.framework in Frameworks */,
 				9A3B850D19AED88300BEA2E3 /* libMobClickLibrary.a in Frameworks */,
-				9A6740591989F21E006E12CC /* QuartzCore.framework in Frameworks */,
 				9A11A78219E2773D00937C1B /* SinaWeiboConnection.framework in Frameworks */,
 				9A6740521989D8C2006E12CC /* CoreLocation.framework in Frameworks */,
 				9A52C7BC1979160C004C89CF /* AdSupport.framework in Frameworks */,
-				9A4A14421974070A00F2EF04 /* libz.dylib in Frameworks */,
+				9A54A7BA1A3EE39B00D09D80 /* GoogleMaps.framework in Frameworks */,
 				9A4A13B71973FFD500F2EF04 /* CoreGraphics.framework in Frameworks */,
 				9A11A78719E2773D00937C1B /* ShareSDKCoreService.framework in Frameworks */,
 				9A1D4B5A19D3F65900DD0316 /* libGoogleAdMobAds.a in Frameworks */,
@@ -3008,6 +3030,11 @@
 		9A4A13B31973FFD500F2EF04 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9A54A7C41A3EE51D00D09D80 /* libc++.dylib */,
+				9A54A7C21A3EE50400D09D80 /* ImageIO.framework */,
+				9A54A7C01A3EE4FD00D09D80 /* GLKit.framework */,
+				9A54A7BE1A3EE4EC00D09D80 /* CoreData.framework */,
+				9A54A7B91A3EE39B00D09D80 /* GoogleMaps.framework */,
 				9ACC09761A3558B40037E6BB /* AddressBookUI.framework */,
 				9ACC09741A3558AE0037E6BB /* AddressBook.framework */,
 				9ACC09721A3558760037E6BB /* SMS_SDK.framework */,
@@ -3145,6 +3172,7 @@
 		9A4A13EC1974019B00F2EF04 /* third */ = {
 			isa = PBXGroup;
 			children = (
+				9A54A7BB1A3EE3DE00D09D80 /* google */,
 				9AF861C219D5712F00C8C6DF /* sharesdk */,
 				9A72CDF619C53E190035A1DA /* ad */,
 				9A3B850A19AED86700BEA2E3 /* um */,
@@ -3216,6 +3244,14 @@
 				9A4A14391974048400F2EF04 /* CNNetworkHandler.m */,
 			);
 			name = network;
+			sourceTree = "<group>";
+		};
+		9A54A7BB1A3EE3DE00D09D80 /* google */ = {
+			isa = PBXGroup;
+			children = (
+				9A54A7BC1A3EE3E700D09D80 /* GoogleMaps.bundle */,
+			);
+			name = google;
 			sourceTree = "<group>";
 		};
 		9A5F499E198E709F00D990F0 /* custom view */ = {
@@ -3423,6 +3459,9 @@
 				9A6740651989F57E006E12CC /* CNRunMapViewController.h */,
 				9A6740661989F57E006E12CC /* CNRunMapViewController.m */,
 				9A6740671989F57E006E12CC /* CNRunMapViewController.xib */,
+				9A532DAA1A3FC8D800483A35 /* CNRunMapGoogleViewController.h */,
+				9A532DAB1A3FC8D800483A35 /* CNRunMapGoogleViewController.m */,
+				9A532DAC1A3FC8D800483A35 /* CNRunMapGoogleViewController.xib */,
 				9A5F49A61991064C00D990F0 /* CNRunMoodViewController.h */,
 				9A5F49A71991064C00D990F0 /* CNRunMoodViewController.m */,
 				9A5F49A81991064C00D990F0 /* CNRunMoodViewController.xib */,
@@ -3721,6 +3760,7 @@
 				9A7D3684199DA17200044F6E /* button_map.png in Resources */,
 				9A11A84019E290F100937C1B /* 100042.mp3 in Resources */,
 				9A11A78919E2773D00937C1B /* TencentOpenApi_IOS_Bundle.bundle in Resources */,
+				9A532DAE1A3FC8D800483A35 /* CNRunMapGoogleViewController.xib in Resources */,
 				9ACEC23919ADCB5400F36770 /* red5.png in Resources */,
 				9A11A82F19E290F100937C1B /* 100025.mp3 in Resources */,
 				9A11A82C19E290F100937C1B /* 100022.mp3 in Resources */,
@@ -3962,6 +4002,7 @@
 				9ACEC23D19ADCB5400F36770 /* red9.png in Resources */,
 				9A2CCAE9199D06B4002E8AF0 /* Makefile.am in Resources */,
 				9A2CCB27199D06B4002E8AF0 /* Makefile.am in Resources */,
+				9A54A7BD1A3EE3E700D09D80 /* GoogleMaps.bundle in Resources */,
 				9ACEC22419ADCB1B00F36770 /* white4.png in Resources */,
 				9A39C0651997223D0091A2E6 /* CNRecordDetailViewController.xib in Resources */,
 				9A562B0B19E381EC008D2DA7 /* takeover1.png in Resources */,
@@ -4069,6 +4110,7 @@
 				9A2CCB26199D06B4002E8AF0 /* Makefile in Sources */,
 				9A2CCADA199D06B4002E8AF0 /* Makefile in Sources */,
 				9A28DE5B19B55C21001AC1A2 /* CNTimeImageView.m in Sources */,
+				9A532DAD1A3FC8D800483A35 /* CNRunMapGoogleViewController.m in Sources */,
 				9A2CCAD4199D06B4002E8AF0 /* Makefile in Sources */,
 				9A4A13C11973FFD500F2EF04 /* main.m in Sources */,
 				9A4A142C197402C600F2EF04 /* SBJsonStreamWriter.m in Sources */,

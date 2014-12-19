@@ -19,6 +19,9 @@
 @property (strong, nonatomic) IBOutlet UITextField *textfield_phone;
 @property (strong, nonatomic) IBOutlet UITextField *textfield_vcode;
 @property (strong, nonatomic) IBOutlet UILabel *label_country;
+@property (strong, nonatomic) IBOutlet UILabel *label_countryandarea;
+@property (strong, nonatomic) IBOutlet UIButton *button_country;
+
 @property (strong, nonatomic) IBOutlet UILabel *label_code;
 - (IBAction)button_clicked:(id)sender;
 - (IBAction)view_touched:(id)sender;

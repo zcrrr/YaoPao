@@ -31,6 +31,7 @@
 #import "CNLocationHandler.h"
 #import "CNUtil.h"
 #import "CNVCodeViewController.h"
+#import "CNRunMapGoogleViewController.h"
 
 @interface CNMainViewController ()
 
@@ -226,6 +227,9 @@
             self.button_setting.backgroundColor = [UIColor clearColor];
             CNSettingViewController* settingVC = [[CNSettingViewController alloc]init];
             [self.navigationController pushViewController:settingVC animated:YES];
+            
+//            CNRunMapGoogleViewController* testVC = [[CNRunMapGoogleViewController alloc]init];
+//            [self.navigationController pushViewController:testVC animated:YES];
             break;
         }
         case 1:

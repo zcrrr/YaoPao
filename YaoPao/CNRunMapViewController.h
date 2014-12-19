@@ -19,8 +19,6 @@
 
 @property (strong, nonatomic) IBOutlet MBSliderView *sliderview;
 @property (strong, nonatomic) IBOutlet UIView *view_bottom_bar;
-@property (assign, nonatomic) double last_lon;
-@property (assign, nonatomic) double last_lat;
 @property (strong, nonatomic) IBOutlet UIImageView *image_gps;
 @property (strong, nonatomic) IBOutlet UIView *view_bottom_slider;
 

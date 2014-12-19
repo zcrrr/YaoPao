@@ -202,7 +202,7 @@
         [CNAppDelegate popupWarningGPSWeak];
         return NO;
     }else{
-        if(kApp.locationHandler.rank > 2){
+        if(kApp.locationHandler.rank >= 2){
             [CNAppDelegate initRun];
             return YES;
         }else{

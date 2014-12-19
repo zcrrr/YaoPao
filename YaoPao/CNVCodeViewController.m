@@ -29,7 +29,23 @@
     [self.button_back addTarget:self action:@selector(button_blue_down:) forControlEvents:UIControlEventTouchDown];
     [self.button_ok addTarget:self action:@selector(button_green_down:) forControlEvents:UIControlEventTouchDown];
     [self.button_vcode addTarget:self action:@selector(button_green_down:) forControlEvents:UIControlEventTouchDown];
-    
+    [self.button_country addTarget:self action:@selector(button_white_down:) forControlEvents:UIControlEventTouchDown];
+}
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    [self.navigationController setNavigationBarHidden:YES animated:NO];
+    if(kApp.vcodeSecond == 0){
+        [self.button_vcode setTitle:@"获取验证码" forState:UIControlStateNormal];
+        self.button_vcode.userInteractionEnabled = YES;
+    }else{
+        [self.button_vcode setTitle:[NSString stringWithFormat:@"%i",kApp.vcodeSecond] forState:UIControlStateNormal];
+        self.button_vcode.userInteractionEnabled = NO;
+    }
+    [kApp addObserver:self forKeyPath:@"vcodeSecond" options:NSKeyValueObservingOptionNew context:nil];
+}
+- (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    [kApp removeObserver:self forKeyPath:@"vcodeSecond"];
 }
 - (void)button_green_down:(id)sender{
     ((UIButton*)sender).backgroundColor = [UIColor colorWithRed:111.0/255.0 green:150.0/255.0 blue:26.0/255.0 alpha:1];
@@ -37,14 +53,14 @@
 - (void)button_blue_down:(id)sender{
     ((UIButton*)sender).backgroundColor = [UIColor colorWithRed:0 green:88.0/255.0 blue:142.0/255.0 alpha:1];
 }
+- (void)button_white_down:(id)sender{
+    self.label_country.backgroundColor = [UIColor colorWithRed:229.0/255.0 green:229.0/255.0 blue:229.0/255.0 alpha:1];
+    self.label_countryandarea.backgroundColor = [UIColor colorWithRed:229.0/255.0 green:229.0/255.0 blue:229.0/255.0 alpha:1];
+}
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-- (void)viewWillAppear:(BOOL)animated{
-    [super viewWillAppear:animated];
-    [self.navigationController setNavigationBarHidden:YES animated:NO];
 }
 
 - (IBAction)button_clicked:(id)sender {
@@ -103,12 +119,9 @@
     [self resetViewFrame];
 }
 - (void)countdown{
-    [self.button_vcode setTitle:[NSString stringWithFormat:@"%i",self.count] forState:UIControlStateNormal];
-    self.count -- ;
-    if(self.count == 0){
-        [self.timer invalidate];
-        [self.button_vcode setTitle:@"获取验证码" forState:UIControlStateNormal];
-        self.button_vcode.userInteractionEnabled = YES;
+    kApp.vcodeSecond -- ;
+    if(kApp.vcodeSecond == 0){
+        [kApp.vcodeTimer invalidate];
     }
 }
 - (void)getVCode{
@@ -119,8 +132,9 @@
             NSLog(@"block 获取验证码成功");
             UIAlertView* alert=[[UIAlertView alloc] initWithTitle:@"" message:@"获取验证码成功" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
             [alert show];
-            self.count = 60;
-            self.timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(countdown) userInfo:nil repeats:YES];
+            self.button_vcode.userInteractionEnabled = NO;
+            kApp.vcodeSecond = 60;
+            kApp.vcodeTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(countdown) userInfo:nil repeats:YES];
         }
         else if(0==state)
         {
@@ -166,6 +180,8 @@
     }];
 }
 - (IBAction)button_country_clicked:(id)sender {
+    self.label_country.backgroundColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:1];
+    self.label_countryandarea.backgroundColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:1];
     [SMS_SDK getZone:^(enum SMS_ResponseState state, NSArray *array) {
         if (1==state)
         {
@@ -305,5 +321,14 @@
     CGRect rect = CGRectMake(0.0f, 0.0f, self.view.frame.size.width, self.view.frame.size.height);
     self.view.frame = rect;
     [UIView commitAnimations];
+}
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
+    if(kApp.vcodeSecond == 0){
+        [self.button_vcode setTitle:@"获取验证码" forState:UIControlStateNormal];
+        self.button_vcode.userInteractionEnabled = YES;
+    }else{
+        [self.button_vcode setTitle:[NSString stringWithFormat:@"%i",kApp.vcodeSecond] forState:UIControlStateNormal];
+        self.button_vcode.userInteractionEnabled = NO;
+    }
 }
 @end
