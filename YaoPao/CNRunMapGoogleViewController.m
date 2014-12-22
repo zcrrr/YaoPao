@@ -16,6 +16,8 @@
 @implementation CNRunMapGoogleViewController
 @synthesize mapView;
 @synthesize lastDrawPoint;
+@synthesize path;
+@synthesize polyline;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -29,21 +31,36 @@
     self.mapView.settings.myLocationButton = YES;
     self.view = self.mapView;
     
-    [self drawRunTrack];
+//    [self drawRunTrack];
+    [self testDraw];
 }
 - (void)drawRunTrack{
     int pointCount = [kApp.oneRunPointList count];
-    GMSMutablePath *path = [GMSMutablePath path];
+    self.path = [GMSMutablePath path];
     for(int i=0;i<pointCount;i++){
         CNGPSPoint* gpsPoint = [kApp.oneRunPointList objectAtIndex:i];
         CLLocationCoordinate2D wgs84Point = CLLocationCoordinate2DMake(gpsPoint.lat, gpsPoint.lon);
-        [path addCoordinate:wgs84Point];
+        [self.path addCoordinate:wgs84Point];
     }
-    GMSPolyline *polyline = [GMSPolyline polylineWithPath:path];
+    self.polyline = [GMSPolyline polylineWithPath:self.path];
     
-    polyline.strokeColor = [UIColor colorWithRed:0 green:1 blue:0 alpha:1];
-    polyline.strokeWidth = 11.5;
-    polyline.map = self.mapView;
+    self.polyline.strokeColor = [UIColor colorWithRed:0 green:1 blue:0 alpha:1];
+    self.polyline.strokeWidth = 11.5;
+    self.polyline.map = self.mapView;
+}
+- (void)testDraw{
+    self.path = [GMSMutablePath path];
+    [self.path addCoordinate:CLLocationCoordinate2DMake(39.974041, 116.395322)];
+    [self.path addCoordinate:CLLocationCoordinate2DMake(39.974041+0.005, 116.395322)];
+    [self.path addCoordinate:CLLocationCoordinate2DMake(39.974041+0.01, 116.395322)];
+    [self.path addCoordinate:CLLocationCoordinate2DMake(39.974041+0.015, 116.395322)];
+    self.polyline = [GMSPolyline polylineWithPath:self.path];
+    self.polyline.strokeColor = [UIColor colorWithRed:0 green:1 blue:0 alpha:1];
+    self.polyline.strokeWidth = 11.5;
+    self.polyline.map = self.mapView;
+    
+    [path addCoordinate:CLLocationCoordinate2DMake(39.974041+0.015, 116.395322+0.05)];
+    polyline.path = path;
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -68,4 +85,5 @@
     // Pass the selected object to the new view controller.
 }
 */
+
 @end

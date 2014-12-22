@@ -38,6 +38,7 @@
 {
     [super viewDidLoad];
     kApp.isRunning = 0;
+    kApp.gpsLevel = 1;
     // Do any additional setup after loading the view from its nib.
     
     //测试代码

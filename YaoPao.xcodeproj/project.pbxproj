@@ -3156,6 +3156,7 @@
 		9A4A13EB1974015400F2EF04 /* Class */ = {
 			isa = PBXGroup;
 			children = (
+				9A6B71231A47B8EC0027768C /* manager */,
 				9A35F9A619D7A4BD00C4767A /* voice */,
 				9A412E01199A1EDD002A9513 /* geos */,
 				9A5F499E198E709F00D990F0 /* custom view */,
@@ -3351,6 +3352,13 @@
 				9A2CE5A119E1407400FDF49D /* CNWarningCheckTimeViewController.xib */,
 			);
 			name = popup;
+			sourceTree = "<group>";
+		};
+		9A6B71231A47B8EC0027768C /* manager */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = manager;
 			sourceTree = "<group>";
 		};
 		9A72CDF619C53E190035A1DA /* ad */ = {

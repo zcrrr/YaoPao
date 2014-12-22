@@ -16,6 +16,9 @@
 
 @property (nonatomic, strong) CNGPSPoint* lastDrawPoint;
 
+@property (nonatomic, strong) GMSMutablePath *path;
+@property (nonatomic, strong) GMSPolyline *polyline;
+
 
 
 @end

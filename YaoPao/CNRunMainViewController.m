@@ -449,6 +449,7 @@
             kApp.runStatus = 0;
             if(kApp.distance < 50){
                 kApp.isRunning = 0;
+                kApp.gpsLevel = 1;
                 //弹出框，距离小于50
                 [kApp.window makeToast:@"您运动距离也太短啦！这次就不给您记录了，下次一定要加油！"];
                 [CNAppDelegate initRun];

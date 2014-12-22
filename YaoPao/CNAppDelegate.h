@@ -44,6 +44,7 @@
 @property (assign, nonatomic) int runStatus;//运动状态：0——没在运动，1——正在运动，2——暂停运动
 @property (strong, nonatomic) NSMutableArray* runStatusChangeIndex;//记录运动状态发生改变时数组的坐标-1
 @property (assign, nonatomic) int voiceOn;//1-开启语音 0-关闭语音
+@property (assign, nonatomic) int gpsLevel;//gps采用的等级
 //下面是一次运动的一些实时数据
 @property (assign, nonatomic) float distance;//一次运动的累计距离
 @property (assign, nonatomic) int perMileSecond;//一次运动的平均配速，用秒表示

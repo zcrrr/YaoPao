@@ -67,6 +67,7 @@
 @synthesize runStatus;
 @synthesize mood;
 @synthesize way;
+@synthesize gpsLevel;
 @synthesize perHeart;
 @synthesize maxHeart;
 @synthesize weather;
@@ -133,6 +134,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    self.gpsLevel = 1;
     //google map
     [GMSServices provideAPIKey:@"AIzaSyCyYR5Ih3xP0rpYMaF1qAsInxFyqvaCJIY"];
     

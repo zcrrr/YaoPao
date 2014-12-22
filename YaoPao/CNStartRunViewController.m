@@ -181,6 +181,7 @@
             
             if ([self prepareRun]) {
                 kApp.isRunning = 1;
+                kApp.gpsLevel = 4;
                 if(self.switch_countdown.on){
                     CNCountDownViewController* countdownVC = [[CNCountDownViewController alloc]init];
                     [self.navigationController pushViewController:countdownVC animated:YES];
@@ -202,7 +203,7 @@
         [CNAppDelegate popupWarningGPSWeak];
         return NO;
     }else{
-        if(kApp.locationHandler.rank >= 2){
+        if(kApp.locationHandler.rank >= kApp.gpsLevel){
             [CNAppDelegate initRun];
             return YES;
         }else{
