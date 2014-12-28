@@ -17,9 +17,11 @@
 @property (assign, nonatomic) double lat;
 @property (assign, nonatomic) int speed;
 @property (assign, nonatomic) int course;
-@property (assign, nonatomic) int altitude;
+@property (assign, nonatomic) double altitude;
 
 - (id)proxyForJson;
+
+- (id)initWithLon:(double)lon andLat:(double)lat andStatus:(int)status andTime:(long long)time andCourse:(int)course andAltitude:(double)altitude andSpeed:(int)speed;
 
 
 @end

@@ -460,6 +460,10 @@
 		9A6A1C0519B45C6D00C3D2F9 /* CNWarningBackGroundViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A6A1C0319B45C6D00C3D2F9 /* CNWarningBackGroundViewController.m */; };
 		9A6A1C0619B45C6D00C3D2F9 /* CNWarningBackGroundViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9A6A1C0419B45C6D00C3D2F9 /* CNWarningBackGroundViewController.xib */; };
 		9A6A1C0919B46F0600C3D2F9 /* CNMapImageAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A6A1C0819B46F0600C3D2F9 /* CNMapImageAnnotationView.m */; };
+		9A6B71261A47BABC0027768C /* CNRunManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A6B71251A47BABC0027768C /* CNRunManager.m */; };
+		9A6B71291A47FB0E0027768C /* OneKMInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A6B71281A47FB0E0027768C /* OneKMInfo.m */; };
+		9A6B712C1A4802090027768C /* OneMileInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A6B712B1A4802090027768C /* OneMileInfo.m */; };
+		9A6B712F1A4802CB0027768C /* OneMinuteInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A6B712E1A4802CB0027768C /* OneMinuteInfo.m */; };
 		9A6C17A319C2E6E00070543D /* CNMatchAvatarAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A6C17A219C2E6E00070543D /* CNMatchAvatarAnnotationView.m */; };
 		9A72CE0719C561D30035A1DA /* CNNotInTakeOverViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9A72CE0519C561D30035A1DA /* CNNotInTakeOverViewController.mm */; };
 		9A72CE0819C561D30035A1DA /* CNNotInTakeOverViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9A72CE0619C561D30035A1DA /* CNNotInTakeOverViewController.xib */; };
@@ -1517,6 +1521,14 @@
 		9A6A1C0419B45C6D00C3D2F9 /* CNWarningBackGroundViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CNWarningBackGroundViewController.xib; sourceTree = "<group>"; };
 		9A6A1C0719B46F0600C3D2F9 /* CNMapImageAnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CNMapImageAnnotationView.h; sourceTree = "<group>"; };
 		9A6A1C0819B46F0600C3D2F9 /* CNMapImageAnnotationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CNMapImageAnnotationView.m; sourceTree = "<group>"; };
+		9A6B71241A47BABC0027768C /* CNRunManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CNRunManager.h; sourceTree = "<group>"; };
+		9A6B71251A47BABC0027768C /* CNRunManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CNRunManager.m; sourceTree = "<group>"; };
+		9A6B71271A47FB0E0027768C /* OneKMInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OneKMInfo.h; sourceTree = "<group>"; };
+		9A6B71281A47FB0E0027768C /* OneKMInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OneKMInfo.m; sourceTree = "<group>"; };
+		9A6B712A1A4802090027768C /* OneMileInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OneMileInfo.h; sourceTree = "<group>"; };
+		9A6B712B1A4802090027768C /* OneMileInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OneMileInfo.m; sourceTree = "<group>"; };
+		9A6B712D1A4802CB0027768C /* OneMinuteInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OneMinuteInfo.h; sourceTree = "<group>"; };
+		9A6B712E1A4802CB0027768C /* OneMinuteInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OneMinuteInfo.m; sourceTree = "<group>"; };
 		9A6C17A119C2E6E00070543D /* CNMatchAvatarAnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CNMatchAvatarAnnotationView.h; sourceTree = "<group>"; };
 		9A6C17A219C2E6E00070543D /* CNMatchAvatarAnnotationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CNMatchAvatarAnnotationView.m; sourceTree = "<group>"; };
 		9A72CE0419C561D30035A1DA /* CNNotInTakeOverViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CNNotInTakeOverViewController.h; sourceTree = "<group>"; };
@@ -3357,6 +3369,14 @@
 		9A6B71231A47B8EC0027768C /* manager */ = {
 			isa = PBXGroup;
 			children = (
+				9A6B71241A47BABC0027768C /* CNRunManager.h */,
+				9A6B71251A47BABC0027768C /* CNRunManager.m */,
+				9A6B71271A47FB0E0027768C /* OneKMInfo.h */,
+				9A6B71281A47FB0E0027768C /* OneKMInfo.m */,
+				9A6B712A1A4802090027768C /* OneMileInfo.h */,
+				9A6B712B1A4802090027768C /* OneMileInfo.m */,
+				9A6B712D1A4802CB0027768C /* OneMinuteInfo.h */,
+				9A6B712E1A4802CB0027768C /* OneMinuteInfo.m */,
 			);
 			name = manager;
 			sourceTree = "<group>";
@@ -4142,6 +4162,7 @@
 				9A2CCB38199D06B4002E8AF0 /* Makefile in Sources */,
 				9A2CCAEE199D06B4002E8AF0 /* Makefile in Sources */,
 				9AE5421A1980ED4400C86BF0 /* CNUserinfoViewController.m in Sources */,
+				9A6B712C1A4802090027768C /* OneMileInfo.m in Sources */,
 				9A8C63831987ECE40082AE4E /* UIImage+Rescale.m in Sources */,
 				9A2CCAC8199D06B4002E8AF0 /* Makefile in Sources */,
 				9A2CCAF1199D06B4002E8AF0 /* Makefile in Sources */,
@@ -4165,6 +4186,7 @@
 				9A6A1C0019B455F100C3D2F9 /* CNWarningHelpViewController.m in Sources */,
 				9A6740501989D839006E12CC /* CNGPSPoint.m in Sources */,
 				9A2CCB48199D06B4002E8AF0 /* Makefile in Sources */,
+				9A6B71261A47BABC0027768C /* CNRunManager.m in Sources */,
 				9A2CCAF7199D06B4002E8AF0 /* Makefile in Sources */,
 				9A2CCB10199D06B4002E8AF0 /* Makefile in Sources */,
 				9A2CCB45199D06B4002E8AF0 /* Makefile in Sources */,
@@ -4193,6 +4215,7 @@
 				9A621A3A19B07828001AF9CC /* AMBlurView.m in Sources */,
 				9AC9AED31A36E821002BFB46 /* SectionsViewController.m in Sources */,
 				9A2CCB16199D06B4002E8AF0 /* Makefile in Sources */,
+				9A6B71291A47FB0E0027768C /* OneKMInfo.m in Sources */,
 				9A4A1435197402F800F2EF04 /* CNMainViewController.mm in Sources */,
 				9A8C639C1988D98A0082AE4E /* CNRunMainViewController.m in Sources */,
 				9A6A1C0919B46F0600C3D2F9 /* CNMapImageAnnotationView.m in Sources */,
@@ -4209,6 +4232,7 @@
 				9A8C637A19855C2A0082AE4E /* CNForgetPwdViewController.m in Sources */,
 				9A7540401A3DC3CA00221B3D /* CNVCodeViewController.m in Sources */,
 				9A72CE0C19C5672B0035A1DA /* CNNotRunTransmitRelayViewController.m in Sources */,
+				9A6B712F1A4802CB0027768C /* OneMinuteInfo.m in Sources */,
 				9A2CCAFE199D06B4002E8AF0 /* Makefile in Sources */,
 				9A4A1426197402C600F2EF04 /* NSObject+SBJson.m in Sources */,
 				9A4A142D197402C600F2EF04 /* SBJsonStreamWriterAccumulator.m in Sources */,
