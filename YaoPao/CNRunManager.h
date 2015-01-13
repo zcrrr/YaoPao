@@ -30,6 +30,7 @@
 @property (assign, nonatomic) int targetKM;// 下一个要到达的公里数，为了计算整公里的数据
 @property (assign, nonatomic) int targetMile;// 下一个要到达的英里数，为了计算整英里的数据
 @property (assign, nonatomic) int targetMinute;// 下一个要到达的分钟数，为了计算整分钟的数据
+@property (assign, nonatomic) int pauseCount;//暂停时gps数组个数
 // 下面这些变量是在timer中每次根据新的gps刷新值,外部可以访问
 @property (assign, nonatomic) double distance;// 个人距离(米)
 @property (assign, nonatomic) int paceKm;// 每公里配速（秒）

@@ -8,6 +8,7 @@
 
 #import "CNRunMapGoogleViewController.h"
 #import "CNGPSPoint.h"
+#define kIntervalMap 2
 
 @interface CNRunMapGoogleViewController ()
 
@@ -18,6 +19,7 @@
 @synthesize lastDrawPoint;
 @synthesize path;
 @synthesize polyline;
+@synthesize timer_map;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -31,8 +33,9 @@
     self.mapView.settings.myLocationButton = YES;
     self.view = self.mapView;
     
-//    [self drawRunTrack];
-    [self testDraw];
+    [self drawRunTrack];
+    self.timer_map = [NSTimer scheduledTimerWithTimeInterval:kIntervalMap target:self selector:@selector(drawIncrementLine) userInfo:nil repeats:YES];
+//    [self testDraw];
 }
 - (void)drawRunTrack{
     int pointCount = [kApp.oneRunPointList count];
@@ -62,6 +65,14 @@
     [path addCoordinate:CLLocationCoordinate2DMake(39.974041+0.015, 116.395322+0.05)];
     polyline.path = path;
 }
+- (void)drawIncrementLine{
+    //取数组最新值
+    CNGPSPoint* newPoint = [kApp.oneRunPointList lastObject];
+    if(newPoint.lon != lastDrawPoint.lon || newPoint.lat != lastDrawPoint.lat){//5秒后点的位置有移动
+        [self.path addCoordinate:CLLocationCoordinate2DMake(newPoint.lat, newPoint.lon)];
+        self.polyline.path = self.path;
+    }
+}
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -73,6 +84,7 @@
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
     [self.navigationController setNavigationBarHidden:YES animated:NO];
+    [self.timer_map invalidate];
     self.mapView.myLocationEnabled = NO;
 }
 

@@ -16,6 +16,8 @@
 #import "CNDistanceImageView.h"
 #import "CNMapImageAnnotationView.h"
 #import "CNGPSPoint4Match.h"
+#import "CNRecordMapGoogleViewController.h"
+#import "CNTestGEOS.h"
 
 @interface CNRecordDetailViewController ()
 
@@ -336,9 +338,23 @@
     return nil;
 }
 - (IBAction)button_gotoMap_clicked:(id)sender {
-    CNRecordMapViewController* recordMapVC = [[CNRecordMapViewController alloc]init];
-    recordMapVC.oneRun = self.oneRun;
-    [self.navigationController pushViewController:recordMapVC animated:YES];
+    CNGPSPoint* startPoint = [kApp.oneRunPointList firstObject];
+    BOOL isInChina = [CNTestGEOS isInChina:startPoint.lon :startPoint.lat];
+    NSLog(@"是否在中国：%d",isInChina);
+//    isInChina = NO;
+    if(isInChina){
+        CNRecordMapViewController* recordMapVC = [[CNRecordMapViewController alloc]init];
+        recordMapVC.oneRun = self.oneRun;
+        [self.navigationController pushViewController:recordMapVC animated:YES];
+    }else{
+        CNRecordMapGoogleViewController* recordMapVC = [[CNRecordMapGoogleViewController alloc]init];
+        recordMapVC.oneRun = self.oneRun;
+        [self.navigationController pushViewController:recordMapVC animated:YES];
+    }
+    
+    
+    
+    
 }
 //比赛：
 - (void)drawMatchTrack{

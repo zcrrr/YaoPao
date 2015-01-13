@@ -46,6 +46,7 @@
 @synthesize navigationController;
 @synthesize networkHandler;
 @synthesize voiceHandler;
+@synthesize runManager;
 @synthesize isLogin;
 @synthesize pid;
 @synthesize userInfoDic;
@@ -127,6 +128,8 @@
 @synthesize match_track_line;
 @synthesize voiceOn;
 @synthesize hasCheckTimeFromServer;
+@synthesize isInChina;
+@synthesize isKnowCountry;
 
 @synthesize managedObjectModel=_managedObjectModel;
 @synthesize managedObjectContext=_managedObjectContext;

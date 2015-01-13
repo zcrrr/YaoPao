@@ -19,6 +19,15 @@
 @synthesize lat_after_convert;
 @synthesize lon_after_convert;
 
++ (BOOL)isInChina:(double)lon :(double)lat{
+    const std::string &wkt_zone = [@"POLYGON ((73.740192 53.545317, 135.039985 53.545317, 135.039985 18.156599, 73.740192 18.156599, 73.740192 53.545317))" UTF8String];
+    Polygon *pgChinaZone = dynamic_cast<Polygon*>((new WKTReader())->read(wkt_zone));
+    Coordinate c(lon, lat);
+    geos::geom::Point *p = (new GeometryFactory())->createPoint(c);
+    return pgChinaZone->contains(p);
+    
+}
+
 - (void)initClass:(NSString*)name1 :(BOOL)isLap1 :(int)claimedLength1{
     gf = new GeometryFactory();
     name = name1;

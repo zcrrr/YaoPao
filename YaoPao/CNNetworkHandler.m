@@ -40,6 +40,10 @@
 @synthesize delegate_listPersonal;
 @synthesize delegate_cancelTransmit;
 @synthesize delegate_checkServerTime;
+@synthesize delegate_cloudData;
+@synthesize delegate_isServerNew;
+@synthesize delegate_deleteRecord;
+@synthesize delegate_downloadRecord;
 
 @synthesize verifyCodeRequest;
 @synthesize registerPhoneRequest;
@@ -60,6 +64,10 @@
 @synthesize listPersonalRequest;
 @synthesize cancelTransmitRequest;
 @synthesize checkServerTimeRequest;
+@synthesize cloudDataRequest;
+@synthesize isServerNewRequest;
+@synthesize deleteRecordRequest;
+@synthesize downloadRecordRequest;
 
 - (void)startQueue{
     //    self.handler = self;//持有自己的引用，这样就不会被释放,在delegate里面有了强引用，这里可以注释了
@@ -97,6 +105,7 @@
     int code = [[stateDic objectForKey:@"code"] intValue];
     if(code == -7){//用户已经在其他手机登录
         [self showAlert:@"用户在其他手机登录，请重新登录"];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"loginDone" object:nil];
         CNLoginPhoneViewController* loginVC = [[CNLoginPhoneViewController alloc]init];
         [kApp.navigationController pushViewController:loginVC animated:YES];
         [self user_logout];
@@ -321,7 +330,51 @@
                     [self performSelector:@selector(doRequest_checkServerTime) withObject:nil afterDelay:kCheckServerTimeInterval];
                 }
             }
-            
+            break;
+        }
+        case TAG_IS_SERVER_NEW:
+        {
+            if(isSuccess){
+                [self.delegate_isServerNew isServerNewDidSuccess:result];
+            }else{
+                [self.delegate_isServerNew isServerNewDidFailed:desc];
+            }
+            break;
+        }
+        case TAG_DELETE_RECORD:
+        {
+            if(isSuccess){
+                [self.delegate_deleteRecord deleteRecordDidSuccess:result];
+            }else{
+                [self.delegate_deleteRecord deleteRecordDidFailed:desc];
+            }
+            break;
+        }
+        case TAG_CLOUD_DATA:
+        {
+            if(isSuccess){
+                [self.delegate_cloudData cloudDataDidSuccess:result];
+            }else{
+                [self.delegate_cloudData cloudDataDidFailed:desc];
+            }
+            break;
+        }
+        case TAG_UPLOAD_RECORD:
+        {
+            if(isSuccess){
+                [self.delegate_uploadRecord uploadRecordDidSuccess:result];
+            }else{
+                [self.delegate_uploadRecord uploadRecordDidFailed:desc];
+            }
+            break;
+        }
+        case TAG_DOWNLAOD_RECORD:
+        {
+            if(isSuccess){
+                [self.delegate_downloadRecord downloadRecordDidSuccess:result];
+            }else{
+                [self.delegate_downloadRecord downloadRecordDidFailed:desc];
+            }
             break;
         }
         default:
@@ -428,6 +481,32 @@
             [self performSelector:@selector(doRequest_checkServerTime) withObject:nil afterDelay:kCheckServerTimeInterval];
             break;
         }
+        case TAG_IS_SERVER_NEW:
+        {
+            [self.delegate_isServerNew isServerNewDidFailed:@""];
+            break;
+        }
+        case TAG_DELETE_RECORD:
+        {
+            [self.delegate_deleteRecord deleteRecordDidFailed:@""];
+            break;
+        }
+        case TAG_CLOUD_DATA:
+        {
+            [self.delegate_cloudData cloudDataDidFailed:@""];
+            break;
+        }
+        case TAG_UPLOAD_RECORD:
+        {
+            [self.delegate_uploadRecord uploadRecordDidFailed:@""];
+            break;
+        }
+        case TAG_DOWNLAOD_RECORD:
+        {
+            [self.delegate_downloadRecord downloadRecordDidFailed:@""];
+            break;
+        }
+            
         default:
             break;
     }
@@ -738,6 +817,91 @@
     [self.checkServerTimeRequest addRequestHeader:@"ua" value:kApp.ua];
     NSLog(@"获取服务器时间url:%@",str_url);
     [[self networkQueue]addOperation:self.checkServerTimeRequest];
+}
+- (void)doRequest_cloudData:(NSMutableDictionary*)params{
+    NSString* str_url = [NSString stringWithFormat:@"%@chSports/sys/upfile.htm",ENDPOINTS];
+    NSURL* url = [NSURL URLWithString:str_url];
+    self.cloudDataRequest =  [ASIFormDataRequest requestWithURL:url];
+    self.cloudDataRequest.tag = TAG_CLOUD_DATA;
+    [self.cloudDataRequest setNumberOfTimesToRetryOnTimeout:3];
+    [self.cloudDataRequest setTimeOutSeconds:15];
+    [self.cloudDataRequest addRequestHeader:@"X-PID" value:kApp.pid];
+    [self.cloudDataRequest addRequestHeader:@"ua" value:kApp.ua];
+    for (id oneKey in [params allKeys]){
+        if([oneKey isEqualToString:@"avatar"]){
+            [self.cloudDataRequest addData:[params objectForKey:@"avatar"] forKey:@"avatar"];
+        }else{
+            [self.cloudDataRequest setPostValue:[params objectForKey:oneKey] forKey:oneKey];
+        }
+    }
+    NSLog(@"上传文件url:%@",str_url);
+//    [params removeObjectForKey:@"avatar"];
+    NSLog(@"上传文件参数:%@",params);
+    [[self networkQueue]addOperation:self.cloudDataRequest];
+}
+- (void)doRequest_isServerNew:(NSMutableDictionary*)params{
+    NSString* str_url = [NSString stringWithFormat:@"%@chSports/run/updaterecordnumber.htm",ENDPOINTS];
+    NSURL* url = [NSURL URLWithString:str_url];
+    self.isServerNewRequest =  [ASIFormDataRequest requestWithURL:url];
+    self.isServerNewRequest.tag = TAG_IS_SERVER_NEW;
+    [self.isServerNewRequest setNumberOfTimesToRetryOnTimeout:3];
+    [self.isServerNewRequest setTimeOutSeconds:15];
+    [self.isServerNewRequest addRequestHeader:@"X-PID" value:kApp.pid];
+    [self.isServerNewRequest addRequestHeader:@"ua" value:kApp.ua];
+    for (id oneKey in [params allKeys]){
+        [self.isServerNewRequest setPostValue:[params objectForKey:oneKey] forKey:oneKey];
+    }
+    NSLog(@"服务器数据新吗url:%@",str_url);
+    NSLog(@"服务器数据新吗参数:%@",params);
+    [[self networkQueue]addOperation:self.isServerNewRequest];
+}
+- (void)doRequest_DeleteRecord:(NSMutableDictionary*)params{
+    NSString* str_url = [NSString stringWithFormat:@"%@chSports/run/delrecord.htm",ENDPOINTS];
+    NSURL* url = [NSURL URLWithString:str_url];
+    self.deleteRecordRequest =  [ASIFormDataRequest requestWithURL:url];
+    self.deleteRecordRequest.tag = TAG_DELETE_RECORD;
+    [self.deleteRecordRequest setNumberOfTimesToRetryOnTimeout:3];
+    [self.deleteRecordRequest setTimeOutSeconds:15];
+    [self.deleteRecordRequest addRequestHeader:@"X-PID" value:kApp.pid];
+    [self.deleteRecordRequest addRequestHeader:@"ua" value:kApp.ua];
+    for (id oneKey in [params allKeys]){
+        [self.deleteRecordRequest setPostValue:[params objectForKey:oneKey] forKey:oneKey];
+    }
+    NSLog(@"删除记录url:%@",str_url);
+    NSLog(@"删除记录参数:%@",params);
+    [[self networkQueue]addOperation:self.deleteRecordRequest];
+}
+- (void)doRequest_uploadRecord:(NSMutableDictionary*)params{
+    NSString* str_url = [NSString stringWithFormat:@"%@chSports/run/runupdata.htm",ENDPOINTS];
+    NSURL* url = [NSURL URLWithString:str_url];
+    self.uploadRecordRequest =  [ASIFormDataRequest requestWithURL:url];
+    self.uploadRecordRequest.tag = TAG_UPLOAD_RECORD;
+    [self.uploadRecordRequest setNumberOfTimesToRetryOnTimeout:3];
+    [self.uploadRecordRequest setTimeOutSeconds:15];
+    [self.uploadRecordRequest addRequestHeader:@"X-PID" value:kApp.pid];
+    [self.uploadRecordRequest addRequestHeader:@"ua" value:kApp.ua];
+    for (id oneKey in [params allKeys]){
+        [self.uploadRecordRequest setPostValue:[params objectForKey:oneKey] forKey:oneKey];
+    }
+    NSLog(@"上传记录url:%@",str_url);
+    NSLog(@"上传记录参数:%@",params);
+    [[self networkQueue]addOperation:self.uploadRecordRequest];
+}
+- (void)doRequest_downloadRecord:(NSMutableDictionary*)params{
+    NSString* str_url = [NSString stringWithFormat:@"%@chSports/run/rundowndata.htm",ENDPOINTS];
+    NSURL* url = [NSURL URLWithString:str_url];
+    self.downloadRecordRequest =  [ASIFormDataRequest requestWithURL:url];
+    self.downloadRecordRequest.tag = TAG_DOWNLAOD_RECORD;
+    [self.downloadRecordRequest setNumberOfTimesToRetryOnTimeout:3];
+    [self.downloadRecordRequest setTimeOutSeconds:15];
+    [self.downloadRecordRequest addRequestHeader:@"X-PID" value:kApp.pid];
+    [self.downloadRecordRequest addRequestHeader:@"ua" value:kApp.ua];
+    for (id oneKey in [params allKeys]){
+        [self.downloadRecordRequest setPostValue:[params objectForKey:oneKey] forKey:oneKey];
+    }
+    NSLog(@"下载记录url:%@",str_url);
+    NSLog(@"下载记录参数:%@",params);
+    [[self networkQueue]addOperation:self.downloadRecordRequest];
 }
 - (void)showAlert:(NSString*) content{
     UIAlertView* alert = [[UIAlertView alloc]initWithTitle:nil message:content delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];

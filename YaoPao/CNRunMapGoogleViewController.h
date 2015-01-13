@@ -13,6 +13,7 @@
 @interface CNRunMapGoogleViewController : UIViewController
 
 @property (nonatomic, strong) GMSMapView *mapView;
+@property (nonatomic, strong) NSTimer* timer_map;
 
 @property (nonatomic, strong) CNGPSPoint* lastDrawPoint;
 

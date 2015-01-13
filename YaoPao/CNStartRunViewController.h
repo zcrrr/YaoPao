@@ -13,6 +13,10 @@
 
 @property (strong, nonatomic) NSMutableDictionary* runSettingDic;
 
+@property (assign, nonatomic) int howToMove;
+@property (assign, nonatomic) int targetType;
+@property (assign, nonatomic) int targetValue;
+
 @property (strong, nonatomic) IBOutlet UILabel *label_target;
 @property (strong, nonatomic) IBOutlet UILabel *label_type;
 @property (strong, nonatomic) IBOutlet UISwitch *switch_countdown;

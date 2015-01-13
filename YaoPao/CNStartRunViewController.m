@@ -13,12 +13,16 @@
 #import "CNRunMainViewController.h"
 #import "CNLocationHandler.h"
 #import "CNUtil.h"
+#import "CNRunManager.h"
 
 @interface CNStartRunViewController ()
 
 @end
 
 @implementation CNStartRunViewController
+@synthesize howToMove;
+@synthesize targetType;
+@synthesize targetValue;
 @synthesize runSettingDic;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -64,18 +68,24 @@
     switch (target) {
         case 0:
         {
+            self.targetType = 1;
+            self.targetValue = 0;
             targetDes = @"自由";
             self.image_target.image = [UIImage imageNamed:@"target_free.png"];
             break;
         }
         case 1:
         {
+            self.targetType = 2;
+            self.targetValue = [[self.runSettingDic objectForKey:@"distance"] intValue]*1000;
             targetDes = [NSString stringWithFormat:@"%@km",[self.runSettingDic objectForKey:@"distance"]];
             self.image_target.image = [UIImage imageNamed:@"target_dis.png"];
             break;
         }
         case 2:
         {
+            self.targetType = 3;
+            self.targetValue = [[self.runSettingDic objectForKey:@"time"]intValue]*60*1000;//毫秒
             int second = [[self.runSettingDic objectForKey:@"time"]intValue]*60;
             NSString* timestr = [CNUtil duringTimeStringFromSecond:second];
             targetDes = timestr;
@@ -91,18 +101,21 @@
     switch (type) {
         case 0:
         {
+            self.howToMove = 2;
             typeDes = @"步行";
             self.image_type.image = [UIImage imageNamed:@"runtype_walk_s.png"];
             break;
         }
         case 1:
         {
+            self.howToMove = 1;
             typeDes = @"跑步";
             self.image_type.image = [UIImage imageNamed:@"runtype_run_s.png"];
             break;
         }
         case 2:
         {
+            self.howToMove = 3;
             typeDes = @"自行车骑行";
             self.image_type.image = [UIImage imageNamed:@"runtype_ride_s.png"];
             break;
@@ -182,6 +195,15 @@
             if ([self prepareRun]) {
                 kApp.isRunning = 1;
                 kApp.gpsLevel = 4;
+                //初始化runManager
+                kApp.runManager = [[CNRunManager alloc]initWithSecond:2];
+                kApp.runManager.howToMove = self.howToMove;
+                kApp.runManager.targetType = self.targetType;
+                kApp.runManager.targetValue = self.targetValue;
+                NSLog(@"howtomove is %d",self.howToMove);
+                NSLog(@"targetType is %d",self.targetType);
+                NSLog(@"targetValue is %d",self.targetValue);
+                
                 if(self.switch_countdown.on){
                     CNCountDownViewController* countdownVC = [[CNCountDownViewController alloc]init];
                     [self.navigationController pushViewController:countdownVC animated:YES];

@@ -11,6 +11,7 @@
 #import "CNGPSPoint4Match.h"
 #import "SBJson.h"
 #import "CNNetworkHandler.h"
+#import "CNTestGEOS.h"
 
 @implementation CNLocationHandler
 @synthesize userLocation_lat;
@@ -65,6 +66,17 @@
         self.speed = newLocation.speed;
     }
     self.gpsTime = [CNUtil getNowTimeDelta];
+    if(kApp.isKnowCountry == NO){
+        kApp.isInChina = [CNTestGEOS isInChina:newLocation.coordinate.longitude :newLocation.coordinate.latitude];
+        kApp.isKnowCountry = YES;
+        NSLog(@"是否在中国：%d",kApp.isInChina);
+//        if(kApp.isInChina){
+//            [self showAlert:@"在中国"];
+//        }else{
+//            [self showAlert:@"不在中国"];
+//        }
+    }
+    
     
     //测试代码：
 //    self.userLocation_lat = 39.968191+0.0003*self.num;
@@ -153,5 +165,9 @@
 }
 - (void)endMatchInfoDidFailed:(NSString *)mes{
     
+}
+- (void)showAlert:(NSString*) content{
+    UIAlertView* alert = [[UIAlertView alloc]initWithTitle:nil message:content delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+    [alert show];
 }
 @end

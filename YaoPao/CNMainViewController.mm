@@ -32,6 +32,8 @@
 #import "CNUtil.h"
 #import "CNVCodeViewController.h"
 #import "CNRunMapGoogleViewController.h"
+#import "CNRunManager.h"
+#import "BinaryIOManager.h"
 
 @interface CNMainViewController ()
 
@@ -58,6 +60,134 @@
 {
     [super viewDidLoad];
     
+    
+    //测试代码
+//    NSMutableDictionary* params = [[NSMutableDictionary alloc]init];
+//    [params setObject:@"54" forKey:@"uid"];
+//    [params setObject:@"0" forKey:@"syntime"];
+//    [kApp.networkHandler doRequest_isServerNew:params];
+    
+//    NSMutableDictionary* params = [[NSMutableDictionary alloc]init];
+//    [params setObject:@"54" forKey:@"uid"];
+//    [params setObject:@"[\"rid2\",\"rid3\"]" forKey:@"delrids"];
+//    [kApp.networkHandler doRequest_DeleteRecord:params];
+    
+//    //上传一条二进制文件
+//    NSString *path = [[NSBundle mainBundle] pathForResource:@"country" ofType:@"plist"];
+//    NSDictionary *dict = [[NSDictionary alloc]initWithContentsOfFile:path];
+//    NSMutableData *data = [[NSMutableData alloc] init];
+//    NSKeyedArchiver *archiver = [[NSKeyedArchiver alloc] initForWritingWithMutableData:data];
+//    [archiver encodeObject:dict forKey:@"Some Key Value"];
+//    [archiver finishEncoding];
+//    NSMutableDictionary* params = [[NSMutableDictionary alloc]init];
+//    [params setObject:@"54" forKey:@"uid"];
+//    [params setObject:@"3" forKey:@"type"];
+//    [params setObject:@"rid5" forKey:@"rid"];
+//    [params setObject:data forKey:@"avatar"];
+//    [kApp.networkHandler doRequest_cloudData:params];
+//
+//    NSMutableDictionary* params2 = [[NSMutableDictionary alloc]init];
+//    [params2 setObject:@"54" forKey:@"uid"];
+//    [params2 setObject:@"3" forKey:@"type"];
+//    [params2 setObject:@"rid6" forKey:@"rid"];
+//    [params2 setObject:data forKey:@"avatar"];
+//    [kApp.networkHandler doRequest_cloudData:params2];
+//    
+//    NSMutableDictionary* params3 = [[NSMutableDictionary alloc]init];
+//    [params3 setObject:@"54" forKey:@"uid"];
+//    [params3 setObject:@"3" forKey:@"type"];
+//    [params3 setObject:@"rid7" forKey:@"rid"];
+//    [params3 setObject:data forKey:@"avatar"];
+//    [kApp.networkHandler doRequest_cloudData:params3];
+
+    
+    
+//    NSMutableDictionary* recordData1 = [[NSMutableDictionary alloc]init];
+//    [recordData1 setObject:@"rid5" forKey:@"id"];
+//    [recordData1 setObject:@"54" forKey:@"uid"];
+//    [recordData1 setObject:@"1" forKey:@"runtar"];
+//    [recordData1 setObject:@"3000" forKey:@"tarinfo"];
+//    [recordData1 setObject:@"1" forKey:@"runty"];
+//    [recordData1 setObject:@"1" forKey:@"mind"];
+//    [recordData1 setObject:@"1" forKey:@"runway"];
+//    [recordData1 setObject:@"1" forKey:@"aheart "];
+//    [recordData1 setObject:@"1" forKey:@"mheart"];
+//    [recordData1 setObject:@"1" forKey:@"weather"];
+//    [recordData1 setObject:@"17" forKey:@"temp"];
+//    [recordData1 setObject:@"2678" forKey:@"distance"];
+//    [recordData1 setObject:@"28983" forKey:@"utime"];
+//    [recordData1 setObject:@"1111111" forKey:@"pspeed"];
+//    [recordData1 setObject:@"3" forKey:@"ihspeedd"];
+//    [recordData1 setObject:@"1420956003000" forKey:@"generateTime"];
+//    [recordData1 setObject:@"1420956003000" forKey:@"updateTime"];
+//    [recordData1 setObject:@"/trajfile/20150111/rid5_EA0C7680995611E4B84EA152F9BEEDEA" forKey:@"servertrajectorypath"];
+//
+//    NSMutableDictionary* recordData2 = [[NSMutableDictionary alloc]init];
+//    [recordData2 setObject:@"rid6" forKey:@"id"];
+//    [recordData2 setObject:@"54" forKey:@"uid"];
+//    [recordData2 setObject:@"1" forKey:@"runtar"];
+//    [recordData2 setObject:@"3000" forKey:@"tarinfo"];
+//    [recordData2 setObject:@"1" forKey:@"runty"];
+//    [recordData2 setObject:@"1" forKey:@"mind"];
+//    [recordData2 setObject:@"1" forKey:@"runway"];
+//    [recordData2 setObject:@"1" forKey:@"aheart "];
+//    [recordData2 setObject:@"1" forKey:@"mheart"];
+//    [recordData2 setObject:@"1" forKey:@"weather"];
+//    [recordData2 setObject:@"17" forKey:@"temp"];
+//    [recordData2 setObject:@"999" forKey:@"distance"];
+//    [recordData2 setObject:@"28983" forKey:@"utime"];
+//    [recordData2 setObject:@"3333333" forKey:@"pspeed"];
+//    [recordData2 setObject:@"3" forKey:@"ihspeedd"];
+//    [recordData2 setObject:@"1420956003000" forKey:@"generateTime"];
+//    [recordData2 setObject:@"1420956003000" forKey:@"updateTime"];
+//    [recordData2 setObject:@"/trajfile/20150111/rid6_EA0C9D90995611E4B84EE9ABDAA6898F" forKey:@"servertrajectorypath"];
+//  
+//    NSMutableDictionary* recordData3 = [[NSMutableDictionary alloc]init];
+//    [recordData3 setObject:@"rid4" forKey:@"id"];
+//    [recordData3 setObject:@"54" forKey:@"uid"];
+//    [recordData3 setObject:@"1" forKey:@"runtar"];
+//    [recordData3 setObject:@"3000" forKey:@"tarinfo"];
+//    [recordData3 setObject:@"1" forKey:@"runty"];
+//    [recordData3 setObject:@"1" forKey:@"mind"];
+//    [recordData3 setObject:@"1" forKey:@"runway"];
+//    [recordData3 setObject:@"1" forKey:@"aheart "];
+//    [recordData3 setObject:@"1" forKey:@"mheart"];
+//    [recordData3 setObject:@"1" forKey:@"weather"];
+//    [recordData3 setObject:@"17" forKey:@"temp"];
+//    [recordData3 setObject:@"2678" forKey:@"distance"];
+//    [recordData3 setObject:@"28983" forKey:@"utime"];
+//    [recordData3 setObject:@"5555555" forKey:@"pspeed"];
+//    [recordData3 setObject:@"3" forKey:@"ihspeedd"];
+//    [recordData3 setObject:@"1420947478000" forKey:@"generateTime"];
+//    [recordData3 setObject:@"1420956003000" forKey:@"updateTime"];
+//    [recordData3 setObject:@"/trajfile/20150111/rid4_87561290993C11E4ADD4CCC05974D4CD" forKey:@"servertrajectorypath"];
+//    
+//    
+//    
+//    NSArray* arraytemp1 = [[NSArray alloc]initWithObjects:recordData1,recordData2,nil];
+//    SBJsonWriter *jsonWriter = [[SBJsonWriter alloc] init];
+//    NSString* pointJson1 = [jsonWriter stringWithObject:arraytemp1];
+//    
+//    NSArray* arraytemp2 = [[NSArray alloc]initWithObjects:recordData3,nil];
+//    NSString* pointJson2 = [jsonWriter stringWithObject:arraytemp2];
+////
+//    NSMutableDictionary* params = [[NSMutableDictionary alloc]init];
+//    [params setObject:@"54" forKey:@"uid"];
+//    [params setObject:@"1420954640328" forKey:@"syntime"];
+//    [params setObject:[NSString stringWithFormat:@"%@",pointJson1] forKey:@"genrecords"];
+//    [params setObject:[NSString stringWithFormat:@"%@",pointJson2] forKey:@"uprecords"];
+//    [kApp.networkHandler doRequest_uploadRecord:params];
+    
+//    NSMutableDictionary* params = [[NSMutableDictionary alloc]init];
+//    [params setObject:@"54" forKey:@"uid"];
+//    [params setObject:@"[\"rid2\",\"rid3\"]" forKey:@"downrecordIDs"];
+//    [kApp.networkHandler doRequest_downloadRecord:params];
+//
+    
+    
+
+    
+
     NSArray* array = [kApp.showad componentsSeparatedByString:@","];
     //广告：
     if([array count] == 2){
@@ -224,12 +354,15 @@
     switch ([sender tag]) {
         case 0:
         {
-            self.button_setting.backgroundColor = [UIColor clearColor];
-            CNSettingViewController* settingVC = [[CNSettingViewController alloc]init];
-            [self.navigationController pushViewController:settingVC animated:YES];
+            [kApp.runManager finishOneRun];
+            //写文件
+            BinaryIOManager* ioManager = [[BinaryIOManager alloc]init];
+            [ioManager writeBinary:@"test"];
+            [ioManager readBinary:@"test" :[kApp.runManager.GPSList count] :[kApp.runManager.dataKm count] :[kApp.runManager.dataMile count] :[kApp.runManager.dataMin count]];
             
-//            CNRunMapGoogleViewController* testVC = [[CNRunMapGoogleViewController alloc]init];
-//            [self.navigationController pushViewController:testVC animated:YES];
+//            self.button_setting.backgroundColor = [UIColor clearColor];
+//            CNSettingViewController* settingVC = [[CNSettingViewController alloc]init];
+//            [self.navigationController pushViewController:settingVC animated:YES];
             break;
         }
         case 1:

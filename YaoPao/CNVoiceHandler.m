@@ -319,6 +319,8 @@
     return r;
 }
 - (void)voiceOfapp:(NSString*)occasion :(NSDictionary*)params{
+    //测试代码
+    return;
     if(kApp.voiceOn == 0){
         return;
     }

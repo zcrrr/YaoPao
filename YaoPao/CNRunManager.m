@@ -34,6 +34,7 @@
 @synthesize targetKM;
 @synthesize targetMile;
 @synthesize targetMinute;
+@synthesize pauseCount;
 
 @synthesize distance;
 @synthesize paceKm;
@@ -91,9 +92,17 @@
     self.targetKM = 1;
     self.targetMile = 1;
     self.targetMinute = 1;
+    self.everyXMinute = 1;
     [self startTimer];
 }
 - (void)finishOneRun{
+    //先去掉最后一段暂停的gps点：
+    int count = [self.GPSList count];
+    if(count > self.pauseCount){//去掉最后一小段从暂停到完成的距离
+        for(int i=self.pauseCount;i<count;i++){
+            [self.GPSList removeLastObject];
+        }
+    }
     self.endTimeStamp = [CNUtil getNowTime1000];
     [self stopTimer];
     // 计算一下积分的零头
@@ -124,12 +133,14 @@
         if (self.runStatus == 2 && status == 1) {// 由暂停变运动
             self.pauseSecond += (int)([CNUtil getNowTime1000] - self.startPauseTimeStamp);
         } else if (self.runStatus == 1 && status == 2) {// 由运动变暂停
+            self.pauseCount = [self.GPSList count];
             self.startPauseTimeStamp = [CNUtil getNowTime1000];
         }
     }
     self.runStatus = status;
 }
 - (void)startTimer{
+    [self updateDate];
     self.timerUpdate = [NSTimer scheduledTimerWithTimeInterval:self.timeInterval target:self selector:@selector(updateDate) userInfo:nil repeats:YES];
 }
 - (void)stopTimer{
@@ -293,6 +304,7 @@
         self.targetMile++;
     }
     if ([self during] > self.targetMinute * everyXMinute * 60 * 1000) {// 刚到达整分钟
+        NSLog(@"during is %i",[self during]);
         int thisMinDistance = 0;
         int thisMinDuring = 0;
         double thisMinAltitudeAdd = 0;
@@ -322,6 +334,14 @@
                                              andAltitudeReduce:thisMinAltitudeReduce]];
         self.targetMinute++;
     }
+//    NSLog(@"distance is %f",distance);
+//    NSLog(@"pacekm is %i",paceKm);
+//    NSLog(@"gps count is %i",[self.GPSList count]);
+//    NSLog(@"km count is %i",[self.dataKm count]);
+//    NSLog(@"mile count is %i",[self.dataMile count]);
+//    NSLog(@"min count is %i",[self.dataMin count]);
+//    NSLog(@"------------------------------------------");
+
 }
 - (int)score4speed:(int)minute{
     if (minute < 5) {

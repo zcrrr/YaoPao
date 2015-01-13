@@ -19,6 +19,7 @@
 #import "Toast+UIView.h"
 #import "CNVoiceHandler.h"
 #import "CNRunMapGoogleViewController.h"
+#import "CNRunManager.h"
 #define kInterval 3
 
 @interface CNRunMainViewController ()
@@ -55,7 +56,7 @@
 }
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    switch (kApp.runStatus) {
+    switch (kApp.runManager.runStatus) {
         case 1:
         {
             self.view_bottom_slider.hidden = NO;
@@ -70,6 +71,8 @@
         default:
             break;
     }
+    [kApp.runManager addObserver:self forKeyPath:@"distance" options:NSKeyValueObservingOptionNew context:nil];
+    [kApp.runManager addObserver:self forKeyPath:@"paceKm" options:NSKeyValueObservingOptionNew context:nil];
 }
 - (void)button_blue_down:(id)sender{
     ((UIButton*)sender).backgroundColor = [UIColor colorWithRed:0 green:88.0/255.0 blue:142.0/255.0 alpha:1];
@@ -80,22 +83,16 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    //启动runmanager跑步
+    [kApp.runManager startRun];
+    
     [self.button_reset addTarget:self action:@selector(button_blue_down:) forControlEvents:UIControlEventTouchDown];
     [self.button_complete addTarget:self action:@selector(button_green_down:) forControlEvents:UIControlEventTouchDown];
     
-    
     [kApp.voiceHandler voiceOfapp:@"run_start" :nil];
     // Do any additional setup after loading the view from its nib.
-    
-    if(kApp.oneRunPointList == nil){
-        kApp.oneRunPointList = [[NSMutableArray alloc]init];
-    }
-    if(kApp.runStatusChangeIndex == nil){
-        kApp.runStatusChangeIndex = [[NSMutableArray alloc]init];
-    }
     NSString* NOTIFICATION_GPS = @"gps";
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(setGPSImage) name:NOTIFICATION_GPS object:nil];
-    [self startTimer];
     self.sliderview.delegate = self;
     [self.sliderview setBackgroundColor:[UIColor clearColor]];
     [self.sliderview setText:@"滑动暂停"];
@@ -168,200 +165,36 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-- (CNGPSPoint*)getOnePoint{
-    CNGPSPoint* gpsPoint = [[CNGPSPoint alloc]init];
-    gpsPoint.status = kApp.runStatus;
-    gpsPoint.lon = kApp.locationHandler.userLocation_lon;
-    gpsPoint.lat = kApp.locationHandler.userLocation_lat;
-    gpsPoint.speed = kApp.locationHandler.speed;
-    gpsPoint.course = kApp.locationHandler.course;
-    gpsPoint.altitude = kApp.locationHandler.altitude;
-    gpsPoint.time = [CNUtil getNowTime];
-    return gpsPoint;
-}
-- (void)pushOnePoint{
-    //记录下数组中最后一个点
-    CNGPSPoint* lastPoint = [kApp.oneRunPointList lastObject];
-    NSLog(@"上一个点：%@",[NSString stringWithFormat:@"lon:%f,lat:%f",lastPoint.lon,lastPoint.lat]);
-    //得到新的一个点压入数组
-    CNGPSPoint* gpsPoint = [self getOnePoint];
-    //判断是否离的特别近
-    CLLocation *current=[[CLLocation alloc] initWithLatitude:gpsPoint.lat longitude:gpsPoint.lon];
-    CLLocation *before=[[CLLocation alloc] initWithLatitude:lastPoint.lat longitude:lastPoint.lon];
-    CLLocationDistance meters=[current distanceFromLocation:before];
-    if(meters < 5){//离得特别近
-        if(gpsPoint.status == lastPoint.status){//两点状态一样
-            //不保存这个点，算一下配速和进度条
-            if(gpsPoint.status == 1){//运动中，计算
-                kApp.totalSecond = kApp.alreadySecond + (int)([CNUtil getNowTime] - kApp.startTime);
-                //计算一下平均配速：
-                kApp.perMileSecond = 1000.0/kApp.distance*kApp.totalSecond;
-                
-            }
-            lastPoint.time = gpsPoint.time;//就不入数组了，而是更新时间
-        }else{//两点状态不一样，要计算配速、进度条和距离
-            if(gpsPoint.status == 1){//运动中，计算
-                kApp.totalSecond = kApp.alreadySecond + (int)([CNUtil getNowTime] - kApp.startTime);
-                //计算一下平均配速：
-                kApp.perMileSecond = 1000.0/kApp.distance*kApp.totalSecond;
-                kApp.distance += meters;
-            }
-            [kApp.oneRunPointList addObject:gpsPoint];
-        }
-    }else{
-        if(gpsPoint.status == 1){
-            kApp.totalSecond = kApp.alreadySecond + (int)([CNUtil getNowTime] - kApp.startTime);
-            //计算一下平均配速：
-            kApp.perMileSecond = 1000.0/kApp.distance*kApp.totalSecond;
-            kApp.distance += meters;
-        }
-        [kApp.oneRunPointList addObject:gpsPoint];
-    }
-    if(kApp.totalSecond < 0){
-        kApp.totalSecond = 0;
-    }
-    if(kApp.perMileSecond < 0){
-        kApp.perMileSecond = 0;
-    }
-    if(kApp.distance < 0){
-        kApp.distance = 0;
-    }
-    //显示到ui上
-    if(gpsPoint.status == 1){
-        int target = [[self.runSettingDic objectForKey:@"target"]intValue];
-        if(target == 1 || target == 0){//目标是距离
-            if(target == 1){
-                int targetDetail = [[self.runSettingDic objectForKey:@"distance"]intValue]*1000;
-                if(self.playTarget == NO && kApp.distance > targetDetail){
-                    self.reachTarget = YES;//达到目标了
-                }
-                if(self.playHalf == NO && kApp.distance > targetDetail/2){//达到目标一半
-                    self.reachHalf = YES;
-                }
-                if(kApp.distance > targetDetail - 2000){//快达到目标
-                    self.closeToTarget = YES;
-                }
-                float width = (float)(kApp.distance)/(float)targetDetail*300.0;
-                if(width > 300){
-                    width = 300;
-                }
-                CGRect newFrame = self.view_progress.frame;
-                newFrame.size = CGSizeMake(width, 3);
-                self.view_progress.frame = newFrame;
-            }
-            self.big_div.distance = (kApp.distance+5)/1000.0;
-            [self.big_div fitToSize];
-            if(kApp.perMileSecond < 0){
-                kApp.perMileSecond = 0;
-            }
-            self.siv.time = kApp.perMileSecond;
-            [self.siv fitToSize];
-        }else if(target == 2){
-            int targetDetail = [[self.runSettingDic objectForKey:@"time"]intValue]*60;
-            if(self.playTarget == NO && kApp.totalSecond > targetDetail){
-                self.reachTarget = YES;//达到目标了
-            }
-            if(self.playHalf == NO && kApp.totalSecond > targetDetail/2){//达到目标一半
-                self.reachHalf = YES;
-            }
-            if(kApp.totalSecond > targetDetail - 10*60){//快达到目标
-                self.closeToTarget = YES;
-            }
-            float width = (float)(kApp.totalSecond)/(float)targetDetail*300.0;
-            if(width > 300)width = 300;
-            CGRect newFrame = self.view_progress.frame;
-            newFrame.size = CGSizeMake(width, 3);
-            self.view_progress.frame = newFrame;
-            
-            self.div.distance = (kApp.distance+5)/1000.0;
-            [self.div fitToSize];
-            if(kApp.perMileSecond <= 0){
-                kApp.perMileSecond = 0;
-            }
-            self.siv.time = kApp.perMileSecond;
-            [self.siv fitToSize];
-        }
-    }
-    //算一下积分：
-    if(gpsPoint.status == 1){
-        self.second_add = kApp.totalSecond-kApp.kmstartTime;
-        if(kApp.distance > (self.pass_km+1)*1000){
-            int minute = self.second_add/60;
-            kApp.score += [self score4speed:minute];
-            kApp.kmstartTime = kApp.totalSecond;
-            self.pass_km++;
-            self.playkm = YES;
-        }
-        if(kApp.totalSecond > (self.pass_5munite + 1)*kVoiceTimeInterval*60){//过了5分钟
-            self.pass_5munite++;
-            self.play5munite = YES;
-        }
-        [self playVoice];
-    }
-}
-- (int)score4speed:(int)minute{
-    if(minute < 5){
-        return 12;
-    }
-    if(minute < 6){
-        return 10;
-    }
-    if(minute < 7){
-        return 9;
-    }
-    if(minute < 8){
-        return 8;
-    }
-    if(minute < 9){
-        return 7;
-    }
-    if(minute < 10){
-        return 6;
-    }
-    if(minute < 11){
-        return 5;
-    }
-    if(minute < 12){
-        return 4;
-    }
-    if(minute < 13){
-        return 3;
-    }
-    return 0;
-}
-
-- (void)startTimer{
-    kApp.runStatus = 1;
-    [kApp.runStatusChangeIndex addObject:[NSNumber numberWithInt:0]];
-    //先往数组里放一个点
-    CNGPSPoint* gpsPoint = [self getOnePoint];
-    [kApp.oneRunPointList addObject:gpsPoint];
-    kApp.startTime = gpsPoint.time;
-    kApp.kmstartTime = 0;
-    //然后每5秒放一个点
-    kApp.timer_one_point = [NSTimer scheduledTimerWithTimeInterval:kInterval target:self selector:@selector(pushOnePoint) userInfo:nil repeats:YES];
-    //启动显示时间的timer
-    kApp.timer_secondplusplus = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timeaddadd) userInfo:nil repeats:YES];
-}
-- (void)stopTimer{
-    [kApp.timer_one_point invalidate];
-}
-- (void)timeaddadd{
-    kApp.run_second = kApp.alreadySecond + (int)([CNUtil getNowTime] - kApp.startTime);
-}
 - (void)displayTime{
-    int target = [[self.runSettingDic objectForKey:@"target"]intValue];
-    if(target == 1 || target == 0){//目标是距离
-        self.tiv.time = kApp.run_second;
-        [self.tiv fitToSize];
-    }else if(target == 2){
-        self.big_tiv.time = kApp.run_second;
+    int duringMiliSecond = [kApp.runManager during];
+    if(kApp.runManager.targetType == 3){
+        if(self.playTarget == NO && duringMiliSecond > kApp.runManager.targetValue){
+            self.reachTarget = YES;//达到目标了
+        }
+        if(self.playHalf == NO && duringMiliSecond > kApp.runManager.targetValue/2){//达到目标一半
+            self.reachHalf = YES;
+        }
+        if(duringMiliSecond > kApp.runManager.targetValue - 10*60*1000){//快达到目标
+            self.closeToTarget = YES;
+        }
+        float width = kApp.runManager.completePercent*300.0;
+        CGRect newFrame = self.view_progress.frame;
+        newFrame.size = CGSizeMake(width, 3);
+        self.view_progress.frame = newFrame;
+        self.big_tiv.time = duringMiliSecond/1000;
         [self.big_tiv fitToSize];
+    }else{
+        self.tiv.time = duringMiliSecond/1000;
+        [self.tiv fitToSize];
     }
+    if(duringMiliSecond > (self.pass_5munite + 1)*kVoiceTimeInterval*60){//过了5分钟
+        self.pass_5munite++;
+        self.play5munite = YES;
+    }
+    [self playVoice];
 }
 - (IBAction)button_map_clicked:(id)sender {
-    BOOL inChina = YES;
-    if(inChina){
+    if(kApp.isInChina){
         CNRunMapViewController* mapVC = [[CNRunMapViewController alloc]init];
         [self.navigationController pushViewController:mapVC animated:YES];
     }else{
@@ -371,6 +204,8 @@
 }
 - (void)viewWillDisappear:(BOOL)animated{
     [self.timer_dispalyTime invalidate];
+    [kApp removeObserver:self forKeyPath:@"distance"];
+    [kApp removeObserver:self forKeyPath:@"paceKm"];
 }
 
 - (IBAction)button_control_clicked:(id)sender {
@@ -387,14 +222,10 @@
         {
             self.button_reset.backgroundColor = [UIColor colorWithRed:0 green:123.0/255.0 blue:199.0/255.0 alpha:1];
             [kApp.voiceHandler voiceOfapp:@"run_continue" :nil];
-            kApp.runStatus = 1;
-            int hascount = [kApp.oneRunPointList count];
-            [kApp.runStatusChangeIndex addObject:[NSNumber numberWithInt:hascount-1]];
+            [kApp.runManager changeRunStatus:1];
             self.view_bottom_slider.hidden = NO;
-            kApp.timer_secondplusplus = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timeaddadd) userInfo:nil repeats:YES];
             self.timer_dispalyTime = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(displayTime) userInfo:nil repeats:YES];
             NSLog(@"恢复");
-            kApp.startTime = [CNUtil getNowTime];
             break;
         }
         default:
@@ -404,31 +235,11 @@
 // MBSliderViewDelegate
 - (void) sliderDidSlide:(MBSliderView *)slideView {
     [kApp.voiceHandler voiceOfapp:@"run_pause" :nil];
-    kApp.pauseCount = [kApp.oneRunPointList count];
     // Customization example
     NSLog(@"滑动");
-    kApp.runStatus = 2;
-    kApp.alreadySecond = kApp.totalSecond;
-    int hascount = [kApp.oneRunPointList count];
-    [kApp.runStatusChangeIndex addObject:[NSNumber numberWithInt:hascount-1]];
+    [kApp.runManager changeRunStatus:2];
     self.view_bottom_slider.hidden = YES;
     [self.timer_dispalyTime invalidate];
-    [kApp.timer_secondplusplus invalidate];
-}
-
-
-- (void)finishRun{
-    [kApp.timer_one_point invalidate];
-    int count = [kApp.oneRunPointList count];
-    NSMutableArray* arraytest = [[NSMutableArray alloc]init];
-    int i = 0;
-    for(i = 0;i<count;i++){
-        CNGPSPoint* gpsPoint = [kApp.oneRunPointList objectAtIndex:i];
-        NSString* lonlat = [NSString stringWithFormat:@"%f,%f,%i,%i,%i,%lli",gpsPoint.lon,gpsPoint.lat,gpsPoint.speed,gpsPoint.course,gpsPoint.altitude,gpsPoint.time];
-        [arraytest addObject:lonlat];
-    }
-    NSString* filePath = [CNPersistenceHandler getDocument:@"runTrack.plist"];
-    [arraytest writeToFile:filePath atomically:YES];
 }
 - (void)setGPSImage{
     NSString* imageName = [NSString stringWithFormat:@"gps%i.png",kApp.gpsSignal];
@@ -439,20 +250,12 @@
     switch (buttonIndex) {
         case 0:
         {
-            int count = [kApp.oneRunPointList count];
-            if(count > kApp.pauseCount){//去掉最后一小段从暂停到完成的距离
-                for(int i=kApp.pauseCount;i<count;i++){
-                    [kApp.oneRunPointList removeLastObject];
-                }
-            }
-            [self stopTimer];
-            kApp.runStatus = 0;
+            kApp.isRunning = 0;
+            [kApp.runManager finishOneRun];
             if(kApp.distance < 50){
-                kApp.isRunning = 0;
                 kApp.gpsLevel = 1;
                 //弹出框，距离小于50
-                [kApp.window makeToast:@"您运动距离也太短啦！这次就不给您记录了，下次一定要加油！"];
-                [CNAppDelegate initRun];
+                [kApp.window makeToast:@"您运动距离也太短啦！这次就不给您记录了，下次一定要加油"];
                 CNMainViewController* mainVC = [[CNMainViewController alloc]init];
                 [self.navigationController pushViewController:mainVC animated:YES];
             }else{
@@ -661,6 +464,46 @@
                 return;
             }
         }
+    }
+}
+-(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    if([keyPath isEqualToString:@"distance"])
+    {
+        double distance = kApp.runManager.distance;
+        NSLog(@"distance is %f",kApp.runManager.distance);
+        if(kApp.runManager.targetType == 1 || kApp.runManager.targetType == 2){//目标是距离
+            if(kApp.runManager.targetType == 2){
+                if(self.playTarget == NO && distance > kApp.runManager.targetValue){
+                    self.reachTarget = YES;//达到目标了
+                }
+                if(self.playHalf == NO && distance > kApp.runManager.targetValue/2){//达到目标一半
+                    self.reachHalf = YES;
+                }
+                if(kApp.distance > kApp.runManager.targetValue - 2000){//快达到目标
+                    self.closeToTarget = YES;
+                }
+                float width = kApp.runManager.completePercent*300.0;
+                CGRect newFrame = self.view_progress.frame;
+                newFrame.size = CGSizeMake(width, 3);
+                self.view_progress.frame = newFrame;
+            }
+            self.big_div.distance = distance/1000.0;
+            [self.big_div fitToSize];
+        }else{
+            self.div.distance = (kApp.distance+5)/1000.0;
+            [self.div fitToSize];
+        }
+        if(distance > (self.pass_km+1)*1000){
+            self.pass_km++;
+            self.playkm = YES;
+        }
+        [self playVoice];
+    }
+    if([keyPath isEqualToString:@"paceKm"])
+    {
+        self.siv.time = kApp.runManager.paceKm;
+        [self.siv fitToSize];
     }
 }
 @end

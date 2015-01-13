@@ -124,6 +124,38 @@
 - (void)checkServerTimeDidFailed:(NSString*)mes;
 @end
 
+@protocol cloudDataDelegate<NSObject>
+//同步接口
+- (void)cloudDataDidSuccess:(NSDictionary*)resultDic;
+- (void)cloudDataDidFailed:(NSString*)mes;
+@end
+
+@protocol isServerNewDelegate<NSObject>
+//查看服务器是否有更新接口
+- (void)isServerNewDidSuccess:(NSDictionary*)resultDic;
+- (void)isServerNewDidFailed:(NSString*)mes;
+@end
+
+@protocol deleteRecordDelegate<NSObject>
+//删除记录
+- (void)deleteRecordDidSuccess:(NSDictionary*)resultDic;
+- (void)deleteRecordDidFailed:(NSString*)mes;
+@end
+
+@protocol uploadRecordDelegate<NSObject>
+//上传记录
+- (void)uploadRecordDidSuccess:(NSDictionary*)resultDic;
+- (void)uploadRecordDidFailed:(NSString*)mes;
+@end
+
+@protocol downloadRecordDelegate<NSObject>
+//下载记录
+- (void)downloadRecordDidSuccess:(NSDictionary*)resultDic;
+- (void)downloadRecordDidFailed:(NSString*)mes;
+@end
+
+
+
 @interface CNNetworkHandler : NSObject
 
 @property (nonatomic, strong) ASINetworkQueue* networkQueue;
@@ -153,6 +185,11 @@
 @property (nonatomic, strong) id<listPersonalDelegate> delegate_listPersonal;
 @property (nonatomic, strong) id<cancelTransmitDelegate> delegate_cancelTransmit;
 @property (nonatomic, strong) id<checkServerTimeDelegate> delegate_checkServerTime;
+@property (nonatomic, strong) id<cloudDataDelegate> delegate_cloudData;
+@property (nonatomic, strong) id<isServerNewDelegate> delegate_isServerNew;
+@property (nonatomic, strong) id<deleteRecordDelegate> delegate_deleteRecord;
+@property (nonatomic, strong) id<uploadRecordDelegate> delegate_uploadRecord;
+@property (nonatomic, strong) id<downloadRecordDelegate> delegate_downloadRecord;
 
 //定义每个请求的request
 @property (nonatomic, strong) ASIFormDataRequest* verifyCodeRequest;
@@ -174,6 +211,11 @@
 @property (nonatomic, strong) ASIFormDataRequest* listPersonalRequest;
 @property (nonatomic, strong) ASIFormDataRequest* cancelTransmitRequest;
 @property (nonatomic, strong) ASIFormDataRequest* checkServerTimeRequest;
+@property (nonatomic, strong) ASIFormDataRequest* cloudDataRequest;
+@property (nonatomic, strong) ASIFormDataRequest* isServerNewRequest;
+@property (nonatomic, strong) ASIFormDataRequest* deleteRecordRequest;
+@property (nonatomic, strong) ASIFormDataRequest* uploadRecordRequest;
+@property (nonatomic, strong) ASIFormDataRequest* downloadRecordRequest;
 //每个请求的实现
 - (void)doRequest_verifyCode:(NSString*)phoneNO;
 - (void)doRequest_registerPhone:(NSMutableDictionary*)params;
@@ -194,5 +236,10 @@
 - (void)doRequest_listPersonal:(NSMutableDictionary*)params;
 - (void)doRequest_cancelTransmit:(NSMutableDictionary*)params;
 - (void)doRequest_checkServerTime;
+- (void)doRequest_cloudData:(NSMutableDictionary*)params;
+- (void)doRequest_isServerNew:(NSMutableDictionary*)params;
+- (void)doRequest_DeleteRecord:(NSMutableDictionary*)params;
+- (void)doRequest_uploadRecord:(NSMutableDictionary*)params;
+- (void)doRequest_downloadRecord:(NSMutableDictionary*)params;
 
 @end

@@ -178,6 +178,8 @@
 		9A24DB8419A4C03A0084EE85 /* button_relay.png in Resources */ = {isa = PBXBuildFile; fileRef = 9A24DB8019A4C03A0084EE85 /* button_relay.png */; };
 		9A24DB8519A4C03A0084EE85 /* button_team_h.png in Resources */ = {isa = PBXBuildFile; fileRef = 9A24DB8119A4C03A0084EE85 /* button_team_h.png */; };
 		9A24DB8619A4C03A0084EE85 /* button_team.png in Resources */ = {isa = PBXBuildFile; fileRef = 9A24DB8219A4C03A0084EE85 /* button_team.png */; };
+		9A26BF831A57FDD0001E7D18 /* CNRecordMapGoogleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A26BF811A57FDD0001E7D18 /* CNRecordMapGoogleViewController.m */; };
+		9A26BF841A57FDD0001E7D18 /* CNRecordMapGoogleViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9A26BF821A57FDD0001E7D18 /* CNRecordMapGoogleViewController.xib */; };
 		9A28834D19B1E1ED0014EA9A /* gps1.png in Resources */ = {isa = PBXBuildFile; fileRef = 9A28834919B1E1ED0014EA9A /* gps1.png */; };
 		9A28834E19B1E1ED0014EA9A /* gps2.png in Resources */ = {isa = PBXBuildFile; fileRef = 9A28834A19B1E1ED0014EA9A /* gps2.png */; };
 		9A28834F19B1E1ED0014EA9A /* gps3.png in Resources */ = {isa = PBXBuildFile; fileRef = 9A28834B19B1E1ED0014EA9A /* gps3.png */; };
@@ -356,7 +358,7 @@
 		9A319B5519BA999B00D982D5 /* CNMatchMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A319B5319BA999B00D982D5 /* CNMatchMapViewController.m */; };
 		9A319B5619BA999B00D982D5 /* CNMatchMapViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9A319B5419BA999B00D982D5 /* CNMatchMapViewController.xib */; };
 		9A35F9A919D7A4F100C4767A /* CNVoiceHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A35F9A819D7A4F100C4767A /* CNVoiceHandler.m */; };
-		9A39C0641997223D0091A2E6 /* CNRecordDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A39C0621997223D0091A2E6 /* CNRecordDetailViewController.m */; };
+		9A39C0641997223D0091A2E6 /* CNRecordDetailViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9A39C0621997223D0091A2E6 /* CNRecordDetailViewController.mm */; };
 		9A39C0651997223D0091A2E6 /* CNRecordDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9A39C0631997223D0091A2E6 /* CNRecordDetailViewController.xib */; };
 		9A3B850419AEC51200BEA2E3 /* red_colon.png in Resources */ = {isa = PBXBuildFile; fileRef = 9A3B850219AEC51200BEA2E3 /* red_colon.png */; };
 		9A3B850519AEC51200BEA2E3 /* red_point.png in Resources */ = {isa = PBXBuildFile; fileRef = 9A3B850319AEC51200BEA2E3 /* red_point.png */; };
@@ -369,6 +371,8 @@
 		9A412E04199A1EF5002A9513 /* CNTestGEOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9A412E03199A1EF5002A9513 /* CNTestGEOS.mm */; };
 		9A4627251994BEB800D1EA90 /* CNRunRecordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A4627231994BEB800D1EA90 /* CNRunRecordViewController.m */; };
 		9A4627261994BEB800D1EA90 /* CNRunRecordViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9A4627241994BEB800D1EA90 /* CNRunRecordViewController.xib */; };
+		9A4712201A5250CD00A4419D /* BinaryIOManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A47121F1A5250CD00A4419D /* BinaryIOManager.m */; };
+		9A4712231A527AD000A4419D /* BinaryIO.c in Sources */ = {isa = PBXBuildFile; fileRef = 9A4712211A527AD000A4419D /* BinaryIO.c */; };
 		9A47582719F11E4E0098D32D /* LunYang2.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9A47582519F11E4E0098D32D /* LunYang2.txt */; };
 		9A47582819F11E4E0098D32D /* Olympics.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9A47582619F11E4E0098D32D /* Olympics.txt */; };
 		9A4786B519C938D200E059CA /* term_of_service.html in Resources */ = {isa = PBXBuildFile; fileRef = 9A4786B419C938D200E059CA /* term_of_service.html */; };
@@ -535,7 +539,7 @@
 		9A86B8B8197BF34600701324 /* CNRegisterPhoneViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9A86B8B6197BF34600701324 /* CNRegisterPhoneViewController.xib */; };
 		9A86B8BC197BFB8500701324 /* CNLoginPhoneViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A86B8BA197BFB8500701324 /* CNLoginPhoneViewController.m */; };
 		9A86B8BD197BFB8500701324 /* CNLoginPhoneViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9A86B8BB197BFB8500701324 /* CNLoginPhoneViewController.xib */; };
-		9A8886CB1988E5F4004FA24B /* CNLocationHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A8886CA1988E5F4004FA24B /* CNLocationHandler.m */; };
+		9A8886CB1988E5F4004FA24B /* CNLocationHandler.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9A8886CA1988E5F4004FA24B /* CNLocationHandler.mm */; };
 		9A8C637A19855C2A0082AE4E /* CNForgetPwdViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A8C637819855C2A0082AE4E /* CNForgetPwdViewController.m */; };
 		9A8C637B19855C2A0082AE4E /* CNForgetPwdViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9A8C637919855C2A0082AE4E /* CNForgetPwdViewController.xib */; };
 		9A8C637F1987A0CA0082AE4E /* CNPersistenceHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A8C637E1987A0CA0082AE4E /* CNPersistenceHandler.m */; };
@@ -550,6 +554,8 @@
 		9A8C63981988D8430082AE4E /* CNCountDownViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9A8C63961988D8430082AE4E /* CNCountDownViewController.xib */; };
 		9A8C639C1988D98A0082AE4E /* CNRunMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A8C639A1988D98A0082AE4E /* CNRunMainViewController.m */; };
 		9A8C639D1988D98A0082AE4E /* CNRunMainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9A8C639B1988D98A0082AE4E /* CNRunMainViewController.xib */; };
+		9A8DB2921A53C78D00BB3CE5 /* china.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9A8DB2911A53C78D00BB3CE5 /* china.txt */; };
+		9A8DB2951A53C82A00BB3CE5 /* CNGEOSUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A8DB2941A53C82A00BB3CE5 /* CNGEOSUtil.m */; };
 		9A8FA30219C1955C009A7400 /* CNBeforeMatchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A8FA30019C1955C009A7400 /* CNBeforeMatchViewController.m */; };
 		9A8FA30319C1955C009A7400 /* CNBeforeMatchViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9A8FA30119C1955C009A7400 /* CNBeforeMatchViewController.xib */; };
 		9AB78E5219DBFE3E006E14AB /* account.png in Resources */ = {isa = PBXBuildFile; fileRef = 9AB78E5119DBFE3E006E14AB /* account.png */; };
@@ -818,6 +824,9 @@
 		9A24DB8019A4C03A0084EE85 /* button_relay.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = button_relay.png; sourceTree = "<group>"; };
 		9A24DB8119A4C03A0084EE85 /* button_team_h.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = button_team_h.png; sourceTree = "<group>"; };
 		9A24DB8219A4C03A0084EE85 /* button_team.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = button_team.png; sourceTree = "<group>"; };
+		9A26BF801A57FDD0001E7D18 /* CNRecordMapGoogleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CNRecordMapGoogleViewController.h; sourceTree = "<group>"; };
+		9A26BF811A57FDD0001E7D18 /* CNRecordMapGoogleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CNRecordMapGoogleViewController.m; sourceTree = "<group>"; };
+		9A26BF821A57FDD0001E7D18 /* CNRecordMapGoogleViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CNRecordMapGoogleViewController.xib; sourceTree = "<group>"; };
 		9A28834919B1E1ED0014EA9A /* gps1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gps1.png; sourceTree = "<group>"; };
 		9A28834A19B1E1ED0014EA9A /* gps2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gps2.png; sourceTree = "<group>"; };
 		9A28834B19B1E1ED0014EA9A /* gps3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gps3.png; sourceTree = "<group>"; };
@@ -1362,7 +1371,7 @@
 		9A35F9A719D7A4F100C4767A /* CNVoiceHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CNVoiceHandler.h; sourceTree = "<group>"; };
 		9A35F9A819D7A4F100C4767A /* CNVoiceHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CNVoiceHandler.m; sourceTree = "<group>"; };
 		9A39C0611997223D0091A2E6 /* CNRecordDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CNRecordDetailViewController.h; sourceTree = "<group>"; };
-		9A39C0621997223D0091A2E6 /* CNRecordDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CNRecordDetailViewController.m; sourceTree = "<group>"; };
+		9A39C0621997223D0091A2E6 /* CNRecordDetailViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CNRecordDetailViewController.mm; sourceTree = "<group>"; };
 		9A39C0631997223D0091A2E6 /* CNRecordDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CNRecordDetailViewController.xib; sourceTree = "<group>"; };
 		9A3B850219AEC51200BEA2E3 /* red_colon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = red_colon.png; sourceTree = "<group>"; };
 		9A3B850319AEC51200BEA2E3 /* red_point.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = red_point.png; sourceTree = "<group>"; };
@@ -1379,6 +1388,10 @@
 		9A4627221994BEB800D1EA90 /* CNRunRecordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CNRunRecordViewController.h; sourceTree = "<group>"; };
 		9A4627231994BEB800D1EA90 /* CNRunRecordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CNRunRecordViewController.m; sourceTree = "<group>"; };
 		9A4627241994BEB800D1EA90 /* CNRunRecordViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CNRunRecordViewController.xib; sourceTree = "<group>"; };
+		9A47121E1A5250CD00A4419D /* BinaryIOManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BinaryIOManager.h; sourceTree = "<group>"; };
+		9A47121F1A5250CD00A4419D /* BinaryIOManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BinaryIOManager.m; sourceTree = "<group>"; };
+		9A4712211A527AD000A4419D /* BinaryIO.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BinaryIO.c; sourceTree = "<group>"; };
+		9A4712221A527AD000A4419D /* BinaryIO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BinaryIO.h; sourceTree = "<group>"; };
 		9A47582519F11E4E0098D32D /* LunYang2.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LunYang2.txt; sourceTree = "<group>"; };
 		9A47582619F11E4E0098D32D /* Olympics.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Olympics.txt; sourceTree = "<group>"; };
 		9A4786B419C938D200E059CA /* term_of_service.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = term_of_service.html; sourceTree = "<group>"; };
@@ -1607,7 +1620,7 @@
 		9A86B8BA197BFB8500701324 /* CNLoginPhoneViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CNLoginPhoneViewController.m; sourceTree = "<group>"; };
 		9A86B8BB197BFB8500701324 /* CNLoginPhoneViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CNLoginPhoneViewController.xib; sourceTree = "<group>"; };
 		9A8886C91988E5F4004FA24B /* CNLocationHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CNLocationHandler.h; sourceTree = "<group>"; };
-		9A8886CA1988E5F4004FA24B /* CNLocationHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CNLocationHandler.m; sourceTree = "<group>"; };
+		9A8886CA1988E5F4004FA24B /* CNLocationHandler.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CNLocationHandler.mm; sourceTree = "<group>"; };
 		9A8C637719855C2A0082AE4E /* CNForgetPwdViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CNForgetPwdViewController.h; sourceTree = "<group>"; };
 		9A8C637819855C2A0082AE4E /* CNForgetPwdViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CNForgetPwdViewController.m; sourceTree = "<group>"; };
 		9A8C637919855C2A0082AE4E /* CNForgetPwdViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CNForgetPwdViewController.xib; sourceTree = "<group>"; };
@@ -1630,6 +1643,9 @@
 		9A8C63991988D98A0082AE4E /* CNRunMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CNRunMainViewController.h; sourceTree = "<group>"; };
 		9A8C639A1988D98A0082AE4E /* CNRunMainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CNRunMainViewController.m; sourceTree = "<group>"; };
 		9A8C639B1988D98A0082AE4E /* CNRunMainViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CNRunMainViewController.xib; sourceTree = "<group>"; };
+		9A8DB2911A53C78D00BB3CE5 /* china.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = china.txt; sourceTree = "<group>"; };
+		9A8DB2931A53C82A00BB3CE5 /* CNGEOSUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CNGEOSUtil.h; sourceTree = "<group>"; };
+		9A8DB2941A53C82A00BB3CE5 /* CNGEOSUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CNGEOSUtil.m; sourceTree = "<group>"; };
 		9A8FA2FF19C1955C009A7400 /* CNBeforeMatchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CNBeforeMatchViewController.h; sourceTree = "<group>"; };
 		9A8FA30019C1955C009A7400 /* CNBeforeMatchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CNBeforeMatchViewController.m; sourceTree = "<group>"; };
 		9A8FA30119C1955C009A7400 /* CNBeforeMatchViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CNBeforeMatchViewController.xib; sourceTree = "<group>"; };
@@ -2998,6 +3014,8 @@
 				9A24DABA19A43EE80084EE85 /* CNGoogleProjection.m */,
 				9A24DABC19A44A110084EE85 /* CNProjectionFactory.h */,
 				9A24DABD19A44A110084EE85 /* CNProjectionFactory.mm */,
+				9A8DB2931A53C82A00BB3CE5 /* CNGEOSUtil.h */,
+				9A8DB2941A53C82A00BB3CE5 /* CNGEOSUtil.m */,
 			);
 			name = geos;
 			sourceTree = "<group>";
@@ -3009,11 +3027,14 @@
 				9A4627231994BEB800D1EA90 /* CNRunRecordViewController.m */,
 				9A4627241994BEB800D1EA90 /* CNRunRecordViewController.xib */,
 				9A39C0611997223D0091A2E6 /* CNRecordDetailViewController.h */,
-				9A39C0621997223D0091A2E6 /* CNRecordDetailViewController.m */,
+				9A39C0621997223D0091A2E6 /* CNRecordDetailViewController.mm */,
 				9A39C0631997223D0091A2E6 /* CNRecordDetailViewController.xib */,
 				9A4BD54E1997730E003FC164 /* CNRecordMapViewController.h */,
 				9A4BD54F1997730E003FC164 /* CNRecordMapViewController.m */,
 				9A4BD5501997730E003FC164 /* CNRecordMapViewController.xib */,
+				9A26BF801A57FDD0001E7D18 /* CNRecordMapGoogleViewController.h */,
+				9A26BF811A57FDD0001E7D18 /* CNRecordMapGoogleViewController.m */,
+				9A26BF821A57FDD0001E7D18 /* CNRecordMapGoogleViewController.xib */,
 			);
 			name = record;
 			sourceTree = "<group>";
@@ -3141,6 +3162,7 @@
 				9A0AFAA219EE5E2600B39F7C /* LunYang.txt */,
 				9A47582519F11E4E0098D32D /* LunYang2.txt */,
 				9A47582619F11E4E0098D32D /* Olympics.txt */,
+				9A8DB2911A53C78D00BB3CE5 /* china.txt */,
 				9A7D3676199DA15C00044F6E /* button_res */,
 				9A7D366F199DA14100044F6E /* textfield */,
 			);
@@ -3377,6 +3399,10 @@
 				9A6B712B1A4802090027768C /* OneMileInfo.m */,
 				9A6B712D1A4802CB0027768C /* OneMinuteInfo.h */,
 				9A6B712E1A4802CB0027768C /* OneMinuteInfo.m */,
+				9A47121E1A5250CD00A4419D /* BinaryIOManager.h */,
+				9A47121F1A5250CD00A4419D /* BinaryIOManager.m */,
+				9A4712211A527AD000A4419D /* BinaryIO.c */,
+				9A4712221A527AD000A4419D /* BinaryIO.h */,
 			);
 			name = manager;
 			sourceTree = "<group>";
@@ -3437,7 +3463,7 @@
 			isa = PBXGroup;
 			children = (
 				9A8886C91988E5F4004FA24B /* CNLocationHandler.h */,
-				9A8886CA1988E5F4004FA24B /* CNLocationHandler.m */,
+				9A8886CA1988E5F4004FA24B /* CNLocationHandler.mm */,
 				9A4BD55319977ADD003FC164 /* CNEncryption.h */,
 				9A4BD55419977ADD003FC164 /* CNEncryption.m */,
 			);
@@ -3912,6 +3938,7 @@
 				9A72CE0D19C5672B0035A1DA /* CNNotRunTransmitRelayViewController.xib in Resources */,
 				9A2CCAE3199D06B4002E8AF0 /* Makefile.am in Resources */,
 				9ACEC1F319AD80D800F36770 /* CNFinishViewController.xib in Resources */,
+				9A8DB2921A53C78D00BB3CE5 /* china.txt in Resources */,
 				9A2CCB37199D06B4002E8AF0 /* Makefile.in in Resources */,
 				9A8C63981988D8430082AE4E /* CNCountDownViewController.xib in Resources */,
 				9A11A83B19E290F100937C1B /* 100037.mp3 in Resources */,
@@ -4059,6 +4086,7 @@
 				9A11A78619E2773D00937C1B /* Resource.bundle in Resources */,
 				9A24DB8619A4C03A0084EE85 /* button_team.png in Resources */,
 				9A7D36A3199DE0C200044F6E /* target_dis.png in Resources */,
+				9A26BF841A57FDD0001E7D18 /* CNRecordMapGoogleViewController.xib in Resources */,
 				9A30FB2F19B6255100D0869F /* help_gps.html in Resources */,
 				9A6A1C0119B455F100C3D2F9 /* CNWarningHelpViewController.xib in Resources */,
 				9A7D36B1199DE30600044F6E /* way2_h.png in Resources */,
@@ -4139,6 +4167,8 @@
 				9A2CCADA199D06B4002E8AF0 /* Makefile in Sources */,
 				9A28DE5B19B55C21001AC1A2 /* CNTimeImageView.m in Sources */,
 				9A532DAD1A3FC8D800483A35 /* CNRunMapGoogleViewController.m in Sources */,
+				9A26BF831A57FDD0001E7D18 /* CNRecordMapGoogleViewController.m in Sources */,
+				9A4712231A527AD000A4419D /* BinaryIO.c in Sources */,
 				9A2CCAD4199D06B4002E8AF0 /* Makefile in Sources */,
 				9A4A13C11973FFD500F2EF04 /* main.m in Sources */,
 				9A4A142C197402C600F2EF04 /* SBJsonStreamWriter.m in Sources */,
@@ -4178,6 +4208,7 @@
 				9A2CCAF4199D06B4002E8AF0 /* Makefile in Sources */,
 				9A319B5519BA999B00D982D5 /* CNMatchMapViewController.m in Sources */,
 				9A8C6388198881860082AE4E /* CNStartRunViewController.m in Sources */,
+				9A4712201A5250CD00A4419D /* BinaryIOManager.m in Sources */,
 				9AC9AED61A36E8E7002BFB46 /* NSDictionary-DeepMutableCopy.m in Sources */,
 				9A8C6392198893FA0082AE4E /* CNRunTypeViewController.m in Sources */,
 				9A2CCAEB199D06B4002E8AF0 /* Makefile in Sources */,
@@ -4185,6 +4216,7 @@
 				9A2CCACB199D06B4002E8AF0 /* Makefile in Sources */,
 				9A6A1C0019B455F100C3D2F9 /* CNWarningHelpViewController.m in Sources */,
 				9A6740501989D839006E12CC /* CNGPSPoint.m in Sources */,
+				9A8DB2951A53C82A00BB3CE5 /* CNGEOSUtil.m in Sources */,
 				9A2CCB48199D06B4002E8AF0 /* Makefile in Sources */,
 				9A6B71261A47BABC0027768C /* CNRunManager.m in Sources */,
 				9A2CCAF7199D06B4002E8AF0 /* Makefile in Sources */,
@@ -4219,10 +4251,10 @@
 				9A4A1435197402F800F2EF04 /* CNMainViewController.mm in Sources */,
 				9A8C639C1988D98A0082AE4E /* CNRunMainViewController.m in Sources */,
 				9A6A1C0919B46F0600C3D2F9 /* CNMapImageAnnotationView.m in Sources */,
-				9A8886CB1988E5F4004FA24B /* CNLocationHandler.m in Sources */,
+				9A8886CB1988E5F4004FA24B /* CNLocationHandler.mm in Sources */,
 				9A6740551989E073006E12CC /* CNUtil.m in Sources */,
 				9A24DABB19A43EE80084EE85 /* CNGoogleProjection.m in Sources */,
-				9A39C0641997223D0091A2E6 /* CNRecordDetailViewController.m in Sources */,
+				9A39C0641997223D0091A2E6 /* CNRecordDetailViewController.mm in Sources */,
 				9ACEC1ED19ACC78F00F36770 /* CNGiveRelayViewController.mm in Sources */,
 				9A4A1431197402C600F2EF04 /* SBJsonWriter.m in Sources */,
 				9A6A1BFB19B4556F00C3D2F9 /* CNWarningGPSWeakViewController.m in Sources */,

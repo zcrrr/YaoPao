@@ -57,6 +57,9 @@
 - (double)getDistanceToNextTakeOverZone:(double)runningDistance;
 
 
++ (BOOL)isInChina:(double)lon :(double)lat;
+
+
 
 
 @end

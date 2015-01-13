@@ -12,6 +12,7 @@
 @class CNLocationHandler;
 @class CNGPSPoint4Match;
 @class CNVoiceHandler;
+@class CNRunManager;
 
 @interface CNAppDelegate : UIResponder <UIApplicationDelegate>
 
@@ -20,6 +21,7 @@
 @property (strong, nonatomic) CNNetworkHandler* networkHandler;
 @property (nonatomic, strong) CNLocationHandler* locationHandler;
 @property (strong ,nonatomic) CNVoiceHandler* voiceHandler;
+@property (strong ,nonatomic) CNRunManager* runManager;
 
 @property (nonatomic, strong) NSString* pid;
 @property (nonatomic, strong) NSString* ua;
@@ -45,6 +47,8 @@
 @property (strong, nonatomic) NSMutableArray* runStatusChangeIndex;//记录运动状态发生改变时数组的坐标-1
 @property (assign, nonatomic) int voiceOn;//1-开启语音 0-关闭语音
 @property (assign, nonatomic) int gpsLevel;//gps采用的等级
+@property (assign, nonatomic) BOOL isInChina;//是否在中国
+@property (assign, nonatomic) BOOL isKnowCountry;//是否已经判断了国家
 //下面是一次运动的一些实时数据
 @property (assign, nonatomic) float distance;//一次运动的累计距离
 @property (assign, nonatomic) int perMileSecond;//一次运动的平均配速，用秒表示
