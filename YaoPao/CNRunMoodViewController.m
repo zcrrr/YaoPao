@@ -15,6 +15,7 @@
 #import "CNUtil.h"
 #import "UIImage+Rescale.h"
 #import "CNRunRecordViewController.h"
+#import "CNRunManager.h"
 
 
 @interface CNRunMoodViewController ()
@@ -106,7 +107,7 @@
     int tag = [sender tag];
     NSString* imageName = [NSString stringWithFormat:@"mood%i_h.png",tag];
     [(UIButton*)sender setBackgroundImage:[UIImage imageNamed:imageName] forState:UIControlStateNormal];
-    kApp.mood = tag;
+    kApp.runManager.feeling = tag;
 }
 
 - (IBAction)button_track_clicked:(id)sender {
@@ -114,7 +115,7 @@
     int tag = [sender tag];
     NSString* imageName = [NSString stringWithFormat:@"way%i_h.png",tag];
     [(UIButton*)sender setBackgroundImage:[UIImage imageNamed:imageName] forState:UIControlStateNormal];
-    kApp.way = tag;
+    kApp.runManager.way = tag;
 }
 - (void)resetMoodButtonStatus{
     [self.button_mood1 setBackgroundImage:[UIImage imageNamed:@"mood1.png"] forState:UIControlStateNormal];
@@ -146,36 +147,17 @@
     [self.navigationController pushViewController:recordVC animated:YES];
 }
 - (void)saveRun{
-    kApp.feel = self.textfield_feel.text;
+    kApp.runManager.remark = self.textfield_feel.text;
     
     //通过plist获取运动类型等参数
     NSString* filePath = [CNPersistenceHandler getDocument:@"runSetting.plist"];
     NSMutableDictionary* runSettingDic = [NSMutableDictionary dictionaryWithContentsOfFile:filePath];
     //通过全局变量获取运动属性等参数
-    //通过oneRunPointList获取轨迹json串
-    NSMutableArray* oneRunPointListIncrement = [self list2Increment];
-    SBJsonWriter *jsonWriter = [[SBJsonWriter alloc] init];
-    NSString* trackJson = [jsonWriter stringWithObject:oneRunPointListIncrement];
-    NSLog(@"trackJson is %@",trackJson);
-    
-    NSString* statusIndexJson = [jsonWriter stringWithObject:kApp.runStatusChangeIndex];
-    NSLog(@"statusIndexJson is %@",statusIndexJson);
-    //计算一下获得的积分：
-    if(kApp.distance < 1000){
-        kApp.score = 1;
-    }else{
-        int meter = (int)kApp.distance % 1000;
-        if(meter > 500){
-            kApp.score += 2;
-        }
-    }
     //存储到数据库
     RunClass * runClass  = [NSEntityDescription insertNewObjectForEntityForName:@"RunClass" inManagedObjectContext:kApp.managedObjectContext];
     runClass.rid = [NSString stringWithFormat:@"%lli",[CNUtil getNowTime]];
     runClass.runtar = [NSNumber numberWithInt:[[runSettingDic objectForKey:@"target"]intValue]];
     runClass.runty = [NSNumber numberWithInt:[[runSettingDic objectForKey:@"type"]intValue]];
-    runClass.runtra = trackJson;
-    runClass.statusIndex = statusIndexJson;
     runClass.mind = [NSNumber numberWithInt:kApp.mood];
     runClass.runway = [NSNumber numberWithInt:kApp.way];
     runClass.aheart = [NSNumber numberWithInt:kApp.perHeart];

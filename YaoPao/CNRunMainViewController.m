@@ -204,8 +204,8 @@
 }
 - (void)viewWillDisappear:(BOOL)animated{
     [self.timer_dispalyTime invalidate];
-    [kApp removeObserver:self forKeyPath:@"distance"];
-    [kApp removeObserver:self forKeyPath:@"paceKm"];
+    [kApp.runManager removeObserver:self forKeyPath:@"distance"];
+    [kApp.runManager removeObserver:self forKeyPath:@"paceKm"];
 }
 
 - (IBAction)button_control_clicked:(id)sender {

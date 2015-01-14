@@ -14,6 +14,7 @@
 #import "Toast+UIView.h"
 #import "CNUtil.h"
 #import "CNVoiceHandler.h"
+#import "CNRunManager.h"
 #define kIntervalMap 2
 
 @interface CNRunMapViewController ()
@@ -65,7 +66,7 @@
     [self.sliderview setBackgroundColor:[UIColor clearColor]];
     [self.sliderview setText:@"滑动暂停"];
     //将当前数组中的数据画到地图上
-    self.lastDrawPoint = [kApp.oneRunPointList lastObject];
+    self.lastDrawPoint = [kApp.runManager.GPSList lastObject];
     [self drawRunTrack];
     [self setGPSImage];
     self.timer_map = [NSTimer scheduledTimerWithTimeInterval:kIntervalMap target:self selector:@selector(drawIncrementLine) userInfo:nil repeats:YES];
@@ -81,7 +82,7 @@
 }
 - (void)drawIncrementLine{
     //取数组最新值
-    CNGPSPoint* newPoint = [kApp.oneRunPointList lastObject];
+    CNGPSPoint* newPoint = [kApp.runManager.GPSList lastObject];
     if(newPoint.lon != lastDrawPoint.lon || newPoint.lat != lastDrawPoint.lat){//5秒后点的位置有移动
         int count = 2;
         CLLocationCoordinate2D polylineCoords[count];
@@ -125,8 +126,6 @@
 - (IBAction)button_clicked:(id)sender {
     switch ([sender tag]) {
         case 0:
-            //测试完成整个运动
-//            [self finishRun];
             self.mapView.userTrackingMode = MAUserTrackingModeFollow;
             break;
         case 1:
@@ -156,21 +155,14 @@
         {
             self.button_reset.backgroundColor = [UIColor colorWithRed:0 green:123.0/255.0 blue:199.0/255.0 alpha:1];
             [kApp.voiceHandler voiceOfapp:@"run_continue" :nil];
-            kApp.runStatus = 1;
-            int hascount = [kApp.oneRunPointList count];
-            [kApp.runStatusChangeIndex addObject:[NSNumber numberWithInt:hascount-1]];
+            [kApp.runManager changeRunStatus:1];
             self.view_bottom_slider.hidden = NO;
             NSLog(@"恢复");
-            kApp.timer_secondplusplus = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timeaddadd) userInfo:nil repeats:YES];
-            kApp.startTime = [CNUtil getNowTime];
             break;
         }
         default:
             break;
     }
-}
-- (void)timeaddadd{
-    kApp.run_second++;
 }
 - (void)drawRunTrack{
     //测试代码
@@ -178,12 +170,12 @@
     int j = 0;
     int i = 0;
     int n = 0;
-    int pointCount = [kApp.oneRunPointList count];
+    int pointCount = [kApp.runManager.GPSList count];
     
     
     CLLocationCoordinate2D polylineCoords_backgound[pointCount];
     for(i=0;i<pointCount;i++){
-        CNGPSPoint* gpsPoint = [kApp.oneRunPointList objectAtIndex:i];
+        CNGPSPoint* gpsPoint = [kApp.runManager.GPSList objectAtIndex:i];
         CLLocationCoordinate2D wgs84Point = CLLocationCoordinate2DMake(gpsPoint.lat, gpsPoint.lon);
         CLLocationCoordinate2D encryptionPoint = [CNEncryption encrypt:wgs84Point];
         polylineCoords_backgound[i].latitude = encryptionPoint.latitude;
@@ -201,7 +193,7 @@
     
     
     
-    CNGPSPoint* firstPoint = [kApp.oneRunPointList objectAtIndex:0];
+    CNGPSPoint* firstPoint = [kApp.runManager.GPSList objectAtIndex:0];
     CLLocationCoordinate2D wgs84Point_first = CLLocationCoordinate2DMake(firstPoint.lat, firstPoint.lon);
     CLLocationCoordinate2D encryptionPoint_first = [CNEncryption encrypt:wgs84Point_first];
     double min_lon = encryptionPoint_first.longitude;
@@ -209,43 +201,66 @@
     double max_lon = encryptionPoint_first.longitude;
     double max_lat = encryptionPoint_first.latitude;
     
-    [kApp.runStatusChangeIndex addObject:[NSNumber numberWithInt:pointCount-1]];
-    NSLog(@"changeIndex is %@",kApp.runStatusChangeIndex);
-    int linesCount = [kApp.runStatusChangeIndex count];
-    for(j = 0;j<linesCount-1;j++){
-        int startIndex = [[kApp.runStatusChangeIndex objectAtIndex:j]intValue];
-        int endIndex = [[kApp.runStatusChangeIndex objectAtIndex:j+1]intValue];
-        NSLog(@"startIndex:%i,endIndex:%i",startIndex,endIndex);
-        CLLocationCoordinate2D polylineCoords[endIndex-startIndex+1];
-        if(endIndex-startIndex+1<2)continue;
-        for(i = startIndex,n = 0;i <= endIndex;i++,n++){
-            CNGPSPoint* gpsPoint = [kApp.oneRunPointList objectAtIndex:i];
-            CLLocationCoordinate2D wgs84Point = CLLocationCoordinate2DMake(gpsPoint.lat, gpsPoint.lon);
-            CLLocationCoordinate2D encryptionPoint = [CNEncryption encrypt:wgs84Point];
-            polylineCoords[n].latitude = encryptionPoint.latitude;
-            polylineCoords[n].longitude = encryptionPoint.longitude;
-            if(encryptionPoint.longitude < min_lon){
-                min_lon = encryptionPoint.longitude;
-            }
-            if(encryptionPoint.latitude < min_lat){
-                min_lat = encryptionPoint.latitude;
-            }
-            if(encryptionPoint.longitude > max_lon){
-                max_lon = encryptionPoint.longitude;
-            }
-            if(encryptionPoint.latitude > max_lat){
-                max_lat = encryptionPoint.latitude;
-            }
+    int startIndex = 0;
+    int endIndex = 0;
+    for(i = 0;i<pointCount;i++){
+        CNGPSPoint* gpsPoint = [kApp.runManager.GPSList objectAtIndex:i];
+        
+        CLLocationCoordinate2D wgs84Point = CLLocationCoordinate2DMake(gpsPoint.lat, gpsPoint.lon);
+        CLLocationCoordinate2D encryptionPoint = [CNEncryption encrypt:wgs84Point];
+        if(encryptionPoint.longitude < min_lon){
+            min_lon = encryptionPoint.longitude;
         }
-        MAPolyline* polyline = [MAPolyline polylineWithCoordinates:polylineCoords count:endIndex-startIndex+1];
-        CNGPSPoint* gpsPoint_end = [kApp.oneRunPointList objectAtIndex:endIndex];
-        //        polyline.title = gpsPoint_end.status == 1?@"1":@"2";
-        NSLog(@"这一段状态是%@",polyline.title);
-        if(gpsPoint_end.status == 1){
-            polyline.title = @"1";
-            [self.mapView addOverlay:polyline];
+        if(encryptionPoint.latitude < min_lat){
+            min_lat = encryptionPoint.latitude;
+        }
+        if(encryptionPoint.longitude > max_lon){
+            max_lon = encryptionPoint.longitude;
+        }
+        if(encryptionPoint.latitude > max_lat){
+            max_lat = encryptionPoint.latitude;
+        }
+        
+        if(i==0){
+            startIndex = 0;
+        }else{
+            CNGPSPoint* lastPoint = [kApp.runManager.GPSList objectAtIndex:(i-1)];
+            if(gpsPoint.status != lastPoint.status){
+                if(gpsPoint.status == 1){//运动开始的序列
+                    startIndex = i;
+                }else if(gpsPoint.status == 2){//暂停开始的序列
+                    endIndex = i-1;
+                    if(endIndex-startIndex+1<2)continue;
+                    CLLocationCoordinate2D polylineCoords[endIndex-startIndex+1];
+                    for(j=startIndex,n=0;j<=endIndex;j++,n++){
+                        CNGPSPoint* point = [kApp.runManager.GPSList objectAtIndex:j];
+                        CLLocationCoordinate2D wgs84Point = CLLocationCoordinate2DMake(point.lat, point.lon);
+                        CLLocationCoordinate2D encryptionPoint = [CNEncryption encrypt:wgs84Point];
+                        polylineCoords[n].latitude = encryptionPoint.latitude;
+                        polylineCoords[n].longitude = encryptionPoint.longitude;
+                    }
+                    MAPolyline* polyline = [MAPolyline polylineWithCoordinates:polylineCoords count:endIndex-startIndex+1];
+                    polyline.title = @"1";
+                    [self.mapView addOverlay:polyline];
+                }
+            }else if(i == pointCount-1 && gpsPoint.status == 1){//结束的一段
+                endIndex = i;
+                if(endIndex-startIndex+1<2)continue;
+                CLLocationCoordinate2D polylineCoords[endIndex-startIndex+1];
+                for(j=startIndex,n=0;j<=endIndex;j++,n++){
+                    CNGPSPoint* point = [kApp.runManager.GPSList objectAtIndex:j];
+                    CLLocationCoordinate2D wgs84Point = CLLocationCoordinate2DMake(point.lat, point.lon);
+                    CLLocationCoordinate2D encryptionPoint = [CNEncryption encrypt:wgs84Point];
+                    polylineCoords[n].latitude = encryptionPoint.latitude;
+                    polylineCoords[n].longitude = encryptionPoint.longitude;
+                }
+                MAPolyline* polyline = [MAPolyline polylineWithCoordinates:polylineCoords count:endIndex-startIndex+1];
+                polyline.title = @"1";
+                [self.mapView addOverlay:polyline];
+            }
         }
     }
+    
     CLLocationCoordinate2D center = CLLocationCoordinate2DMake((min_lat+max_lat)/2, (min_lon+max_lon)/2);
     MACoordinateSpan span = MACoordinateSpanMake(max_lat-min_lat+0.005, max_lon-min_lon+0.005);
     MACoordinateRegion region = MACoordinateRegionMake(center, span);
@@ -300,30 +315,12 @@ updatingLocation:(BOOL)updatingLocation
 - (void)viewDidDisappear:(BOOL)animated{
     [super viewDidDisappear:animated];
 }
-- (void)finishRun{
-    [kApp.timer_one_point invalidate];
-    
-    int count = [kApp.oneRunPointList count];
-    NSMutableArray* arraytest = [[NSMutableArray alloc]init];
-    int i = 0;
-    for(i = 0;i<count;i++){
-        CNGPSPoint* gpsPoint = [kApp.oneRunPointList objectAtIndex:i];
-        NSString* lonlat = [NSString stringWithFormat:@"%f,%f,%i,%i,%i,%lli",gpsPoint.lon,gpsPoint.lat,gpsPoint.speed,gpsPoint.course,gpsPoint.altitude,gpsPoint.time];
-        [arraytest addObject:lonlat];
-    }
-    NSString* filePath = [CNPersistenceHandler getDocument:@"runTrack.plist"];
-    [arraytest writeToFile:filePath atomically:YES];
-}
 // MBSliderViewDelegate
 - (void) sliderDidSlide:(MBSliderView *)slideView {
     [kApp.voiceHandler voiceOfapp:@"run_pause" :nil];
     // Customization example
-    kApp.pauseCount = [kApp.oneRunPointList count];
     NSLog(@"滑动");
-    kApp.runStatus = 2;
-    kApp.alreadySecond = kApp.totalSecond;
-    int hascount = [kApp.oneRunPointList count];
-    [kApp.runStatusChangeIndex addObject:[NSNumber numberWithInt:hascount-1]];
+    [kApp.runManager changeRunStatus:2];
     self.view_bottom_slider.hidden = YES;
     [kApp.timer_secondplusplus invalidate];
 }
@@ -338,20 +335,13 @@ updatingLocation:(BOOL)updatingLocation
         case 0:
         {
             NSLog(@"是的，完成了");
-            int count = [kApp.oneRunPointList count];
-            if(count > kApp.pauseCount){//去掉最后一小段从暂停到完成的距离
-                for(int i=kApp.pauseCount;i<count;i++){
-                    [kApp.oneRunPointList removeLastObject];
-                }
-            }
-            kApp.runStatus = 0;
+            kApp.isRunning = 0;
             [kApp.timer_one_point invalidate];
+            [kApp.runManager finishOneRun];
             if(kApp.distance < 50){
-                kApp.isRunning = 0;
                 kApp.gpsLevel = 1;
                 //弹出框，距离小于50
                 [kApp.window makeToast:@"您运动距离也太短啦！这次就不给您记录了，下次一定要加油！"];
-                [CNAppDelegate initRun];
                 CNMainViewController* mainVC = [[CNMainViewController alloc]init];
                 [self.navigationController pushViewController:mainVC animated:YES];
             }else{
