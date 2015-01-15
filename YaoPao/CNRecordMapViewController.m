@@ -222,7 +222,7 @@
                     polylineCoords[n].longitude = encryptionPoint.longitude;
                 }
                 MAPolyline* polyline = [MAPolyline polylineWithCoordinates:polylineCoords count:endIndex-startIndex+1];
-                polyline.title = @"1";
+                polyline.title = @"1"; 
                 [self.mapView addOverlay:polyline];
             }
         }
