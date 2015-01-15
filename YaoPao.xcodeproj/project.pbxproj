@@ -609,10 +609,10 @@
 		9AD57FAC19B741C900A98FB3 /* runtype_run_s.png in Resources */ = {isa = PBXBuildFile; fileRef = 9AD57FA919B741C900A98FB3 /* runtype_run_s.png */; };
 		9AD57FAD19B741C900A98FB3 /* runtype_walk_s.png in Resources */ = {isa = PBXBuildFile; fileRef = 9AD57FAA19B741C900A98FB3 /* runtype_walk_s.png */; };
 		9AD57FB019B7530200A98FB3 /* Toast+UIView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9AD57FAF19B7530200A98FB3 /* Toast+UIView.m */; };
-		9AD580AF19B845D600A98FB3 /* RunClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 9AD580AE19B845D500A98FB3 /* RunClass.m */; };
 		9AD88EF319E5432A00DE28E1 /* matchicon.png in Resources */ = {isa = PBXBuildFile; fileRef = 9AD88EF219E5432900DE28E1 /* matchicon.png */; };
 		9AE5421A1980ED4400C86BF0 /* CNUserinfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9AE542181980ED4400C86BF0 /* CNUserinfoViewController.m */; };
 		9AE5421B1980ED4400C86BF0 /* CNUserinfoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9AE542191980ED4400C86BF0 /* CNUserinfoViewController.xib */; };
+		9AF3CFB51A66781B00B6D26C /* RunClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 9AF3CFB41A66781B00B6D26C /* RunClass.m */; };
 		9AF861EE19D5719900C8C6DF /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AF861ED19D5719900C8C6DF /* libicucore.dylib */; };
 		9AF861F019D571A400C8C6DF /* libz.1.2.5.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AF861EF19D571A400C8C6DF /* libz.1.2.5.dylib */; };
 		9AF861F219D571D100C8C6DF /* libstdc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AF861F119D571D100C8C6DF /* libstdc++.dylib */; };
@@ -1506,6 +1506,7 @@
 		9A652D3A19B2D24F00B80A17 /* map_start.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = map_start.png; sourceTree = "<group>"; };
 		9A652D3E19B3066D00B80A17 /* CNDistanceImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CNDistanceImageView.h; sourceTree = "<group>"; };
 		9A652D3F19B3066D00B80A17 /* CNDistanceImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CNDistanceImageView.m; sourceTree = "<group>"; };
+		9A65AC2E1A66097E00B8AE73 /* Model 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Model 2.xcdatamodel"; sourceTree = "<group>"; };
 		9A67404E1989D839006E12CC /* CNGPSPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CNGPSPoint.h; sourceTree = "<group>"; };
 		9A67404F1989D839006E12CC /* CNGPSPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CNGPSPoint.m; sourceTree = "<group>"; };
 		9A6740511989D8C2006E12CC /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
@@ -1709,12 +1710,12 @@
 		9AD57FAA19B741C900A98FB3 /* runtype_walk_s.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = runtype_walk_s.png; sourceTree = "<group>"; };
 		9AD57FAE19B7530200A98FB3 /* Toast+UIView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Toast+UIView.h"; sourceTree = "<group>"; };
 		9AD57FAF19B7530200A98FB3 /* Toast+UIView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Toast+UIView.m"; sourceTree = "<group>"; };
-		9AD580AD19B845D500A98FB3 /* RunClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RunClass.h; sourceTree = "<group>"; };
-		9AD580AE19B845D500A98FB3 /* RunClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RunClass.m; sourceTree = "<group>"; };
 		9AD88EF219E5432900DE28E1 /* matchicon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = matchicon.png; sourceTree = "<group>"; };
 		9AE542171980ED4400C86BF0 /* CNUserinfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CNUserinfoViewController.h; sourceTree = "<group>"; };
 		9AE542181980ED4400C86BF0 /* CNUserinfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CNUserinfoViewController.m; sourceTree = "<group>"; };
 		9AE542191980ED4400C86BF0 /* CNUserinfoViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CNUserinfoViewController.xib; sourceTree = "<group>"; };
+		9AF3CFB31A66781B00B6D26C /* RunClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RunClass.h; sourceTree = "<group>"; };
+		9AF3CFB41A66781B00B6D26C /* RunClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RunClass.m; sourceTree = "<group>"; };
 		9AF861ED19D5719900C8C6DF /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
 		9AF861EF19D571A400C8C6DF /* libz.1.2.5.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.2.5.dylib; path = usr/lib/libz.1.2.5.dylib; sourceTree = SDKROOT; };
 		9AF861F119D571D100C8C6DF /* libstdc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.dylib"; path = "usr/lib/libstdc++.dylib"; sourceTree = SDKROOT; };
@@ -3042,8 +3043,8 @@
 		9A4A13A81973FFD500F2EF04 = {
 			isa = PBXGroup;
 			children = (
-				9AD580AD19B845D500A98FB3 /* RunClass.h */,
-				9AD580AE19B845D500A98FB3 /* RunClass.m */,
+				9AF3CFB31A66781B00B6D26C /* RunClass.h */,
+				9AF3CFB41A66781B00B6D26C /* RunClass.m */,
 				9A4A13BA1973FFD500F2EF04 /* YaoPao */,
 				9A4A13D91973FFD500F2EF04 /* YaoPaoTests */,
 				9A4A13B31973FFD500F2EF04 /* Frameworks */,
@@ -4164,6 +4165,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9A2CCB26199D06B4002E8AF0 /* Makefile in Sources */,
+				9AF3CFB51A66781B00B6D26C /* RunClass.m in Sources */,
 				9A2CCADA199D06B4002E8AF0 /* Makefile in Sources */,
 				9A28DE5B19B55C21001AC1A2 /* CNTimeImageView.m in Sources */,
 				9A532DAD1A3FC8D800483A35 /* CNRunMapGoogleViewController.m in Sources */,
@@ -4268,7 +4270,6 @@
 				9A2CCAFE199D06B4002E8AF0 /* Makefile in Sources */,
 				9A4A1426197402C600F2EF04 /* NSObject+SBJson.m in Sources */,
 				9A4A142D197402C600F2EF04 /* SBJsonStreamWriterAccumulator.m in Sources */,
-				9AD580AF19B845D600A98FB3 /* RunClass.m in Sources */,
 				9A4A142B197402C600F2EF04 /* SBJsonStreamParserState.m in Sources */,
 				9A2CCAE8199D06B4002E8AF0 /* Makefile in Sources */,
 				9A28DE6619B569EF001AC1A2 /* CNSpeedImageView.m in Sources */,
@@ -4589,9 +4590,10 @@
 		9A64741F199227970091DF7D /* Model.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				9A65AC2E1A66097E00B8AE73 /* Model 2.xcdatamodel */,
 				9A647420199227970091DF7D /* Model.xcdatamodel */,
 			);
-			currentVersion = 9A647420199227970091DF7D /* Model.xcdatamodel */;
+			currentVersion = 9A65AC2E1A66097E00B8AE73 /* Model 2.xcdatamodel */;
 			path = Model.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

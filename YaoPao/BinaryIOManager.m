@@ -154,7 +154,7 @@
     
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString *file = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.yaopao",filename]];
+    NSString *file = [documentsDirectory stringByAppendingPathComponent:filename];
     NSLog(@"filename is %@",file);
     const char * str =[file UTF8String];
     writeBinaryFile(str,pBuf,size);
@@ -162,7 +162,7 @@
 - (void)readBinary:(NSString*)filename :(int)gpsCount :(int)kmCount :(int)mileCount :(int)minCount{
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString *file = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.yaopao",filename]];
+    NSString *file = [documentsDirectory stringByAppendingPathComponent:filename];
     const char * str =[file UTF8String];
     
     int size1 = sizeof(ST_METADATA);
@@ -207,7 +207,7 @@
     }
     
     
-    CNRunManager* manager = [[CNRunManager alloc]initData];
+    kApp.runManager = [[CNRunManager alloc]initData];
     long long startTimeStamp = 0;
     long long lastTimeStamp = 0;
     ST_METADATA stTest;
@@ -228,9 +228,9 @@
         NSLog(@"%d",stTest.mileCount);
         NSLog(@"%d",stTest.minuteCount);
         
-        manager.distance = stTest.distance;
-        manager.altitudeAdd = stTest.altAdd;
-        manager.altitudeReduce = stTest.altRed;
+        kApp.runManager.distance = stTest.distance;
+        kApp.runManager.altitudeAdd = stTest.altAdd;
+        kApp.runManager.altitudeReduce = stTest.altRed;
         NSLog(@"----------");
         
         ST_GPSDATA gpsArray[gpsCount];
@@ -262,7 +262,7 @@
             double alt = gps.altitude/10.0-1000;
             int speed = gps.speed;
             CNGPSPoint* point = [[CNGPSPoint alloc]initWithLon:lon andLat:lat andStatus:status andTime:timeStamp andCourse:dir andAltitude:alt andSpeed:speed];
-            [manager.GPSList addObject:point];
+            [kApp.runManager.GPSList addObject:point];
             
         }
         
@@ -287,7 +287,7 @@
             double altitudeAdd = oneKm.altAdd/10.0;
             double altitudeReduce = oneKm.altRed/10.0;
             OneKMInfo* oneKmInfo = [[OneKMInfo alloc]initWithNumber:(i+1) andLon:lon andLat:lat andDisTance:distance andDuring:time andAltitudeAdd:altitudeAdd andAltitudeReduce:altitudeReduce];
-            [manager.dataKm addObject:oneKmInfo];
+            [kApp.runManager.dataKm addObject:oneKmInfo];
         }
         
         ST_MILEDATA mileArray[mileCount];
@@ -311,7 +311,7 @@
             double altitudeAdd = oneMile.altAdd/10.0;
             double altitudeReduce = oneMile.altRed/10.0;
             OneMileInfo* oneMileInfo = [[OneMileInfo alloc]initWithNumber:(i+1) andLon:lon andLat:lat andDisTance:distance andDuring:time andAltitudeAdd:altitudeAdd andAltitudeReduce:altitudeReduce];
-            [manager.dataMile addObject:oneMileInfo];
+            [kApp.runManager.dataMile addObject:oneMileInfo];
         }
         
         ST_MINUTEDATA minArray[minCount];
@@ -335,7 +335,7 @@
             double altitudeAdd = oneMin.altAdd/10.0;
             double altitudeReduce = oneMin.altRed/10.0;
             OneMinuteInfo* oneMinInfo = [[OneMinuteInfo alloc]initWithNumber:(i+1) andLon:lon andLat:lat andDisTance:distance andDuring:time andAltitudeAdd:altitudeAdd andAltitudeReduce:altitudeReduce];
-            [manager.dataMin addObject:oneMinInfo];
+            [kApp.runManager.dataMin addObject:oneMinInfo];
         }
     }
 }

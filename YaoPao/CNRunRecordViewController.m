@@ -102,7 +102,10 @@
     int i = 0;
     for(i = 0;i<[mutableFetchResult count];i++){
         RunClass *runClass = [mutableFetchResult objectAtIndex:i];
-        NSLog(@"%@,%@,%@,%@,%@,%@,%@,%@,%@,%@,%@,%@,%@,%@,%@,%@,%@,%@",runClass.rid,runClass.stamp,runClass.runtar,runClass.runty,runClass.runtra,runClass.mind,runClass.runway,runClass.aheart,runClass.mheart,runClass.weather,runClass.temp,runClass.distance,runClass.utime,runClass.pspeed,runClass.hspeed,runClass.heat,runClass.remarks,runClass.statusIndex);
+        NSLog(@"runClass is %@",runClass);
+//        NSLog(@"%@,%@,%@,%@,%@,%@,%@,%@,%@,%@,%@,%@,%@,%@,%@,%@,%@,%@",runClass.rid,runClass.stamp,runClass.runtar,runClass.runty,runClass.runtra,runClass.mind,runClass.runway,runClass.aheart,runClass.mheart,runClass.weather,runClass.temp,runClass.distance,runClass.utime,runClass.pspeed,runClass.hspeed,runClass.heat,runClass.remarks,runClass.statusIndex);
+        
+        NSLog(@"ctp is %@",runClass.ctp);
         UIView *view_one_record = [[UIView alloc]initWithFrame:CGRectMake(0, y_used, 320, 60)];
         //分割线
         UIView *view_line = [[UIView alloc]initWithFrame:CGRectMake(0, 59, 320, 1)];
@@ -114,7 +117,8 @@
         image_type.image = [UIImage imageNamed:[self imageNameFromType:type]];
         [view_one_record addSubview:image_type];
         //时间
-        NSDate *date = [NSDate dateWithTimeIntervalSince1970:[runClass.stamp longLongValue]];
+        long long stamp = [runClass.stamp longLongValue];
+        NSDate *date = [NSDate dateWithTimeIntervalSince1970:stamp/1000];
         NSDateComponents *componets = [[NSCalendar autoupdatingCurrentCalendar] components:NSWeekdayCalendarUnit fromDate:date];
         int weekday = [componets weekday];
         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
@@ -154,7 +158,8 @@
         if(imagecount!=0){
             //去沙盒读取图片
             NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask, YES);
-            NSString *filePath = [[paths objectAtIndex:0] stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_small.jpg",runClass.rid]];
+            NSString *filePath = [[paths objectAtIndex:0] stringByAppendingPathComponent:runClass.c120ips];;
+            NSLog(@"filepath is %@",filePath);
             BOOL blHave=[[NSFileManager defaultManager] fileExistsAtPath:filePath];
             if (blHave) {//图片存在
                 NSData *data = [NSData dataWithContentsOfFile:filePath];
@@ -190,7 +195,7 @@
         UILabel* label_during = [[UILabel alloc]initWithFrame:CGRectMake(270, 30, 50, 30)];
         label_during.textAlignment = NSTextAlignmentLeft;
         label_during.font = [UIFont systemFontOfSize:12];
-        int duringSecond = [runClass.utime intValue];
+        int duringSecond = [runClass.utime intValue]/1000;
         int minute1 = duringSecond/60;
         int second1 = duringSecond%60;
         label_during.text = [NSString stringWithFormat:@"%02d:%02d",minute1,second1];

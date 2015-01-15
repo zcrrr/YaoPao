@@ -61,6 +61,7 @@
     [super viewDidLoad];
     
     
+    
     //测试代码
 //    NSMutableDictionary* params = [[NSMutableDictionary alloc]init];
 //    [params setObject:@"54" forKey:@"uid"];
@@ -354,15 +355,15 @@
     switch ([sender tag]) {
         case 0:
         {
-            [kApp.runManager finishOneRun];
-            //写文件
-            BinaryIOManager* ioManager = [[BinaryIOManager alloc]init];
-            [ioManager writeBinary:@"test"];
-            [ioManager readBinary:@"test" :[kApp.runManager.GPSList count] :[kApp.runManager.dataKm count] :[kApp.runManager.dataMile count] :[kApp.runManager.dataMin count]];
+//            [kApp.runManager finishOneRun];
+//            //写文件
+//            BinaryIOManager* ioManager = [[BinaryIOManager alloc]init];
+//            [ioManager writeBinary:@"test"];
+//            [ioManager readBinary:@"test" :[kApp.runManager.GPSList count] :[kApp.runManager.dataKm count] :[kApp.runManager.dataMile count] :[kApp.runManager.dataMin count]];
             
-//            self.button_setting.backgroundColor = [UIColor clearColor];
-//            CNSettingViewController* settingVC = [[CNSettingViewController alloc]init];
-//            [self.navigationController pushViewController:settingVC animated:YES];
+            self.button_setting.backgroundColor = [UIColor clearColor];
+            CNSettingViewController* settingVC = [[CNSettingViewController alloc]init];
+            [self.navigationController pushViewController:settingVC animated:YES];
             break;
         }
         case 1:

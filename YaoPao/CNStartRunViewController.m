@@ -219,6 +219,8 @@
     }
 }
 - (BOOL)prepareRun{
+    //测试代码
+    return YES;
     if (0.001 > fabs(kApp.locationHandler.userLocation_lon) || 0.001 > fabs(kApp.locationHandler.userLocation_lat))
     {
         NSLog(@"异常提示：gps信号弱");

@@ -296,8 +296,16 @@
     }
     NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"Model.sqlite"];
     NSError *error = nil;
+    
+    //升级数据库版本
+    NSDictionary *options =
+    [NSDictionary dictionaryWithObjectsAndKeys:
+     [NSNumber numberWithBool:YES], NSMigratePersistentStoresAutomaticallyOption,
+     [NSNumber numberWithBool:YES], NSInferMappingModelAutomaticallyOption,
+     nil];
+    
     _persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
-    if (![_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:nil error:&error]) {
+    if (![_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:options error:&error]) {
         /*
          Replace this implementation with code to handle the error appropriately.
          abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.

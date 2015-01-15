@@ -98,5 +98,11 @@
         return @"afterMatch";
     }
 }
++ (NSString*)getYearMonth:(long long)timestamp{
+    NSDate *date = [NSDate dateWithTimeIntervalSince1970:timestamp];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"yyyyMM"];
+    return [dateFormatter stringFromDate:date];
+}
 
 @end

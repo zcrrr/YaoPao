@@ -14,6 +14,8 @@
 #import "CustomAnnotationView.h"
 #import "CNMapImageAnnotationView.h"
 #import "CNGPSPoint4Match.h"
+#import "CNRunManager.h"
+#import "OneKMInfo.h"
 #define kPopInterval 1000
 
 @interface CNRecordMapViewController ()
@@ -63,7 +65,7 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 - (void)initUI{
-    NSDate *date = [NSDate dateWithTimeIntervalSince1970:[self.oneRun.stamp longLongValue]];
+    NSDate *date = [NSDate dateWithTimeIntervalSince1970:[self.oneRun.stamp longLongValue]/1000];
     NSDateComponents *componets = [[NSCalendar autoupdatingCurrentCalendar] components:NSWeekdayCalendarUnit fromDate:date];
     int weekday = [componets weekday];
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
@@ -102,7 +104,7 @@
     }
     self.label_title.text = [NSString stringWithFormat:@"%@的%@",strDate2,typeDes];
     self.label_dis.text = [NSString stringWithFormat:@"%0.2fkm",[oneRun.distance floatValue]/1000];
-    self.label_during.text = [CNUtil duringTimeStringFromSecond:[oneRun.utime intValue]];
+    self.label_during.text = [CNUtil duringTimeStringFromSecond:[oneRun.utime intValue]/1000];
     self.label_pspeed.text = [CNUtil pspeedStringFromSecond:[oneRun.pspeed intValue]];
     self.label_aver_speed.text = [NSString stringWithFormat:@"+%i",[oneRun.score intValue]];
     //区分是否是比赛
@@ -116,17 +118,14 @@
 //    [self testDrawOneByOne];
 }
 - (void)drawRunTrack{
-    //测试代码
-//    [CNAppDelegate makeTest];
     int j = 0;
     int i = 0;
     int n = 0;
-    int pointCount = [kApp.oneRunPointList count];
-    NSLog(@"pointCount is %i",pointCount);
+    int pointCount = [kApp.runManager.GPSList count];
     
     //画起点和终点
-    CNGPSPoint* startPoint = [kApp.oneRunPointList firstObject];
-    CNGPSPoint* endPoint = [kApp.oneRunPointList lastObject];
+    CNGPSPoint* startPoint = [kApp.runManager.GPSList firstObject];
+    CNGPSPoint* endPoint = [kApp.runManager.GPSList lastObject];
     CLLocationCoordinate2D wgs84Point_start = CLLocationCoordinate2DMake(startPoint.lat, startPoint.lon);
     CLLocationCoordinate2D encryptionPoint_start = [CNEncryption encrypt:wgs84Point_start];
     CLLocationCoordinate2D wgs84Point_end = CLLocationCoordinate2DMake(endPoint.lat, endPoint.lon);
@@ -141,94 +140,108 @@
     annotation_end.title = @"end";
     [self.mapView addAnnotation:annotation_end];
     
-    
-    double distance_add = 0;
-    long long time_one_km = 0;
-    int targetDis = kPopInterval;
-    
     //先画底色：
     CLLocationCoordinate2D polylineCoords_backgound[pointCount];
     CLLocationCoordinate2D polylineCoords_encryption[pointCount];
     for(i=0;i<pointCount;i++){
-        CNGPSPoint* gpsPoint = [kApp.oneRunPointList objectAtIndex:i];
+        CNGPSPoint* gpsPoint = [kApp.runManager.GPSList objectAtIndex:i];
         CLLocationCoordinate2D wgs84Point = CLLocationCoordinate2DMake(gpsPoint.lat, gpsPoint.lon);
         CLLocationCoordinate2D encryptionPoint = [CNEncryption encrypt:wgs84Point];
         polylineCoords_backgound[i].latitude = encryptionPoint.latitude;
         polylineCoords_backgound[i].longitude = encryptionPoint.longitude;
         polylineCoords_encryption[i] = encryptionPoint;
-        
-        //画气泡
-        if(i >= 1){
-            if(gpsPoint.status == 1){//正常运动
-                CNGPSPoint* gpsPoint_before = [kApp.oneRunPointList objectAtIndex:i-1];
-                CLLocationCoordinate2D wgs84Point_before = CLLocationCoordinate2DMake(gpsPoint_before.lat, gpsPoint_before.lon);
-                CLLocationCoordinate2D encryptionPoint_before = [CNEncryption encrypt:wgs84Point_before];
-                CLLocation *current=[[CLLocation alloc] initWithLatitude:encryptionPoint.latitude longitude:encryptionPoint.longitude];
-                CLLocation *before=[[CLLocation alloc] initWithLatitude:encryptionPoint_before.latitude longitude:encryptionPoint_before.longitude];
-                CLLocationDistance meters=[current distanceFromLocation:before];
-                distance_add += meters;
-                long long during_time = gpsPoint.time - gpsPoint_before.time;
-                time_one_km += during_time;
-                if(distance_add > targetDis){
-                    NSLog(@"大于1000的倍数");
-                    MAPointAnnotation *annotation = [[MAPointAnnotation alloc] init];
-                    annotation.coordinate = CLLocationCoordinate2DMake(encryptionPoint.latitude, encryptionPoint.longitude);
-                    annotation.title = [NSString stringWithFormat:@"%i_%llu",(int)(distance_add/kPopInterval),time_one_km];
-                    [self.mapView addAnnotation:annotation];
-                    targetDis += kPopInterval;
-                    time_one_km = 0;
-                }
-            }
-        }
     }
-    
     MAPolyline* polyline = [MAPolyline polylineWithCoordinates:polylineCoords_backgound count:pointCount];
     polyline.title = @"3";
     [self.mapView addOverlay:polyline];
+    
     //再画灰色：
     MAPolyline* polyline_pause = [MAPolyline polylineWithCoordinates:polylineCoords_backgound count:pointCount];
-    polyline_pause.title = @"1";
+    polyline_pause.title = @"2";
     [self.mapView addOverlay:polyline_pause];
-    double min_lon = polylineCoords_encryption[0].longitude;
-    double min_lat = polylineCoords_encryption[0].latitude;
-    double max_lon = polylineCoords_encryption[0].longitude;
-    double max_lat = polylineCoords_encryption[0].latitude;
     
-    [kApp.runStatusChangeIndex addObject:[NSNumber numberWithInt:pointCount-1]];
-    NSLog(@"changeIndex is %@",kApp.runStatusChangeIndex);
-    int linesCount = [kApp.runStatusChangeIndex count];
-    for(j = 0;j<linesCount-1;j++){
-        int startIndex = [[kApp.runStatusChangeIndex objectAtIndex:j]intValue];
-        int endIndex = [[kApp.runStatusChangeIndex objectAtIndex:j+1]intValue];
-        NSLog(@"startIndex:%i,endIndex:%i",startIndex,endIndex);
-        CLLocationCoordinate2D polylineCoords[endIndex-startIndex+1];
-        if(endIndex-startIndex+1<2)continue;
-        for(i = startIndex,n = 0;i <= endIndex;i++,n++){
-            polylineCoords[n] = polylineCoords_encryption[i];
-            if(polylineCoords_encryption[i].longitude < min_lon){
-                min_lon = polylineCoords_encryption[i].longitude;
-            }
-            if(polylineCoords_encryption[i].latitude < min_lat){
-                min_lat = polylineCoords_encryption[i].latitude;
-            }
-            if(polylineCoords_encryption[i].longitude > max_lon){
-                max_lon = polylineCoords_encryption[i].longitude;
-            }
-            if(polylineCoords_encryption[i].latitude > max_lat){
-                max_lat = polylineCoords_encryption[i].latitude;
-            }
+    CNGPSPoint* firstPoint = [kApp.runManager.GPSList objectAtIndex:0];
+    CLLocationCoordinate2D wgs84Point_first = CLLocationCoordinate2DMake(firstPoint.lat, firstPoint.lon);
+    CLLocationCoordinate2D encryptionPoint_first = [CNEncryption encrypt:wgs84Point_first];
+    double min_lon = encryptionPoint_first.longitude;
+    double min_lat = encryptionPoint_first.latitude;
+    double max_lon = encryptionPoint_first.longitude;
+    double max_lat = encryptionPoint_first.latitude;
+    
+    int startIndex = 0;
+    int endIndex = 0;
+    for(i = 0;i<pointCount;i++){
+        CNGPSPoint* gpsPoint = [kApp.runManager.GPSList objectAtIndex:i];
+        
+        CLLocationCoordinate2D wgs84Point = CLLocationCoordinate2DMake(gpsPoint.lat, gpsPoint.lon);
+        CLLocationCoordinate2D encryptionPoint = [CNEncryption encrypt:wgs84Point];
+        if(encryptionPoint.longitude < min_lon){
+            min_lon = encryptionPoint.longitude;
         }
-        MAPolyline* polyline = [MAPolyline polylineWithCoordinates:polylineCoords count:endIndex-startIndex+1];
-        CNGPSPoint* gpsPoint_end = [kApp.oneRunPointList objectAtIndex:endIndex];
-        if(gpsPoint_end.status == 1){
-            polyline.title = @"1";
-            [self.mapView addOverlay:polyline];
+        if(encryptionPoint.latitude < min_lat){
+            min_lat = encryptionPoint.latitude;
+        }
+        if(encryptionPoint.longitude > max_lon){
+            max_lon = encryptionPoint.longitude;
+        }
+        if(encryptionPoint.latitude > max_lat){
+            max_lat = encryptionPoint.latitude;
+        }
+        
+        if(i==0){
+            startIndex = 0;
+        }else{
+            CNGPSPoint* lastPoint = [kApp.runManager.GPSList objectAtIndex:(i-1)];
+            if(gpsPoint.status != lastPoint.status){
+                if(gpsPoint.status == 1){//运动开始的序列
+                    startIndex = i;
+                }else if(gpsPoint.status == 2){//暂停开始的序列
+                    endIndex = i-1;
+                    if(endIndex-startIndex+1<2)continue;
+                    CLLocationCoordinate2D polylineCoords[endIndex-startIndex+1];
+                    for(j=startIndex,n=0;j<=endIndex;j++,n++){
+                        CNGPSPoint* point = [kApp.runManager.GPSList objectAtIndex:j];
+                        CLLocationCoordinate2D wgs84Point = CLLocationCoordinate2DMake(point.lat, point.lon);
+                        CLLocationCoordinate2D encryptionPoint = [CNEncryption encrypt:wgs84Point];
+                        polylineCoords[n].latitude = encryptionPoint.latitude;
+                        polylineCoords[n].longitude = encryptionPoint.longitude;
+                    }
+                    MAPolyline* polyline = [MAPolyline polylineWithCoordinates:polylineCoords count:endIndex-startIndex+1];
+                    polyline.title = @"1";
+                    [self.mapView addOverlay:polyline];
+                }
+            }else if(i == pointCount-1 && gpsPoint.status == 1){//结束的一段
+                endIndex = i;
+                if(endIndex-startIndex+1<2)continue;
+                CLLocationCoordinate2D polylineCoords[endIndex-startIndex+1];
+                for(j=startIndex,n=0;j<=endIndex;j++,n++){
+                    CNGPSPoint* point = [kApp.runManager.GPSList objectAtIndex:j];
+                    CLLocationCoordinate2D wgs84Point = CLLocationCoordinate2DMake(point.lat, point.lon);
+                    CLLocationCoordinate2D encryptionPoint = [CNEncryption encrypt:wgs84Point];
+                    polylineCoords[n].latitude = encryptionPoint.latitude;
+                    polylineCoords[n].longitude = encryptionPoint.longitude;
+                }
+                MAPolyline* polyline = [MAPolyline polylineWithCoordinates:polylineCoords count:endIndex-startIndex+1];
+                polyline.title = @"1";
+                [self.mapView addOverlay:polyline];
+            }
         }
     }
     CLLocationCoordinate2D center = CLLocationCoordinate2DMake((min_lat+max_lat)/2, (min_lon+max_lon)/2);
     MACoordinateSpan span = MACoordinateSpanMake(max_lat-min_lat+0.005, max_lon-min_lon+0.005);
     MACoordinateRegion region = MACoordinateRegionMake(center, span);
     [self.mapView setRegion:region animated:NO];
+    
+    //画气泡
+    for(i = 0;i<[kApp.runManager.dataKm count];i++){
+        OneKMInfo* oneKm = [kApp.runManager.dataKm objectAtIndex:i];
+        CLLocationCoordinate2D wgs84Point = CLLocationCoordinate2DMake(oneKm.lat, oneKm.lon);
+        CLLocationCoordinate2D encryptionPoint = [CNEncryption encrypt:wgs84Point];
+        MAPointAnnotation *annotation = [[MAPointAnnotation alloc] init];
+        annotation.coordinate = CLLocationCoordinate2DMake(encryptionPoint.latitude, encryptionPoint.longitude);
+        annotation.title = [NSString stringWithFormat:@"%i_%i",oneKm.number,oneKm.during/1000];
+        [self.mapView addAnnotation:annotation];
+    }
 }
 - (MAOverlayView *)mapView:(MAMapView *)mapView viewForOverlay:(id)overlay
 {

@@ -19,4 +19,5 @@
 + (float)speedFromPspeed:(int)second;
 + (long long)getNowTimeDelta;
 + (NSString*)getMatchStage;
++ (NSString*)getYearMonth:(long long)timestamp;
 @end

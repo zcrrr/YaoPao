@@ -16,6 +16,8 @@
 #import "UIImage+Rescale.h"
 #import "CNRunRecordViewController.h"
 #import "CNRunManager.h"
+#import "BinaryIOManager.h"
+#import "Toast+UIView.h"
 
 
 @interface CNRunMoodViewController ()
@@ -147,6 +149,7 @@
     [self.navigationController pushViewController:recordVC animated:YES];
 }
 - (void)saveRun{
+    long long nowTime = [CNUtil getNowTime1000];
     kApp.runManager.remark = self.textfield_feel.text;
     
     //通过plist获取运动类型等参数
@@ -155,35 +158,64 @@
     //通过全局变量获取运动属性等参数
     //存储到数据库
     RunClass * runClass  = [NSEntityDescription insertNewObjectForEntityForName:@"RunClass" inManagedObjectContext:kApp.managedObjectContext];
-    runClass.rid = [NSString stringWithFormat:@"%lli",[CNUtil getNowTime]];
+    runClass.rid = [NSString stringWithFormat:@"%lli",nowTime];
     runClass.runtar = [NSNumber numberWithInt:[[runSettingDic objectForKey:@"target"]intValue]];
     runClass.runty = [NSNumber numberWithInt:[[runSettingDic objectForKey:@"type"]intValue]];
-    runClass.mind = [NSNumber numberWithInt:kApp.mood];
-    runClass.runway = [NSNumber numberWithInt:kApp.way];
-    runClass.aheart = [NSNumber numberWithInt:kApp.perHeart];
-    runClass.mheart = [NSNumber numberWithInt:kApp.maxHeart];
-    runClass.weather = [NSNumber numberWithInt:kApp.weather];
-    runClass.temp = [NSNumber numberWithInt:kApp.temp];
-    runClass.distance = [NSNumber numberWithFloat:kApp.distance];
-    runClass.utime = [NSNumber numberWithInt:kApp.totalSecond];
-    runClass.pspeed = [NSNumber numberWithFloat:kApp.perMileSecond];
-    runClass.hspeed = [NSNumber numberWithFloat:kApp.hspeed];
-    runClass.heat = [NSNumber numberWithInt:100];
-    runClass.remarks = kApp.feel;
+    runClass.mind = [NSNumber numberWithInt:kApp.runManager.feeling];
+    runClass.runway = [NSNumber numberWithInt:kApp.runManager.way];
+    runClass.aheart = [NSNumber numberWithInt:0];
+    runClass.mheart = [NSNumber numberWithInt:0];
+    runClass.weather = [NSNumber numberWithInt:0];
+    runClass.temp = [NSNumber numberWithInt:0];
+    runClass.distance = [NSNumber numberWithFloat:kApp.runManager.distance];
+    runClass.utime = [NSNumber numberWithInt:[kApp.runManager during]];
+    runClass.pspeed = [NSNumber numberWithFloat:kApp.runManager.paceKm];
+    runClass.hspeed = [NSNumber numberWithInt:0];
+    runClass.heat = [NSNumber numberWithInt:0];
+    runClass.remarks = kApp.runManager.remark;
     runClass.ismatch = [NSNumber numberWithInt:0];
-    CNGPSPoint* firstPoint = [kApp.oneRunPointList objectAtIndex:0];
+    CNGPSPoint* firstPoint = [kApp.runManager.GPSList firstObject];
     long long stamp = firstPoint.time;
     runClass.stamp = [NSNumber numberWithLongLong:stamp];
-    runClass.score = [NSNumber numberWithInt:kApp.score];
-    
+    runClass.score = [NSNumber numberWithInt:kApp.runManager.score];
+    //版本2.0新增
+    runClass.uid = [kApp.userInfoDic objectForKey:@"uid"];
+    runClass.version = [NSNumber numberWithInt:2];
+    runClass.gpsCount = [NSNumber numberWithLongLong:[kApp.runManager.GPSList count]];
+    runClass.kmCount = [NSNumber numberWithLongLong:[kApp.runManager.dataKm count]];
+    runClass.mileCount = [NSNumber numberWithLongLong:[kApp.runManager.dataMile count]];
+    runClass.minCount = [NSNumber numberWithLongLong:[kApp.runManager.dataMin count]];
+    runClass.gt = [NSNumber numberWithLongLong:nowTime];
+    runClass.ut = [NSNumber numberWithLongLong:nowTime];
+    runClass.stp = @"";
+    //存储2进制文件
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString *path = [documentsDirectory stringByAppendingPathComponent:[CNUtil getYearMonth:nowTime/1000]];
+    BOOL bo = [[NSFileManager defaultManager] createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:nil];
+    if(bo){
+        NSString* filename = [NSString stringWithFormat:@"%@/%lli.yaopao",[CNUtil getYearMonth:nowTime/1000],nowTime];
+        NSLog(@"filename is %@",filename);
+        BinaryIOManager* ioManager = [[BinaryIOManager alloc]init];
+        [ioManager writeBinary:filename];
+        runClass.ctp = filename;
+    }else{
+        [kApp.window makeToast:@"保存运动轨迹文件出错"];
+        return;
+    }
     //如果有图片，存储到手机
     if(self.hasPhoto){
         NSLog(@"有图片");
-        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask, YES);
-        NSString *filePath_big = [[paths objectAtIndex:0] stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_big.jpg",runClass.rid]];   // 保存文件的名称
-        NSString *filePath_small = [[paths objectAtIndex:0] stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_small.jpg",runClass.rid]];
+        NSString *filePath_big = [path stringByAppendingPathComponent:[NSString stringWithFormat:@"/%lli_big.jpg",nowTime]];   // 保存文件的名称
+        NSString *filePath_small = [path stringByAppendingPathComponent:[NSString stringWithFormat:@"/%lli_small.jpg",nowTime]];
+        NSLog(@"filePath_big is %@",filePath_big);
+        NSLog(@"filePath_small is %@",filePath_small);
         if ([UIImagePNGRepresentation(self.imageview_photo.image) writeToFile: filePath_big atomically:YES]) {
             [UIImagePNGRepresentation(self.image_small) writeToFile: filePath_small atomically:YES];
+            runClass.cips = [NSString stringWithFormat:@"%@/%lli_big.jpg",[CNUtil getYearMonth:nowTime/1000],nowTime];
+            runClass.c120ips = [NSString stringWithFormat:@"%@/%lli_small.jpg",[CNUtil getYearMonth:nowTime/1000],nowTime];
+            runClass.sips = @"";
+            runClass.s120ips = @"";
             runClass.image_count = [NSNumber numberWithInt:1];
         }else{
             runClass.image_count = [NSNumber numberWithInt:0];
@@ -192,6 +224,7 @@
         NSLog(@"没有图片");
         runClass.image_count = [NSNumber numberWithInt:0];
     }
+    
     
     NSError *error = nil;
     if (![kApp.managedObjectContext save:&error]) {
@@ -213,10 +246,10 @@
     int total_count = [[record_dic objectForKey:@"total_count"]intValue];
     int total_time = [[record_dic objectForKey:@"total_time"]intValue];
     int total_score = [[record_dic objectForKey:@"total_score"]intValue];
-    total_distance += kApp.distance;
+    total_distance += kApp.runManager.distance;
     total_count++;
-    total_time += kApp.totalSecond;
-    total_score += kApp.score;
+    total_time += [kApp.runManager during]/1000;
+    total_score += kApp.runManager.score;
     [record_dic setObject:[NSString stringWithFormat:@"%f",total_distance] forKey:@"total_distance"];
     [record_dic setObject:[NSString stringWithFormat:@"%i",total_count] forKey:@"total_count"];
     [record_dic setObject:[NSString stringWithFormat:@"%i",total_time] forKey:@"total_time"];
@@ -267,39 +300,7 @@
     self.view.frame = rect;
     [UIView commitAnimations];
 }
-- (NSMutableArray*)list2Increment{
-    NSMutableArray* listIncrement = [[NSMutableArray alloc]init];
-    int i = 0;
-    CNGPSPoint* firstPoint = [kApp.oneRunPointList objectAtIndex:0];
-    NSMutableDictionary* firstDic = [[NSMutableDictionary alloc]init];
-    
-    NSLog(@"time is %lli",firstPoint.time*1000);
-    NSLog(@"%@",[NSString stringWithFormat:@"%lli",(firstPoint.time*1000)]);
-    
-    [firstDic setObject:[NSString stringWithFormat:@"%i",firstPoint.status] forKey:@"state"];
-    [firstDic setObject:[NSString stringWithFormat:@"%lli",(firstPoint.time*1000)] forKey:@"addtime"];
-    [firstDic setObject:[NSString stringWithFormat:@"%i",(int)(firstPoint.lon*1000000)] forKey:@"slon"];
-    [firstDic setObject:[NSString stringWithFormat:@"%i",(int)(firstPoint.lat*1000000)] forKey:@"slat"];
-    [firstDic setObject:[NSString stringWithFormat:@"%i",firstPoint.speed] forKey:@"speed"];
-    [firstDic setObject:[NSString stringWithFormat:@"%i",firstPoint.course] forKey:@"orient"];
-    [firstDic setObject:[NSString stringWithFormat:@"%i",firstPoint.altitude] forKey:@"height"];
-    [listIncrement addObject:firstDic];
-    int count = [kApp.oneRunPointList count];
-    for(i = 1;i<count;i++){
-        CNGPSPoint* beforePoint = [kApp.oneRunPointList objectAtIndex:(i-1)];
-        CNGPSPoint* thisPoint = [kApp.oneRunPointList objectAtIndex:i];
-        NSMutableDictionary* dic = [[NSMutableDictionary alloc]init];
-        [dic setObject:[NSString stringWithFormat:@"%i",thisPoint.status] forKey:@"state"];
-        [dic setObject:[NSString stringWithFormat:@"%lli",(thisPoint.time*1000-beforePoint.time*1000)] forKey:@"addtime"];
-        [dic setObject:[NSString stringWithFormat:@"%i",((int)(thisPoint.lon*1000000)-(int)(beforePoint.lon*1000000))] forKey:@"slon"];
-        [dic setObject:[NSString stringWithFormat:@"%i",((int)(thisPoint.lat*1000000)-(int)(beforePoint.lat*1000000))] forKey:@"slat"];
-        [dic setObject:[NSString stringWithFormat:@"%i",thisPoint.speed] forKey:@"speed"];
-        [dic setObject:[NSString stringWithFormat:@"%i",thisPoint.course] forKey:@"orient"];
-        [dic setObject:[NSString stringWithFormat:@"%i",thisPoint.altitude] forKey:@"height"];
-        [listIncrement addObject:dic];
-    }
-    return listIncrement;
-}
+
 #pragma -mark actionSheet delegate
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{
     UIImagePickerController* pickC = [[UIImagePickerController alloc]init];
