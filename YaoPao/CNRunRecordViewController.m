@@ -241,7 +241,7 @@
         {
             img_name_type = @"runtype_run.png";
             break;
-        }
+        } 
         case 2:
         {
             img_name_type = @"runtype_ride.png";
