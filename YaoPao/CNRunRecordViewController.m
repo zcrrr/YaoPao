@@ -12,6 +12,8 @@
 #import "CNRecordDetailViewController.h"
 #import "CNDistanceImageView.h"
 #import "CNMainViewController.h"
+#import "CNResultTableViewCell.h"
+#import "CNCloudRecord.h"
 
 @interface CNRunRecordViewController ()
 
@@ -19,9 +21,9 @@
 
 @implementation CNRunRecordViewController
 @synthesize pageNumber;
-@synthesize y_used;
 @synthesize recordList;
 @synthesize from;
+@synthesize page;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -63,9 +65,20 @@
     [self setCountNumImage:total_count];
     int total_second = [[record_dic objectForKey:@"total_time"]intValue];
     [self setTimeNumImage:total_second];
-    
-    self.y_used = 0;
+    self.recordList = [[NSMutableArray alloc]init];
     [self lookup];
+    //表格尾部
+    self.tableview.tableFooterView = nil;
+    UIView *tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.tableview.bounds.size.width, 40.0f)];
+    UILabel *loadMoreText = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 116.0f, 40.0f)];
+    [loadMoreText setCenter:tableFooterView.center];
+    [loadMoreText setFont:[UIFont fontWithName:@"Helvetica Neue" size:14]];
+    [loadMoreText setText:@"上拉显示更多数据"];
+    [tableFooterView addSubview:loadMoreText];
+    
+    
+    
+    self.tableview.tableFooterView = tableFooterView;
 }
 - (void)button_blue_down:(id)sender{
     ((UIButton*)sender).backgroundColor = [UIColor colorWithRed:0 green:88.0/255.0 blue:142.0/255.0 alpha:1];
@@ -92,139 +105,32 @@
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"rid" ascending:NO];
     NSArray *sortDescriptions = [[NSArray alloc]initWithObjects:sortDescriptor, nil];
     [request setSortDescriptors:sortDescriptions];
+    [request setFetchLimit:10];
+    [request setFetchOffset:page * 10];
     NSError *error = nil;
     //执行获取数据请求，返回数组
     NSMutableArray *mutableFetchResult = [[kApp.managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
     if (mutableFetchResult == nil) {
         NSLog(@"Error: %@,%@",error,[error userInfo]);
     }
-    self.recordList = mutableFetchResult;
-    int i = 0;
-    for(i = 0;i<[mutableFetchResult count];i++){
-        RunClass *runClass = [mutableFetchResult objectAtIndex:i];
-        NSLog(@"runClass is %@",runClass);
-//        NSLog(@"%@,%@,%@,%@,%@,%@,%@,%@,%@,%@,%@,%@,%@,%@,%@,%@,%@,%@",runClass.rid,runClass.stamp,runClass.runtar,runClass.runty,runClass.runtra,runClass.mind,runClass.runway,runClass.aheart,runClass.mheart,runClass.weather,runClass.temp,runClass.distance,runClass.utime,runClass.pspeed,runClass.hspeed,runClass.heat,runClass.remarks,runClass.statusIndex);
-        
-        NSLog(@"ctp is %@",runClass.ctp);
-        UIView *view_one_record = [[UIView alloc]initWithFrame:CGRectMake(0, y_used, 320, 60)];
-        //分割线
-        UIView *view_line = [[UIView alloc]initWithFrame:CGRectMake(0, 59, 320, 1)];
-        [view_line setBackgroundColor:[UIColor lightGrayColor]];
-        [view_one_record addSubview:view_line];
-        //运动类型
-        UIImageView* image_type = [[UIImageView alloc]initWithFrame:CGRectMake(10, 10, 40, 40)];
-        int type = [runClass.runty intValue];
-        image_type.image = [UIImage imageNamed:[self imageNameFromType:type]];
-        [view_one_record addSubview:image_type];
-        //时间
-        long long stamp = [runClass.stamp longLongValue];
-        NSDate *date = [NSDate dateWithTimeIntervalSince1970:stamp/1000];
-        NSDateComponents *componets = [[NSCalendar autoupdatingCurrentCalendar] components:NSWeekdayCalendarUnit fromDate:date];
-        int weekday = [componets weekday];
-        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-        [dateFormatter setDateFormat:[NSString stringWithFormat:@"M月d日 周%@ HH:mm",[CNUtil weekday2chinese:weekday]]];
-        NSString *strDate = [dateFormatter stringFromDate:date];
-        
-        UILabel* label_date = [[UILabel alloc]initWithFrame:CGRectMake(60, 0, 120, 20)];
-        label_date.textAlignment = NSTextAlignmentLeft;
-        label_date.font = [UIFont systemFontOfSize:12];
-        label_date.text = [NSString stringWithFormat:@"%@",strDate];
-        [view_one_record addSubview:label_date];
-        //距离
-        CNDistanceImageView* div = [[CNDistanceImageView alloc]initWithFrame:CGRectMake(37, 20, 130, 32)];
-        div.distance = [runClass.distance floatValue]/1000;
-        div.color = @"red";
-        [div fitToSize];
-        [view_one_record addSubview:div];
-        UIImageView* image_km = [[UIImageView alloc]initWithFrame:CGRectMake(div.frame.origin.x+div.frame.size.width, 20,26, 32)];
-        image_km.image = [UIImage imageNamed:@"redkm.png"];
-        [view_one_record addSubview:image_km];
-    
-        //4张图片
-        UIImageView* image_mood = [[UIImageView alloc]initWithFrame:CGRectMake(180, 10, 20, 20)];
-        int mood = [runClass.mind intValue];
-        NSString* img_name_mood = [NSString stringWithFormat:@"mood%i_h.png",mood];
-        image_mood.image = [UIImage imageNamed:img_name_mood];
-        [view_one_record addSubview:image_mood];
-        
-        UIImageView* image_way = [[UIImageView alloc]initWithFrame:CGRectMake(210, 10, 20, 20)];
-        int way = [runClass.runway intValue];
-        NSString* img_name_way = [NSString stringWithFormat:@"way%i_h.png",way];
-        image_way.image = [UIImage imageNamed:img_name_way];
-        [view_one_record addSubview:image_way];
-        
-        UIImageView* image_photo = [[UIImageView alloc]initWithFrame:CGRectMake(240, 10, 20, 20)];
-        int imagecount = [runClass.image_count intValue];
-        if(imagecount!=0){
-            //去沙盒读取图片
-            NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask, YES);
-            NSString *filePath = [[paths objectAtIndex:0] stringByAppendingPathComponent:runClass.c120ips];;
-            NSLog(@"filepath is %@",filePath);
-            BOOL blHave=[[NSFileManager defaultManager] fileExistsAtPath:filePath];
-            if (blHave) {//图片存在
-                NSData *data = [NSData dataWithContentsOfFile:filePath];
-                image_photo.image = [[UIImage alloc] initWithData:data];
-            }
-        }
-        [view_one_record addSubview:image_photo];
-        
-        int ismatch = [runClass.ismatch intValue];
-        if(ismatch == 1){
-            UIImageView* image_match = [[UIImageView alloc]initWithFrame:CGRectMake(180, 10, 20, 20)];
-            image_match.image = [UIImage imageNamed:@"matchicon.png"];
-            [view_one_record addSubview:image_match];
-        }
-        
-        
-        
-        //配速
-        UIImageView* image_speed = [[UIImageView alloc]initWithFrame:CGRectMake(180, 35, 20, 20)];
-        image_speed.image = [UIImage imageNamed:@"secondwatch.png"];
-        [view_one_record addSubview:image_speed];
-        
-        UILabel* label_pspeed = [[UILabel alloc]initWithFrame:CGRectMake(200, 30, 50, 30)];
-        label_pspeed.textAlignment = NSTextAlignmentLeft;
-        label_pspeed.font = [UIFont systemFontOfSize:12];
-        label_pspeed.text = [CNUtil pspeedStringFromSecond:[runClass.pspeed intValue]];
-        [view_one_record addSubview:label_pspeed];
-        //时间
-        UIImageView* image_time = [[UIImageView alloc]initWithFrame:CGRectMake(250, 35, 20, 20)];
-        image_time.image = [UIImage imageNamed:@"clock.png"];
-        [view_one_record addSubview:image_time];
-        
-        UILabel* label_during = [[UILabel alloc]initWithFrame:CGRectMake(270, 30, 50, 30)];
-        label_during.textAlignment = NSTextAlignmentLeft;
-        label_during.font = [UIFont systemFontOfSize:12];
-        int duringSecond = [runClass.utime intValue]/1000;
-        int minute1 = duringSecond/60;
-        int second1 = duringSecond%60;
-        label_during.text = [NSString stringWithFormat:@"%02d:%02d",minute1,second1];
-        [view_one_record addSubview:label_during];
-        //按钮
-        UIButton* button_goDetail = [UIButton buttonWithType:UIButtonTypeCustom];
-        [button_goDetail setTitle:@"" forState:UIControlStateNormal];
-        [button_goDetail setFrame:CGRectMake(0, 0 , 320, 60)];
-        button_goDetail.tag = i;
-        [view_one_record addSubview:button_goDetail];
-        [button_goDetail addTarget:self action:@selector(goDetail:) forControlEvents:UIControlEventTouchUpInside];
-        [self.scrollview_list addSubview:view_one_record];
-        y_used += 60;
+    NSLog(@"mutableFetchResult count is %i",[mutableFetchResult count]);
+    if([mutableFetchResult count] == 0){
+        UIAlertView* alert = [[UIAlertView alloc]initWithTitle:nil message:@"已经没有更多数据了" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+        [alert show];
+        return;
     }
-    [self.scrollview_list setContentSize:CGSizeMake(320, y_used)];
-}
-- (void)goDetail:(id)sender{
-    NSLog(@"tag is %i",[sender tag]);
-    CNRecordDetailViewController* recordDetailVC = [[CNRecordDetailViewController alloc]init];
-    recordDetailVC.oneRun = [self.recordList objectAtIndex:[sender tag]];
-    [self.navigationController pushViewController:recordDetailVC animated:YES];
+    [self.recordList = self.recordList addObjectsFromArray:mutableFetchResult];
+    [self.tableview reloadData];
+    page++;
 }
 - (IBAction)button_back_clicked:(id)sender {
     self.button_back.backgroundColor = [UIColor clearColor];
     if([self.from isEqual:@"match"]){
         [self.navigationController popViewControllerAnimated:YES];
     }else{
-        CNMainViewController* mainVC = [[CNMainViewController alloc]init];
-        [self.navigationController pushViewController:mainVC animated:YES];
+//        CNMainViewController* mainVC = [[CNMainViewController alloc]init];
+//        [self.navigationController pushViewController:mainVC animated:YES];
+        [self.navigationController popToRootViewControllerAnimated:YES];
     }
     
     
@@ -232,17 +138,17 @@
 - (NSString*)imageNameFromType:(int)type{
     NSString* img_name_type = @"runtype_run.png";
     switch (type) {
-        case 0:
-        {
-            img_name_type = @"runtype_walk.png";
-            break;
-        }
         case 1:
         {
             img_name_type = @"runtype_run.png";
             break;
-        } 
+        }
         case 2:
+        {
+            img_name_type = @"runtype_walk.png";
+            break;
+        } 
+        case 3:
         {
             img_name_type = @"runtype_ride.png";
             break;
@@ -335,5 +241,151 @@
     newFrame.origin = CGPointMake(left-width/2, top);
     self.view_count.frame = newFrame;
 }
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+    return 1;
+}
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    return [self.recordList count];
+}
+- (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    static NSString *CellIdentifier = @"TableViewCell";
+    int row = [indexPath row];
+    //自定义cell类
+    CNResultTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (cell == nil) {
+        //通过xib的名称加载自定义的cell
+        cell = [[[NSBundle mainBundle] loadNibNamed:@"CNResultTableViewCell" owner:self options:nil] lastObject];
+    }
+    RunClass *runClass = [self.recordList objectAtIndex:row];
+    NSLog(@"averageHeart:%@",runClass.averageHeart);
+    NSLog(@"clientBinaryFilePath:%@",runClass.clientBinaryFilePath);
+    NSLog(@"clientImagePaths:%@",runClass.clientImagePaths);
+    NSLog(@"clientImagePathsSmall:%@",runClass.clientImagePathsSmall);
+    NSLog(@"dbVersion:%@",runClass.dbVersion);
+    NSLog(@"distance:%@",runClass.distance);
+    NSLog(@"duration:%@",runClass.duration);
+    NSLog(@"feeling:%@",runClass.feeling);
+    NSLog(@"generateTime:%@",runClass.generateTime);
+    NSLog(@"gpsCount:%@",runClass.gpsCount);
+    NSLog(@"gpsString:%@",runClass.gpsString);
+    NSLog(@"heat:%@",runClass.heat);
+    NSLog(@"howToMove:%@",runClass.howToMove);
+    NSLog(@"isMatch:%@",runClass.isMatch);
+    NSLog(@"jsonParam:%@",runClass.jsonParam);
+    NSLog(@"kmCount:%@",runClass.kmCount);
+    NSLog(@"maxHeart:%@",runClass.maxHeart);
+    NSLog(@"mileCount:%@",runClass.mileCount);
+    NSLog(@"minCount:%@",runClass.minCount);
+    NSLog(@"remark:%@",runClass.remark);
+    NSLog(@"rid:%@",runClass.rid);
+    NSLog(@"runway:%@",runClass.runway);
+    NSLog(@"score:%@",runClass.score);
+    NSLog(@"secondPerKm:%@",runClass.secondPerKm);
+    NSLog(@"serverBinaryFilePath:%@",runClass.serverBinaryFilePath);
+    NSLog(@"serverImagePaths:%@",runClass.serverImagePaths);
+    NSLog(@"serverImagePathsSmall:%@",runClass.serverImagePathsSmall);
+    NSLog(@"startTime:%@",runClass.startTime);
+    NSLog(@"targetType:%@",runClass.targetType);
+    NSLog(@"targetValue:%@",runClass.targetValue);
+    NSLog(@"temp:%@",runClass.temp);
+    NSLog(@"uid:%@",runClass.uid);
+    NSLog(@"updateTime:%@",runClass.updateTime);
+    NSLog(@"weather:%@",runClass.weather);
+    NSLog(@"--------------------------------------------");
+    
+    int type = [runClass.howToMove intValue];
+    cell.image_type.image = [UIImage imageNamed:[self imageNameFromType:type]];
+    
+    long long stamp = [runClass.startTime longLongValue];
+    NSDate *date = [NSDate dateWithTimeIntervalSince1970:stamp/1000];
+    NSDateComponents *componets = [[NSCalendar autoupdatingCurrentCalendar] components:NSWeekdayCalendarUnit fromDate:date];
+    int weekday = [componets weekday];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:[NSString stringWithFormat:@"M月d日 周%@ HH:mm",[CNUtil weekday2chinese:weekday]]];
+    NSString *strDate = [dateFormatter stringFromDate:date];
+    cell.label_date.text = [NSString stringWithFormat:@"%@",strDate];
+    
+    int feeling = [runClass.feeling intValue];
+    NSString* img_name_mood = [NSString stringWithFormat:@"mood%i_h.png",feeling];
+    cell.image_mood.image = [UIImage imageNamed:img_name_mood];
+    
+    int way = [runClass.runway intValue];
+    NSString* img_name_way = [NSString stringWithFormat:@"way%i_h.png",way];
+    cell.image_way.image = [UIImage imageNamed:img_name_way];
+    
+    if(![runClass.clientImagePathsSmall isEqualToString:@""]){
+        //去沙盒读取图片
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask, YES);
+        NSString *filePath = [[paths objectAtIndex:0] stringByAppendingPathComponent:runClass.clientImagePathsSmall];;
+        NSLog(@"filepath is %@",filePath);
+        BOOL blHave=[[NSFileManager defaultManager] fileExistsAtPath:filePath];
+        if (blHave) {//图片存在
+            NSData *data = [NSData dataWithContentsOfFile:filePath];
+            cell.image_photo.image = [[UIImage alloc] initWithData:data];
+        }
+    }
+    
+    int ismatch = [runClass.isMatch intValue];
+    if(ismatch == 1){
+        cell.image_mood.image = [UIImage imageNamed:@"matchicon.png"];
+    }
+    
+    cell.label_pspeed.text = [CNUtil pspeedStringFromSecond:[runClass.secondPerKm intValue]];
+    
+    int duringSecond = [runClass.duration intValue]/1000;
+    int minute1 = duringSecond/60;
+    int second1 = duringSecond%60;
+    cell.label_during.text = [NSString stringWithFormat:@"%02d:%02d",minute1,second1];
+    
+    //距离
+    CNDistanceImageView* div = [[CNDistanceImageView alloc]initWithFrame:CGRectMake(37, 20, 130, 32)];
+    div.distance = [runClass.distance floatValue]/1000;
+    div.color = @"red";
+    [div fitToSize];
+    [cell addSubview:div];
+    UIImageView* image_km = [[UIImageView alloc]initWithFrame:CGRectMake(div.frame.origin.x+div.frame.size.width, 20,26, 32)];
+    image_km.image = [UIImage imageNamed:@"redkm.png"];
+    [cell addSubview:image_km];
+    
+    return cell;
+}
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    int row = [indexPath row];
+    CNRecordDetailViewController* recordDetailVC = [[CNRecordDetailViewController alloc]init];
+    recordDetailVC.oneRun = [self.recordList objectAtIndex:row];
+    [self.navigationController pushViewController:recordDetailVC animated:YES];
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+}
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    return YES;
+}
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        // Delete the row from the data source.
+        int row = [indexPath row];
+        RunClass* runclass = [self.recordList objectAtIndex:row];
+        if(![runclass.uid isEqualToString:@""]){//uid有值说明该记录有可能存在于服务器，所以需要通知一下服务器要删除
+            NSString* filePath_cloud = [CNPersistenceHandler getDocument:@"cloudDiary.plist"];
+            NSMutableDictionary* cloudDiary = [NSMutableDictionary dictionaryWithContentsOfFile:filePath_cloud];
+            NSMutableArray* deleteArray = [cloudDiary objectForKey:@"deleteArray"];
+            NSLog(@"rid is %@",runclass.rid);
+            [deleteArray addObject:runclass.rid];
+            [cloudDiary setObject:deleteArray forKey:@"deleteArray"];
+            [cloudDiary writeToFile:filePath_cloud atomically:YES];
+        }
+        [CNCloudRecord deleteOneRecord:runclass];
+        
+        [self.recordList removeObjectAtIndex:row];
+        [self.tableview deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+    }
+}
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
+    if(scrollView.contentOffset.y > ((scrollView.contentSize.height - scrollView.frame.size.height)))
+    {
+        NSLog(@"到最底部上拉");
+        [self lookup];
+    }
+}
+
 
 @end

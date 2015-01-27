@@ -2,7 +2,7 @@
 //  RunClass.m
 //  YaoPao
 //
-//  Created by zc on 15-1-14.
+//  Created by zc on 15-1-27.
 //  Copyright (c) 2015年 张 驰. All rights reserved.
 //
 
@@ -11,41 +11,39 @@
 
 @implementation RunClass
 
-@dynamic aheart;
-@dynamic c120ips;
-@dynamic cips;
-@dynamic ctp;
+@dynamic averageHeart;
+@dynamic clientBinaryFilePath;
+@dynamic clientImagePaths;
+@dynamic clientImagePathsSmall;
+@dynamic dbVersion;
 @dynamic distance;
+@dynamic duration;
+@dynamic feeling;
+@dynamic generateTime;
 @dynamic gpsCount;
-@dynamic gt;
+@dynamic gpsString;
 @dynamic heat;
-@dynamic hspeed;
-@dynamic image_count;
-@dynamic ismatch;
+@dynamic howToMove;
+@dynamic isMatch;
 @dynamic jsonParam;
 @dynamic kmCount;
-@dynamic mheart;
+@dynamic maxHeart;
 @dynamic mileCount;
 @dynamic minCount;
-@dynamic mind;
-@dynamic pspeed;
-@dynamic remarks;
+@dynamic remark;
 @dynamic rid;
-@dynamic runtar;
-@dynamic runtra;
-@dynamic runty;
 @dynamic runway;
-@dynamic s120ips;
 @dynamic score;
-@dynamic sips;
-@dynamic stamp;
-@dynamic statusIndex;
-@dynamic stp;
+@dynamic secondPerKm;
+@dynamic serverBinaryFilePath;
+@dynamic serverImagePaths;
+@dynamic serverImagePathsSmall;
+@dynamic startTime;
+@dynamic targetType;
+@dynamic targetValue;
 @dynamic temp;
 @dynamic uid;
-@dynamic ut;
-@dynamic utime;
+@dynamic updateTime;
 @dynamic weather;
-@dynamic version;
 
 @end

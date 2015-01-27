@@ -7,6 +7,7 @@
 //
 
 #import "CNUtil.h"
+#import "Reachability.h"
 
 @implementation CNUtil
 
@@ -103,6 +104,16 @@
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:@"yyyyMM"];
     return [dateFormatter stringFromDate:date];
+}
++ (BOOL)canNetWork{
+    Reachability *r= [Reachability reachabilityForInternetConnection];
+    if ([r currentReachabilityStatus] == NotReachable) {
+        NSLog(@"无网络连接");
+        return NO;
+    }else{
+        NSLog(@"有网络连接");
+        return YES;
+    }
 }
 
 @end

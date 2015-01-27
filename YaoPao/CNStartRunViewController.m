@@ -56,35 +56,32 @@
     self.runSettingDic = [NSMutableDictionary dictionaryWithContentsOfFile:filePath];
     if(self.runSettingDic == nil){
         self.runSettingDic = [[NSMutableDictionary alloc]init];
-        [self.runSettingDic setObject:@"1" forKey:@"target"];
+        [self.runSettingDic setObject:@"2" forKey:@"targetType"];
         [self.runSettingDic setObject:@"5" forKey:@"distance"];
         [self.runSettingDic setObject:@"30" forKey:@"time"];
-        [self.runSettingDic setObject:@"1" forKey:@"type"];
+        [self.runSettingDic setObject:@"1" forKey:@"howToMove"];
         [self.runSettingDic setObject:@"1" forKey:@"countdown"];
         [self.runSettingDic setObject:@"1" forKey:@"voice"];
     }
-    int target = [[self.runSettingDic objectForKey:@"target"]intValue];
+    self.targetType = [[self.runSettingDic objectForKey:@"targetType"]intValue];
     NSString* targetDes = @"";
-    switch (target) {
-        case 0:
+    switch (self.targetType) {
+        case 1:
         {
-            self.targetType = 1;
             self.targetValue = 0;
             targetDes = @"自由";
             self.image_target.image = [UIImage imageNamed:@"target_free.png"];
             break;
         }
-        case 1:
+        case 2:
         {
-            self.targetType = 2;
             self.targetValue = [[self.runSettingDic objectForKey:@"distance"] intValue]*1000;
             targetDes = [NSString stringWithFormat:@"%@km",[self.runSettingDic objectForKey:@"distance"]];
             self.image_target.image = [UIImage imageNamed:@"target_dis.png"];
             break;
         }
-        case 2:
+        case 3:
         {
-            self.targetType = 3;
             self.targetValue = [[self.runSettingDic objectForKey:@"time"]intValue]*60*1000;//毫秒
             int second = [[self.runSettingDic objectForKey:@"time"]intValue]*60;
             NSString* timestr = [CNUtil duringTimeStringFromSecond:second];
@@ -96,26 +93,23 @@
             break;
     }
     self.label_target.text = targetDes;
-    int type = [[self.runSettingDic objectForKey:@"type"]intValue];
+    self.howToMove = [[self.runSettingDic objectForKey:@"howToMove"]intValue];
     NSString* typeDes = @"";
-    switch (type) {
-        case 0:
-        {
-            self.howToMove = 2;
-            typeDes = @"步行";
-            self.image_type.image = [UIImage imageNamed:@"runtype_walk_s.png"];
-            break;
-        }
+    switch (self.howToMove) {
         case 1:
         {
-            self.howToMove = 1;
             typeDes = @"跑步";
             self.image_type.image = [UIImage imageNamed:@"runtype_run_s.png"];
             break;
         }
         case 2:
         {
-            self.howToMove = 3;
+            typeDes = @"步行";
+            self.image_type.image = [UIImage imageNamed:@"runtype_walk_s.png"];
+            break;
+        }
+        case 3:
+        {
             typeDes = @"自行车骑行";
             self.image_type.image = [UIImage imageNamed:@"runtype_ride_s.png"];
             break;
@@ -203,7 +197,6 @@
                 NSLog(@"howtomove is %d",self.howToMove);
                 NSLog(@"targetType is %d",self.targetType);
                 NSLog(@"targetValue is %d",self.targetValue);
-                
                 if(self.switch_countdown.on){
                     CNCountDownViewController* countdownVC = [[CNCountDownViewController alloc]init];
                     [self.navigationController pushViewController:countdownVC animated:YES];

@@ -36,7 +36,7 @@
     stTest.calorie = 0 ;
     stTest.step = 0 ;
     stTest.during = [kApp.runManager during] ;
-    stTest.distance =  (int)(kApp.runManager.distance+0.5);
+    stTest.distance =  kApp.runManager.distance;
     stTest.startTime =  ((CNGPSPoint*)[kApp.runManager.GPSList firstObject]).time;
     stTest.coor = 1 ;
     stTest.pointCount = pointCount ;

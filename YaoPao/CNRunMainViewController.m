@@ -20,14 +20,12 @@
 #import "CNVoiceHandler.h"
 #import "CNRunMapGoogleViewController.h"
 #import "CNRunManager.h"
-#define kInterval 3
 
 @interface CNRunMainViewController ()
 
 @end
 
 @implementation CNRunMainViewController
-@synthesize runSettingDic;
 @synthesize distance_add;
 @synthesize second_add;
 @synthesize div;
@@ -72,7 +70,7 @@
             break;
     }
     [kApp.runManager addObserver:self forKeyPath:@"distance" options:NSKeyValueObservingOptionNew context:nil];
-    [kApp.runManager addObserver:self forKeyPath:@"paceKm" options:NSKeyValueObservingOptionNew context:nil];
+    [kApp.runManager addObserver:self forKeyPath:@"secondPerKm" options:NSKeyValueObservingOptionNew context:nil];
 }
 - (void)button_blue_down:(id)sender{
     ((UIButton*)sender).backgroundColor = [UIColor colorWithRed:0 green:88.0/255.0 blue:142.0/255.0 alpha:1];
@@ -129,26 +127,14 @@
     [self.siv fitToSize];
     [self.view addSubview:self.siv];
     
-    NSString* filePath = [CNPersistenceHandler getDocument:@"runSetting.plist"];
-    self.runSettingDic = [NSMutableDictionary dictionaryWithContentsOfFile:filePath];
-    if(self.runSettingDic == nil){
-        self.runSettingDic = [[NSMutableDictionary alloc]init];
-        [self.runSettingDic setObject:@"1" forKey:@"target"];
-        [self.runSettingDic setObject:@"5" forKey:@"distance"];
-        [self.runSettingDic setObject:@"30" forKey:@"time"];
-        [self.runSettingDic setObject:@"1" forKey:@"type"];
-        [self.runSettingDic setObject:@"1" forKey:@"countdown"];
-        [self.runSettingDic setObject:@"1" forKey:@"voice"];
-    }
-    int target = [[self.runSettingDic objectForKey:@"target"]intValue];
-    if(target == 1 || target == 0){//目标是距离
+    if(kApp.runManager.targetType == 1 || kApp.runManager.targetType == 2){//目标是距离
         self.label_dis.text = @"距离（公里）";
         self.label_time.text = @"时间";
         self.big_div.hidden = NO;
         self.big_tiv.hidden = YES;
         self.div.hidden = YES;
         self.tiv.hidden = NO;
-    }else if(target == 2){
+    }else if(kApp.runManager.targetType == 3){
         self.label_dis.text = @"时间";
         self.label_time.text = @"距离（公里）";
         self.big_div.hidden = YES;
@@ -156,7 +142,7 @@
         self.div.hidden = NO;
         self.tiv.hidden = YES;
     }
-    if(target == 0){
+    if(kApp.runManager.targetType == 1){
         self.label_target.text = @"自由运动";
     }
 }
@@ -187,7 +173,7 @@
         self.tiv.time = duringMiliSecond/1000;
         [self.tiv fitToSize];
     }
-    if(duringMiliSecond > (self.pass_5munite + 1)*kVoiceTimeInterval*60){//过了5分钟
+    if(duringMiliSecond > (self.pass_5munite + 1)*kVoiceTimeInterval*60*1000){//过了5分钟
         self.pass_5munite++;
         self.play5munite = YES;
     }
@@ -205,7 +191,7 @@
 - (void)viewWillDisappear:(BOOL)animated{
     [self.timer_dispalyTime invalidate];
     [kApp.runManager removeObserver:self forKeyPath:@"distance"];
-    [kApp.runManager removeObserver:self forKeyPath:@"paceKm"];
+    [kApp.runManager removeObserver:self forKeyPath:@"secondPerKm"];
 }
 
 - (IBAction)button_control_clicked:(id)sender {
@@ -260,8 +246,8 @@
                 [self.navigationController pushViewController:mainVC animated:YES];
             }else{
                 NSMutableDictionary* voice_params = [[NSMutableDictionary alloc]init];
-                [voice_params setObject:[NSString stringWithFormat:@"%f",kApp.distance] forKey:@"distance"];
-                [voice_params setObject:[NSString stringWithFormat:@"%i",kApp.totalSecond] forKey:@"second"];
+                [voice_params setObject:[NSString stringWithFormat:@"%i",kApp.runManager.distance] forKey:@"distance"];
+                [voice_params setObject:[NSString stringWithFormat:@"%i",[kApp.runManager during]/1000] forKey:@"second"];
                 [kApp.voiceHandler voiceOfapp:@"run_complete" :voice_params];
                 CNRunMoodViewController* moodVC = [[CNRunMoodViewController alloc]init];
                 [self.navigationController pushViewController:moodVC animated:YES];
@@ -273,19 +259,18 @@
     }
 }
 - (void)playVoice{
-    int target = [[self.runSettingDic objectForKey:@"target"]intValue];
-    if(target == 0){//自由
+    if(kApp.runManager.targetType == 1){//自由
         if(self.playkm){//整公里了
             self.playkm = NO;
             NSMutableDictionary* voice_params = [[NSMutableDictionary alloc]init];
-            [voice_params setObject:[NSString stringWithFormat:@"%f",kApp.distance] forKey:@"distance"];
-            [voice_params setObject:[NSString stringWithFormat:@"%i",kApp.totalSecond] forKey:@"second"];
+            [voice_params setObject:[NSString stringWithFormat:@"%i",kApp.runManager.distance] forKey:@"distance"];
+            [voice_params setObject:[NSString stringWithFormat:@"%i",[kApp.runManager during]/1000] forKey:@"second"];
             [voice_params setObject:[NSString stringWithFormat:@"%i",self.pass_km] forKey:@"km"];
             [kApp.voiceHandler voiceOfapp:@"every_km" :voice_params];
             return;
         }
-    }else if(target == 1){//目标是距离
-        int targetDetail = [[self.runSettingDic objectForKey:@"distance"]intValue]*1000;//目标
+    }else if(kApp.runManager.targetType == 2){//目标是距离
+        int targetDetail = kApp.runManager.targetValue;//目标
         if(targetDetail > 4000){//目标大于4000
             if(self.playTarget == NO&&self.reachTarget){//达到目标！
                 self.playTarget = YES;
@@ -293,8 +278,8 @@
                     self.playkm = NO;
                 }
                 NSMutableDictionary* voice_params = [[NSMutableDictionary alloc]init];
-                [voice_params setObject:[NSString stringWithFormat:@"%f",kApp.distance] forKey:@"distance"];
-                [voice_params setObject:[NSString stringWithFormat:@"%i",kApp.totalSecond] forKey:@"second"];
+                [voice_params setObject:[NSString stringWithFormat:@"%i",kApp.runManager.distance] forKey:@"distance"];
+                [voice_params setObject:[NSString stringWithFormat:@"%i",[kApp.runManager during]/1000] forKey:@"second"];
                 [voice_params setObject:[NSString stringWithFormat:@"%i",targetDetail] forKey:@"target_distance"];
                 [voice_params setObject:[NSString stringWithFormat:@"%i",self.pass_km] forKey:@"km"];
                 [kApp.voiceHandler voiceOfapp:@"reach_target_distance" :voice_params];
@@ -303,8 +288,8 @@
             if(self.playkm && self.reachTarget){//整公里且大于目标
                 self.playkm = NO;
                 NSMutableDictionary* voice_params = [[NSMutableDictionary alloc]init];
-                [voice_params setObject:[NSString stringWithFormat:@"%f",kApp.distance] forKey:@"distance"];
-                [voice_params setObject:[NSString stringWithFormat:@"%i",kApp.totalSecond] forKey:@"second"];
+                [voice_params setObject:[NSString stringWithFormat:@"%i",kApp.runManager.distance] forKey:@"distance"];
+                [voice_params setObject:[NSString stringWithFormat:@"%i",[kApp.runManager during]/1000] forKey:@"second"];
                 [voice_params setObject:[NSString stringWithFormat:@"%i",targetDetail] forKey:@"target_distance"];
                 [voice_params setObject:[NSString stringWithFormat:@"%i",self.pass_km] forKey:@"km"];
                 [kApp.voiceHandler voiceOfapp:@"every_km_and_pass_target" :voice_params];
@@ -316,8 +301,8 @@
                     self.playkm = NO;
                 }
                 NSMutableDictionary* voice_params = [[NSMutableDictionary alloc]init];
-                [voice_params setObject:[NSString stringWithFormat:@"%f",kApp.distance] forKey:@"distance"];
-                [voice_params setObject:[NSString stringWithFormat:@"%i",kApp.totalSecond] forKey:@"second"];
+                [voice_params setObject:[NSString stringWithFormat:@"%i",kApp.runManager.distance] forKey:@"distance"];
+                [voice_params setObject:[NSString stringWithFormat:@"%i",[kApp.runManager during]/1000] forKey:@"second"];
                 [voice_params setObject:[NSString stringWithFormat:@"%i",targetDetail] forKey:@"target_distance"];
                 [kApp.voiceHandler voiceOfapp:@"half_target_dis" :voice_params];
                 return;
@@ -325,8 +310,8 @@
             if(self.playkm && self.closeToTarget){//整公里且接近目标
                 self.playkm = NO;
                 NSMutableDictionary* voice_params = [[NSMutableDictionary alloc]init];
-                [voice_params setObject:[NSString stringWithFormat:@"%f",kApp.distance] forKey:@"distance"];
-                [voice_params setObject:[NSString stringWithFormat:@"%i",kApp.totalSecond] forKey:@"second"];
+                [voice_params setObject:[NSString stringWithFormat:@"%i",kApp.runManager.distance] forKey:@"distance"];
+                [voice_params setObject:[NSString stringWithFormat:@"%i",[kApp.runManager during]/1000] forKey:@"second"];
                 [voice_params setObject:[NSString stringWithFormat:@"%i",targetDetail] forKey:@"target_distance"];
                 [voice_params setObject:[NSString stringWithFormat:@"%i",self.pass_km] forKey:@"km"];
                 [kApp.voiceHandler voiceOfapp:@"every_km_and_close_to_target" :voice_params];
@@ -335,8 +320,8 @@
             if(self.playkm){
                 self.playkm = NO;
                 NSMutableDictionary* voice_params = [[NSMutableDictionary alloc]init];
-                [voice_params setObject:[NSString stringWithFormat:@"%f",kApp.distance] forKey:@"distance"];
-                [voice_params setObject:[NSString stringWithFormat:@"%i",kApp.totalSecond] forKey:@"second"];
+                [voice_params setObject:[NSString stringWithFormat:@"%i",kApp.runManager.distance] forKey:@"distance"];
+                [voice_params setObject:[NSString stringWithFormat:@"%i",[kApp.runManager during]/1000] forKey:@"second"];
                 [voice_params setObject:[NSString stringWithFormat:@"%i",self.pass_km] forKey:@"km"];
                 [kApp.voiceHandler voiceOfapp:@"every_km" :voice_params];
                 return;
@@ -348,8 +333,8 @@
                     self.playkm = NO;
                 }
                 NSMutableDictionary* voice_params = [[NSMutableDictionary alloc]init];
-                [voice_params setObject:[NSString stringWithFormat:@"%f",kApp.distance] forKey:@"distance"];
-                [voice_params setObject:[NSString stringWithFormat:@"%i",kApp.totalSecond] forKey:@"second"];
+                [voice_params setObject:[NSString stringWithFormat:@"%i",kApp.runManager.distance] forKey:@"distance"];
+                [voice_params setObject:[NSString stringWithFormat:@"%i",[kApp.runManager during]/1000] forKey:@"second"];
                 [voice_params setObject:[NSString stringWithFormat:@"%i",targetDetail] forKey:@"target_distance"];
                 [voice_params setObject:[NSString stringWithFormat:@"%i",self.pass_km] forKey:@"km"];
                 [kApp.voiceHandler voiceOfapp:@"reach_target_distance" :voice_params];
@@ -358,8 +343,8 @@
             if(self.playkm && self.reachTarget){//整公里且大于目标
                 self.playkm = NO;
                 NSMutableDictionary* voice_params = [[NSMutableDictionary alloc]init];
-                [voice_params setObject:[NSString stringWithFormat:@"%f",kApp.distance] forKey:@"distance"];
-                [voice_params setObject:[NSString stringWithFormat:@"%i",kApp.totalSecond] forKey:@"second"];
+                [voice_params setObject:[NSString stringWithFormat:@"%i",kApp.runManager.distance] forKey:@"distance"];
+                [voice_params setObject:[NSString stringWithFormat:@"%i",[kApp.runManager during]/1000] forKey:@"second"];
                 [voice_params setObject:[NSString stringWithFormat:@"%i",targetDetail] forKey:@"target_distance"];
                 [voice_params setObject:[NSString stringWithFormat:@"%i",self.pass_km] forKey:@"km"];
                 [kApp.voiceHandler voiceOfapp:@"every_km_and_pass_target" :voice_params];
@@ -368,15 +353,15 @@
             if(self.playkm){
                 self.playkm = NO;
                 NSMutableDictionary* voice_params = [[NSMutableDictionary alloc]init];
-                [voice_params setObject:[NSString stringWithFormat:@"%f",kApp.distance] forKey:@"distance"];
-                [voice_params setObject:[NSString stringWithFormat:@"%i",kApp.totalSecond] forKey:@"second"];
+                [voice_params setObject:[NSString stringWithFormat:@"%i",kApp.runManager.distance] forKey:@"distance"];
+                [voice_params setObject:[NSString stringWithFormat:@"%i",[kApp.runManager during]/1000] forKey:@"second"];
                 [voice_params setObject:[NSString stringWithFormat:@"%i",self.pass_km] forKey:@"km"];
                 [kApp.voiceHandler voiceOfapp:@"every_km" :voice_params];
                 return;
             }
         }
-    }else if(target == 2){
-        int targetDetail = [[self.runSettingDic objectForKey:@"time"]intValue]*60;//时间目标
+    }else if(kApp.runManager.targetType == 3){
+        int targetDetail = kApp.runManager.targetValue/1000;//时间目标
         if(targetDetail > 1200){//目标大于1200
             if(self.playTarget == NO && self.reachTarget){//达到目标！
                 self.playTarget = YES;
@@ -384,8 +369,8 @@
                     self.play5munite = NO;
                 }
                 NSMutableDictionary* voice_params = [[NSMutableDictionary alloc]init];
-                [voice_params setObject:[NSString stringWithFormat:@"%f",kApp.distance] forKey:@"distance"];
-                [voice_params setObject:[NSString stringWithFormat:@"%i",kApp.totalSecond] forKey:@"second"];
+                [voice_params setObject:[NSString stringWithFormat:@"%i",kApp.runManager.distance] forKey:@"distance"];
+                [voice_params setObject:[NSString stringWithFormat:@"%i",[kApp.runManager during]/1000] forKey:@"second"];
                 [voice_params setObject:[NSString stringWithFormat:@"%i",targetDetail] forKey:@"target_second"];
                 [kApp.voiceHandler voiceOfapp:@"reach_target_time" :voice_params];
                 return;
@@ -393,8 +378,8 @@
             if(self.play5munite && self.reachTarget){//5n分钟且大于目标
                 self.play5munite = NO;
                 NSMutableDictionary* voice_params = [[NSMutableDictionary alloc]init];
-                [voice_params setObject:[NSString stringWithFormat:@"%f",kApp.distance] forKey:@"distance"];
-                [voice_params setObject:[NSString stringWithFormat:@"%i",kApp.totalSecond] forKey:@"second"];
+                [voice_params setObject:[NSString stringWithFormat:@"%i",kApp.runManager.distance] forKey:@"distance"];
+                [voice_params setObject:[NSString stringWithFormat:@"%i",[kApp.runManager during]/1000] forKey:@"second"];
                 [voice_params setObject:[NSString stringWithFormat:@"%i",targetDetail] forKey:@"target_second"];
                 [voice_params setObject:[NSString stringWithFormat:@"%i",self.pass_5munite] forKey:@"munite"];
                 [kApp.voiceHandler voiceOfapp:@"every_five_munite_and_pass_target" :voice_params];
@@ -406,8 +391,8 @@
                     self.play5munite = NO;
                 }
                 NSMutableDictionary* voice_params = [[NSMutableDictionary alloc]init];
-                [voice_params setObject:[NSString stringWithFormat:@"%f",kApp.distance] forKey:@"distance"];
-                [voice_params setObject:[NSString stringWithFormat:@"%i",kApp.totalSecond] forKey:@"second"];
+                [voice_params setObject:[NSString stringWithFormat:@"%i",kApp.runManager.distance] forKey:@"distance"];
+                [voice_params setObject:[NSString stringWithFormat:@"%i",[kApp.runManager during]/1000] forKey:@"second"];
                 [voice_params setObject:[NSString stringWithFormat:@"%i",targetDetail] forKey:@"target_second"];
                 [kApp.voiceHandler voiceOfapp:@"half_target_time" :voice_params];
                 return;
@@ -415,8 +400,8 @@
             if(self.play5munite && self.closeToTarget){//5n分钟且接近目标
                 self.play5munite = NO;
                 NSMutableDictionary* voice_params = [[NSMutableDictionary alloc]init];
-                [voice_params setObject:[NSString stringWithFormat:@"%f",kApp.distance] forKey:@"distance"];
-                [voice_params setObject:[NSString stringWithFormat:@"%i",kApp.totalSecond] forKey:@"second"];
+                [voice_params setObject:[NSString stringWithFormat:@"%i",kApp.runManager.distance] forKey:@"distance"];
+                [voice_params setObject:[NSString stringWithFormat:@"%i",[kApp.runManager during]/1000] forKey:@"second"];
                 [voice_params setObject:[NSString stringWithFormat:@"%i",targetDetail] forKey:@"target_second"];
                 [voice_params setObject:[NSString stringWithFormat:@"%i",self.pass_5munite] forKey:@"munite"];
                 [kApp.voiceHandler voiceOfapp:@"every_five_munite_and_close_to_target" :voice_params];
@@ -425,8 +410,8 @@
             if(self.play5munite){
                 self.play5munite = NO;
                 NSMutableDictionary* voice_params = [[NSMutableDictionary alloc]init];
-                [voice_params setObject:[NSString stringWithFormat:@"%f",kApp.distance] forKey:@"distance"];
-                [voice_params setObject:[NSString stringWithFormat:@"%i",kApp.totalSecond] forKey:@"second"];
+                [voice_params setObject:[NSString stringWithFormat:@"%i",kApp.runManager.distance] forKey:@"distance"];
+                [voice_params setObject:[NSString stringWithFormat:@"%i",[kApp.runManager during]/1000] forKey:@"second"];
                 [voice_params setObject:[NSString stringWithFormat:@"%i",self.pass_5munite] forKey:@"munite"];
                 [kApp.voiceHandler voiceOfapp:@"every_five_munite" :voice_params];
                 return;
@@ -438,8 +423,8 @@
                     self.play5munite = NO;
                 }
                 NSMutableDictionary* voice_params = [[NSMutableDictionary alloc]init];
-                [voice_params setObject:[NSString stringWithFormat:@"%f",kApp.distance] forKey:@"distance"];
-                [voice_params setObject:[NSString stringWithFormat:@"%i",kApp.totalSecond] forKey:@"second"];
+                [voice_params setObject:[NSString stringWithFormat:@"%i",kApp.runManager.distance] forKey:@"distance"];
+                [voice_params setObject:[NSString stringWithFormat:@"%i",[kApp.runManager during]/1000] forKey:@"second"];
                 [voice_params setObject:[NSString stringWithFormat:@"%i",targetDetail] forKey:@"target_second"];
                 [kApp.voiceHandler voiceOfapp:@"reach_target_time" :voice_params];
                 return;
@@ -447,8 +432,8 @@
             if(self.play5munite && self.reachTarget){//5n分钟且大于目标
                 self.play5munite = NO;
                 NSMutableDictionary* voice_params = [[NSMutableDictionary alloc]init];
-                [voice_params setObject:[NSString stringWithFormat:@"%f",kApp.distance] forKey:@"distance"];
-                [voice_params setObject:[NSString stringWithFormat:@"%i",kApp.totalSecond] forKey:@"second"];
+                [voice_params setObject:[NSString stringWithFormat:@"%i",kApp.runManager.distance] forKey:@"distance"];
+                [voice_params setObject:[NSString stringWithFormat:@"%i",[kApp.runManager during]/1000] forKey:@"second"];
                 [voice_params setObject:[NSString stringWithFormat:@"%i",targetDetail] forKey:@"target_second"];
                 [voice_params setObject:[NSString stringWithFormat:@"%i",self.pass_5munite] forKey:@"munite"];
                 [kApp.voiceHandler voiceOfapp:@"every_five_munite_and_pass_target" :voice_params];
@@ -457,8 +442,8 @@
             if(self.play5munite){
                 self.play5munite = NO;
                 NSMutableDictionary* voice_params = [[NSMutableDictionary alloc]init];
-                [voice_params setObject:[NSString stringWithFormat:@"%f",kApp.distance] forKey:@"distance"];
-                [voice_params setObject:[NSString stringWithFormat:@"%i",kApp.totalSecond] forKey:@"second"];
+                [voice_params setObject:[NSString stringWithFormat:@"%i",kApp.runManager.distance] forKey:@"distance"];
+                [voice_params setObject:[NSString stringWithFormat:@"%i",[kApp.runManager during]/1000] forKey:@"second"];
                 [voice_params setObject:[NSString stringWithFormat:@"%i",self.pass_5munite] forKey:@"munite"];
                 [kApp.voiceHandler voiceOfapp:@"every_five_munite" :voice_params];
                 return;
@@ -470,8 +455,8 @@
 {
     if([keyPath isEqualToString:@"distance"])
     {
-        double distance = kApp.runManager.distance;
-        NSLog(@"distance is %f",kApp.runManager.distance);
+        int distance = kApp.runManager.distance;
+        NSLog(@"distance is %i",kApp.runManager.distance);
         if(kApp.runManager.targetType == 1 || kApp.runManager.targetType == 2){//目标是距离
             if(kApp.runManager.targetType == 2){
                 if(self.playTarget == NO && distance > kApp.runManager.targetValue){
@@ -480,7 +465,7 @@
                 if(self.playHalf == NO && distance > kApp.runManager.targetValue/2){//达到目标一半
                     self.reachHalf = YES;
                 }
-                if(kApp.distance > kApp.runManager.targetValue - 2000){//快达到目标
+                if(kApp.runManager.distance > kApp.runManager.targetValue - 2000){//快达到目标
                     self.closeToTarget = YES;
                 }
                 float width = kApp.runManager.completePercent*300.0;
@@ -491,7 +476,7 @@
             self.big_div.distance = distance/1000.0;
             [self.big_div fitToSize];
         }else{
-            self.div.distance = (kApp.distance+5)/1000.0;
+            self.div.distance = distance/1000.0;
             [self.div fitToSize];
         }
         if(distance > (self.pass_km+1)*1000){
@@ -500,9 +485,9 @@
         }
         [self playVoice];
     }
-    if([keyPath isEqualToString:@"paceKm"])
+    if([keyPath isEqualToString:@"secondPerKm"])
     {
-        self.siv.time = kApp.runManager.paceKm;
+        self.siv.time = kApp.runManager.secondPerKm;
         [self.siv fitToSize];
     }
 }

@@ -50,7 +50,22 @@
     [self.view_map_container sendSubviewToBack:self.mapView];
     [self.view sendSubviewToBack:self.view_map_container];
     [self initUI];
-//    kApp.timer_secondplusplus = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(redrawPolyline) userInfo:nil repeats:YES];
+    
+//    CLLocationCoordinate2D center = CLLocationCoordinate2DMake(39.975594, 116.396301);
+//    MACoordinateSpan span = MACoordinateSpanMake(0.015, 0.005);
+//    MACoordinateRegion region = MACoordinateRegionMake(center, span);
+//    [self.mapView setRegion:region animated:NO];
+
+}
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    //区分是否是比赛
+    int ismatch = [self.oneRun.isMatch intValue];
+    if(ismatch == 0){
+        [self drawRunTrack];
+    }else if(ismatch == 1){
+        [self drawMatchTrack];
+    }
 }
 - (void)button_blue_down:(id)sender{
     ((UIButton*)sender).backgroundColor = [UIColor colorWithRed:0 green:88.0/255.0 blue:142.0/255.0 alpha:1];
@@ -65,7 +80,7 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 - (void)initUI{
-    NSDate *date = [NSDate dateWithTimeIntervalSince1970:[self.oneRun.stamp longLongValue]/1000];
+    NSDate *date = [NSDate dateWithTimeIntervalSince1970:[self.oneRun.startTime longLongValue]/1000];
     NSDateComponents *componets = [[NSCalendar autoupdatingCurrentCalendar] components:NSWeekdayCalendarUnit fromDate:date];
     int weekday = [componets weekday];
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
@@ -78,7 +93,7 @@
     self.label_date4.text = strDate;
     [dateFormatter setDateFormat:@"M月d日"];
     NSString* strDate2 = [dateFormatter stringFromDate:date];
-    int type = [oneRun.runty intValue];
+    int type = [oneRun.howToMove intValue];
     NSString* typeDes = @"";
     switch (type) {
         case 0:
@@ -104,16 +119,10 @@
     }
     self.label_title.text = [NSString stringWithFormat:@"%@的%@",strDate2,typeDes];
     self.label_dis.text = [NSString stringWithFormat:@"%0.2fkm",[oneRun.distance floatValue]/1000];
-    self.label_during.text = [CNUtil duringTimeStringFromSecond:[oneRun.utime intValue]/1000];
-    self.label_pspeed.text = [CNUtil pspeedStringFromSecond:[oneRun.pspeed intValue]];
+    self.label_during.text = [CNUtil duringTimeStringFromSecond:[oneRun.duration intValue]/1000];
+    self.label_pspeed.text = [CNUtil pspeedStringFromSecond:[oneRun.secondPerKm intValue]];
     self.label_aver_speed.text = [NSString stringWithFormat:@"+%i",[oneRun.score intValue]];
-    //区分是否是比赛
-    int ismatch = [self.oneRun.ismatch intValue];
-    if(ismatch == 0){
-        [self drawRunTrack];
-    }else if(ismatch == 1){
-        [self drawMatchTrack];
-    }
+    
     
 //    [self testDrawOneByOne];
 }
@@ -222,15 +231,18 @@
                     polylineCoords[n].longitude = encryptionPoint.longitude;
                 }
                 MAPolyline* polyline = [MAPolyline polylineWithCoordinates:polylineCoords count:endIndex-startIndex+1];
-                polyline.title = @"1"; 
+                polyline.title = @"1";
                 [self.mapView addOverlay:polyline];
             }
         }
     }
+    
     CLLocationCoordinate2D center = CLLocationCoordinate2DMake((min_lat+max_lat)/2, (min_lon+max_lon)/2);
     MACoordinateSpan span = MACoordinateSpanMake(max_lat-min_lat+0.005, max_lon-min_lon+0.005);
     MACoordinateRegion region = MACoordinateRegionMake(center, span);
-    [self.mapView setRegion:region animated:NO];
+    [self.mapView setRegion:region animated:YES];
+    
+    
     
     //画气泡
     for(i = 0;i<[kApp.runManager.dataKm count];i++){

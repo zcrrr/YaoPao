@@ -14,6 +14,7 @@
 #import "Toast+UIView.h"
 #import "SMS_SDK/SMS_SDK.h"
 #import "SectionsViewController.h"
+#import "CNCloudRecord.h"
 
 @interface CNRegisterPhoneViewController ()
 
@@ -372,7 +373,7 @@
 - (void)registerPhoneDidSuccess:(NSDictionary *)resultDic{
     [self hideLoading];
     [self showAlert:@"注册成功"];
-    
+    [CNCloudRecord ClearRecordAfterUserLogin];
     CNUserinfoViewController* userInfoVC = [[CNUserinfoViewController alloc]init];
     [self.navigationController pushViewController:userInfoVC animated:YES];
 }

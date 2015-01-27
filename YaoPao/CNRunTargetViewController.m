@@ -39,14 +39,14 @@
     self.runSettingDic = [NSMutableDictionary dictionaryWithContentsOfFile:filePath];
     if(self.runSettingDic == nil){
         self.runSettingDic = [[NSMutableDictionary alloc]init];
-        [self.runSettingDic setObject:@"1" forKey:@"target"];
+        [self.runSettingDic setObject:@"2" forKey:@"targetType"];
         [self.runSettingDic setObject:@"5" forKey:@"distance"];
         [self.runSettingDic setObject:@"30" forKey:@"time"];
-        [self.runSettingDic setObject:@"1" forKey:@"type"];
+        [self.runSettingDic setObject:@"1" forKey:@"howToMove"];
         [self.runSettingDic setObject:@"1" forKey:@"countdown"];
         [self.runSettingDic setObject:@"1" forKey:@"voice"];
     }
-    int target = [[runSettingDic objectForKey:@"target"]intValue];
+    int target = [[runSettingDic objectForKey:@"targetType"]intValue];
     [self selectTarget:target];
     self.textfield_choose2.text = [NSString stringWithFormat:@"%@km",[self.runSettingDic objectForKey:@"distance"]];
     int second = [[self.runSettingDic objectForKey:@"time"]intValue]*60;
@@ -138,7 +138,7 @@ numberOfRowsInComponent:(NSInteger)component {
 }
 - (IBAction)button_back_clicked:(id)sender {
     self.button_back.backgroundColor = [UIColor clearColor];
-    [self.runSettingDic setObject:[NSString stringWithFormat:@"%i",self.selectedIndex] forKey:@"target"];
+    [self.runSettingDic setObject:[NSString stringWithFormat:@"%i",self.selectedIndex] forKey:@"targetType"];
     [self.runSettingDic setObject:[NSString stringWithFormat:@"%i",self.distance] forKey:@"distance"];
     [self.runSettingDic setObject:[NSString stringWithFormat:@"%i",self.time] forKey:@"time"];
     NSString* filePath = [CNPersistenceHandler getDocument:@"runSetting.plist"];
@@ -147,7 +147,7 @@ numberOfRowsInComponent:(NSInteger)component {
 }
 
 - (IBAction)button_choose_target:(id)sender {
-    [self selectTarget:[sender tag]];
+    [self selectTarget:([sender tag]+1)];
 }
 
 - (IBAction)view_touched:(id)sender {
@@ -163,21 +163,21 @@ numberOfRowsInComponent:(NSInteger)component {
     self.image_choose2.hidden = YES;
     self.image_choose3.hidden = YES;
     switch (index) {
-        case 0:
+        case 1:
         {
             self.button_choose1.hidden = YES;
             self.image_choose1.hidden = NO;
             [self hideAllTextfiled];
             break;
         }
-        case 1:
+        case 2:
         {
             self.button_choose2.hidden = YES;
             self.image_choose2.hidden = NO;
             [self.textfield_choose2 becomeFirstResponder];
             break;
         }
-        case 2:
+        case 3:
         {
             self.button_choose3.hidden = YES;
             self.image_choose3.hidden = NO;

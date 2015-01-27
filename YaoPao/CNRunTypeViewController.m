@@ -35,14 +35,14 @@
     self.runSettingDic = [NSMutableDictionary dictionaryWithContentsOfFile:filePath];
     if(self.runSettingDic == nil){
         self.runSettingDic = [[NSMutableDictionary alloc]init];
-        [self.runSettingDic setObject:@"1" forKey:@"target"];
+        [self.runSettingDic setObject:@"2" forKey:@"targetType"];
         [self.runSettingDic setObject:@"5" forKey:@"distance"];
         [self.runSettingDic setObject:@"30" forKey:@"time"];
-        [self.runSettingDic setObject:@"1" forKey:@"type"];
+        [self.runSettingDic setObject:@"1" forKey:@"howToMove"];
         [self.runSettingDic setObject:@"1" forKey:@"countdown"];
         [self.runSettingDic setObject:@"1" forKey:@"voice"];
     }
-    int type = [[runSettingDic objectForKey:@"type"]intValue];
+    int type = [[runSettingDic objectForKey:@"howToMove"]intValue];
     [self selectType:type];
 }
 - (void)button_blue_down:(id)sender{
@@ -60,7 +60,7 @@
 
 - (IBAction)button_back_clicked:(id)sender {
     self.button_back.backgroundColor = [UIColor clearColor];
-    [self.runSettingDic setObject:[NSString stringWithFormat:@"%i",self.selectedIndex] forKey:@"type"];
+    [self.runSettingDic setObject:[NSString stringWithFormat:@"%i",self.selectedIndex] forKey:@"howToMove"];
     NSString* filePath = [CNPersistenceHandler getDocument:@"runSetting.plist"];
     [self.runSettingDic writeToFile:filePath atomically:YES];
     [self.navigationController popViewControllerAnimated:YES];
@@ -71,17 +71,17 @@
     self.image_choose2.hidden = YES;
     self.image_choose3.hidden = YES;
     switch (type) {
-        case 0:
+        case 1:
         {
             self.image_choose1.hidden = NO;
             break;
         }
-        case 1:
+        case 2:
         {
             self.image_choose2.hidden = NO;
             break;
         }
-        case 2:
+        case 3:
         {
             self.image_choose3.hidden = NO;
             break;

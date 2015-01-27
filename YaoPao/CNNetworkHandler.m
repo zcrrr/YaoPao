@@ -13,6 +13,8 @@
 #import "CNLoginPhoneViewController.h"
 #import "CNPersistenceHandler.h"
 #import "CNUtil.h"
+#import "CNCloudRecord.h"
+#import "ASIHTTPRequest.h"
 #define kCheckServerTimeInterval 2
 #define kShortTime 3000
 
@@ -20,6 +22,7 @@
 @synthesize networkQueue;
 @synthesize startRequestTime;
 @synthesize endRequestTime;
+@synthesize newprogress;
 
 @synthesize delegate_verifyCode;
 @synthesize delegate_registerPhone;
@@ -44,6 +47,7 @@
 @synthesize delegate_isServerNew;
 @synthesize delegate_deleteRecord;
 @synthesize delegate_downloadRecord;
+@synthesize delegate_downloadOneFile;
 
 @synthesize verifyCodeRequest;
 @synthesize registerPhoneRequest;
@@ -68,11 +72,13 @@
 @synthesize isServerNewRequest;
 @synthesize deleteRecordRequest;
 @synthesize downloadRecordRequest;
+@synthesize downloadOneFileRequest;
 
 - (void)startQueue{
     //    self.handler = self;//持有自己的引用，这样就不会被释放,在delegate里面有了强引用，这里可以注释了
     [self setNetworkQueue:[ASINetworkQueue queue]];
     [[self networkQueue] setDelegate:self];
+    [[self networkQueue] setDownloadProgressDelegate:self];
     [[self networkQueue] setRequestDidFinishSelector:@selector(requestFinishedByQueue:)];
     [[self networkQueue] setRequestDidFailSelector:@selector(requestFailedByQueue:)];
     [[self networkQueue] setQueueDidFinishSelector:@selector(queueFinished:)];
@@ -195,6 +201,7 @@
         case TAG_AUTO_LOGIN:
         {
             [[NSNotificationCenter defaultCenter] postNotificationName:@"loginDone" object:nil];
+            [kApp.cloudManager synTimeWithServer];
             break;
         }
         case TAG_FIND_PWD_VCODE:
@@ -341,42 +348,7 @@
             }
             break;
         }
-        case TAG_DELETE_RECORD:
-        {
-            if(isSuccess){
-                [self.delegate_deleteRecord deleteRecordDidSuccess:result];
-            }else{
-                [self.delegate_deleteRecord deleteRecordDidFailed:desc];
-            }
-            break;
-        }
-        case TAG_CLOUD_DATA:
-        {
-            if(isSuccess){
-                [self.delegate_cloudData cloudDataDidSuccess:result];
-            }else{
-                [self.delegate_cloudData cloudDataDidFailed:desc];
-            }
-            break;
-        }
-        case TAG_UPLOAD_RECORD:
-        {
-            if(isSuccess){
-                [self.delegate_uploadRecord uploadRecordDidSuccess:result];
-            }else{
-                [self.delegate_uploadRecord uploadRecordDidFailed:desc];
-            }
-            break;
-        }
-        case TAG_DOWNLAOD_RECORD:
-        {
-            if(isSuccess){
-                [self.delegate_downloadRecord downloadRecordDidSuccess:result];
-            }else{
-                [self.delegate_downloadRecord downloadRecordDidFailed:desc];
-            }
-            break;
-        }
+        
         default:
             break;
     }
@@ -414,6 +386,7 @@
         {
             [[NSNotificationCenter defaultCenter] postNotificationName:@"loginDone" object:nil];
             kApp.isLogin = 0;
+            [kApp.cloudManager synTimeWithServer];
             break;
         }
         case TAG_FIND_PWD:
@@ -486,26 +459,7 @@
             [self.delegate_isServerNew isServerNewDidFailed:@""];
             break;
         }
-        case TAG_DELETE_RECORD:
-        {
-            [self.delegate_deleteRecord deleteRecordDidFailed:@""];
-            break;
-        }
-        case TAG_CLOUD_DATA:
-        {
-            [self.delegate_cloudData cloudDataDidFailed:@""];
-            break;
-        }
-        case TAG_UPLOAD_RECORD:
-        {
-            [self.delegate_uploadRecord uploadRecordDidFailed:@""];
-            break;
-        }
-        case TAG_DOWNLAOD_RECORD:
-        {
-            [self.delegate_downloadRecord downloadRecordDidFailed:@""];
-            break;
-        }
+        
             
         default:
             break;
@@ -827,6 +781,9 @@
     [self.cloudDataRequest setTimeOutSeconds:15];
     [self.cloudDataRequest addRequestHeader:@"X-PID" value:kApp.pid];
     [self.cloudDataRequest addRequestHeader:@"ua" value:kApp.ua];
+    self.cloudDataRequest.delegate = self;
+    self.cloudDataRequest.showAccurateProgress = YES;
+    [self.cloudDataRequest setUploadProgressDelegate:self];
     for (id oneKey in [params allKeys]){
         if([oneKey isEqualToString:@"avatar"]){
             [self.cloudDataRequest addData:[params objectForKey:@"avatar"] forKey:@"avatar"];
@@ -835,9 +792,9 @@
         }
     }
     NSLog(@"上传文件url:%@",str_url);
-//    [params removeObjectForKey:@"avatar"];
+    [params removeObjectForKey:@"avatar"];
     NSLog(@"上传文件参数:%@",params);
-    [[self networkQueue]addOperation:self.cloudDataRequest];
+    [self.cloudDataRequest startAsynchronous];
 }
 - (void)doRequest_isServerNew:(NSMutableDictionary*)params{
     NSString* str_url = [NSString stringWithFormat:@"%@chSports/run/updaterecordnumber.htm",ENDPOINTS];
@@ -864,12 +821,14 @@
     [self.deleteRecordRequest setTimeOutSeconds:15];
     [self.deleteRecordRequest addRequestHeader:@"X-PID" value:kApp.pid];
     [self.deleteRecordRequest addRequestHeader:@"ua" value:kApp.ua];
+    self.deleteRecordRequest.delegate = self;
     for (id oneKey in [params allKeys]){
         [self.deleteRecordRequest setPostValue:[params objectForKey:oneKey] forKey:oneKey];
     }
     NSLog(@"删除记录url:%@",str_url);
     NSLog(@"删除记录参数:%@",params);
-    [[self networkQueue]addOperation:self.deleteRecordRequest];
+    self.newprogress = 0.5;
+    [self.deleteRecordRequest startAsynchronous];
 }
 - (void)doRequest_uploadRecord:(NSMutableDictionary*)params{
     NSString* str_url = [NSString stringWithFormat:@"%@chSports/run/runupdata.htm",ENDPOINTS];
@@ -880,12 +839,14 @@
     [self.uploadRecordRequest setTimeOutSeconds:15];
     [self.uploadRecordRequest addRequestHeader:@"X-PID" value:kApp.pid];
     [self.uploadRecordRequest addRequestHeader:@"ua" value:kApp.ua];
+    self.uploadRecordRequest.delegate = self;
     for (id oneKey in [params allKeys]){
         [self.uploadRecordRequest setPostValue:[params objectForKey:oneKey] forKey:oneKey];
     }
     NSLog(@"上传记录url:%@",str_url);
     NSLog(@"上传记录参数:%@",params);
-    [[self networkQueue]addOperation:self.uploadRecordRequest];
+    self.newprogress = 0.5;
+    [self.uploadRecordRequest startAsynchronous];
 }
 - (void)doRequest_downloadRecord:(NSMutableDictionary*)params{
     NSString* str_url = [NSString stringWithFormat:@"%@chSports/run/rundowndata.htm",ENDPOINTS];
@@ -896,12 +857,28 @@
     [self.downloadRecordRequest setTimeOutSeconds:15];
     [self.downloadRecordRequest addRequestHeader:@"X-PID" value:kApp.pid];
     [self.downloadRecordRequest addRequestHeader:@"ua" value:kApp.ua];
+    self.downloadRecordRequest.delegate = self;
     for (id oneKey in [params allKeys]){
         [self.downloadRecordRequest setPostValue:[params objectForKey:oneKey] forKey:oneKey];
     }
     NSLog(@"下载记录url:%@",str_url);
     NSLog(@"下载记录参数:%@",params);
-    [[self networkQueue]addOperation:self.downloadRecordRequest];
+    self.newprogress = 0.5;
+    [self.downloadRecordRequest startAsynchronous];
+}
+- (void)doRequest_downloadOneFile:(NSString*)str_url{
+    NSURL* url = [NSURL URLWithString:str_url];
+    self.downloadOneFileRequest = [ASIHTTPRequest requestWithURL:url];
+    self.downloadOneFileRequest.tag = TAG_DOWNLOAD_ONE_FILE;
+    [self.downloadOneFileRequest setNumberOfTimesToRetryOnTimeout:3];
+    [self.downloadOneFileRequest setTimeOutSeconds:15];
+    [self.downloadOneFileRequest addRequestHeader:@"X-PID" value:kApp.pid];
+    [self.downloadOneFileRequest addRequestHeader:@"ua" value:kApp.ua];
+    self.downloadOneFileRequest.delegate = self;
+    self.downloadOneFileRequest.showAccurateProgress = YES;
+    [self.downloadOneFileRequest setDownloadProgressDelegate:self];
+    NSLog(@"下载文件url:%@",str_url);
+    [self.downloadOneFileRequest startAsynchronous];
 }
 - (void)showAlert:(NSString*) content{
     UIAlertView* alert = [[UIAlertView alloc]initWithTitle:nil message:content delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
@@ -913,5 +890,102 @@
     kApp.imageData = nil;
     NSString* filePath = [CNPersistenceHandler getDocument:@"userinfo.plist"];
     [CNPersistenceHandler DeleteSingleFile:filePath];
+}
+- (void)setProgress:(float)newProgress{
+    NSLog(@"new progress is %f",newProgress);
+    self.newprogress = newProgress;
+}
+- (void)didReceiveResponseHeaders:(ASIHTTPRequest *)request
+{
+    NSLog(@"didReceiveResponseHeaders %@",[request.responseHeaders valueForKey:@"Content-Length"]);
+}
+- (void)requestFailed:(ASIHTTPRequest *)request{
+    self.newprogress = 1;
+    switch ([request tag]) {
+        case TAG_DELETE_RECORD:
+        {
+            [self.delegate_deleteRecord deleteRecordDidFailed:@""];
+            break;
+        }
+        case TAG_CLOUD_DATA:
+        {
+            [self.delegate_cloudData cloudDataDidFailed:@""];
+            break;
+        }
+        case TAG_UPLOAD_RECORD:
+        {
+            [self.delegate_uploadRecord uploadRecordDidFailed:@""];
+            break;
+        }
+        case TAG_DOWNLAOD_RECORD:
+        {
+            [self.delegate_downloadRecord downloadRecordDidFailed:@""];
+            break;
+        }
+        case TAG_DOWNLOAD_ONE_FILE:
+        {
+            [self.delegate_downloadOneFile downloadOneFileDidFailed:@""];
+            break;
+        }
+        default:
+            break;
+    }
+
+}
+- (void)requestFinished:(ASIHTTPRequest *)request{
+    self.newprogress = 1;
+    if([request tag] == TAG_DOWNLOAD_ONE_FILE){
+        [self.delegate_downloadOneFile downloadOneFileDidSuccess:[request responseData]];
+        return;
+    }
+    NSString *responseString = [[NSString alloc] initWithData:[request responseData] encoding:NSUTF8StringEncoding];
+    NSLog(@"---服务器返回结果是%@",responseString);
+    SBJsonParser *jsonParser = [[SBJsonParser alloc]init];
+    id result = [jsonParser objectWithString:responseString];
+    NSDictionary* stateDic = [result objectForKey:@"state"];
+    if(stateDic == nil)return;
+    int code = [[stateDic objectForKey:@"code"] intValue];
+    NSString* desc = [stateDic objectForKey:@"desc"];
+    BOOL isSuccess = (code == 0)?YES:NO;
+    switch ([request tag]) {
+        case TAG_CLOUD_DATA:
+        {
+            if(isSuccess){
+                [self.delegate_cloudData cloudDataDidSuccess:result];
+            }else{
+                [self.delegate_cloudData cloudDataDidFailed:desc];
+            }
+            break;
+        }
+        case TAG_DELETE_RECORD:
+        {
+            if(isSuccess){
+                [self.delegate_deleteRecord deleteRecordDidSuccess:result];
+            }else{
+                [self.delegate_deleteRecord deleteRecordDidFailed:desc];
+            }
+            break;
+        }
+        case TAG_UPLOAD_RECORD:
+        {
+            if(isSuccess){
+                [self.delegate_uploadRecord uploadRecordDidSuccess:result];
+            }else{
+                [self.delegate_uploadRecord uploadRecordDidFailed:desc];
+            }
+            break;
+        }
+        case TAG_DOWNLAOD_RECORD:
+        {
+            if(isSuccess){
+                [self.delegate_downloadRecord downloadRecordDidSuccess:result];
+            }else{
+                [self.delegate_downloadRecord downloadRecordDidFailed:desc];
+            }
+            break;
+        }
+        default:break;
+    }
+    
 }
 @end

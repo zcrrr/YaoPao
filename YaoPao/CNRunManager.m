@@ -20,7 +20,7 @@
 @synthesize targetType;
 @synthesize targetValue;
 @synthesize runStatus;
-@synthesize way;
+@synthesize runway;
 @synthesize feeling;
 @synthesize remark;
 @synthesize pictrue;
@@ -37,8 +37,8 @@
 @synthesize pauseCount;
 
 @synthesize distance;
-@synthesize paceKm;
-@synthesize paceMile;
+@synthesize secondPerKm;
+@synthesize secondPerMile;
 @synthesize averSpeedKm;
 @synthesize averSpeedMile;
 @synthesize score;
@@ -84,8 +84,8 @@
     self.altitudeAdd = 0;
     self.altitudeReduce = 0;
     self.distance = 0;
-    self.paceKm = 0;
-    self.paceMile = 0;
+    self.secondPerKm = 0;
+    self.secondPerMile = 0;
     self.averSpeedKm = 0;
     self.averSpeedMile = 0;
     self.score = 0;
@@ -103,6 +103,8 @@
             [self.GPSList removeLastObject];
         }
     }
+    //算上暂停时间
+    self.pauseSecond += (int)([CNUtil getNowTime1000] - self.startPauseTimeStamp);
     self.endTimeStamp = [CNUtil getNowTime1000];
     [self stopTimer];
     // 计算一下积分的零头
@@ -184,16 +186,16 @@
             if (gpsPoint.status == 1) {// 运动中，计算
                 // 计算一下平均配速：
                 if (self.distance < 1) {// 距离太短
-                    self.paceKm = 0;
+                    self.secondPerKm = 0;
                 } else {
-                    self.paceKm = (int) ([self during] / distance);
+                    self.secondPerKm = [self during] / distance;
                 }
             }
             lastPoint.time = gpsPoint.time;// 就不入数组了，而是更新时间
         } else {// 两点状态不一样，要计算配速、进度条和距离
             if (gpsPoint.status == 1) {// 运动中，计算
                 // 计算一下平均配速：
-                self.paceKm = (int) ([self during] / distance);
+                self.secondPerKm = [self during] / distance;
                 self.distance += meter;
             }
             [GPSList addObject:gpsPoint];
@@ -202,7 +204,7 @@
         if (gpsPoint.status == 1) {
             // 计算一下平均配速：
             self.distance += meter;
-            self.paceKm = (int) ([self during] / distance);
+            self.secondPerKm = [self during] / distance;
             // 计算一下高程增加量和高程减少量
             double altitudeOffsize = gpsPoint.altitude - lastPoint.altitude;
             if (altitudeOffsize > 0) {
@@ -223,7 +225,7 @@
         case 2:// 距离
         {
             if (self.distance <= self.targetValue) {
-                self.completePercent = (float) (self.distance / self.targetValue);
+                self.completePercent = (float)self.distance / (float)self.targetValue;
             } else {
                 self.completePercent = 1;
             }
@@ -232,7 +234,7 @@
         case 3:// 时间
         {
             if ([self during] <= self.targetValue) {
-                self.completePercent = (float) ([self during] / self.targetValue);
+                self.completePercent = (float) [self during] / (float)self.targetValue;
             } else {
                 self.completePercent = 1;
             }
@@ -248,13 +250,13 @@
         double thisKmAltitudeAdd = 0;
         double thisKmAltitudeReduce = 0;
         if ([self.dataKm count] == 0) {
-            thisKmDistance = (int) (self.distance + 0.5);
+            thisKmDistance = self.distance;
             thisKmDuring = [self during];
             thisKmAltitudeAdd = self.altitudeAdd;
             thisKmAltitudeReduce = self.altitudeReduce;
         } else {
             OneKMInfo* lastKm = [dataKm lastObject];
-            thisKmDistance = (int) (self.distance + 0.5) - lastKm.totalDistance;
+            thisKmDistance = self.distance - lastKm.totalDistance;
             thisKmDuring = [self during] - lastKm.totalDuring;
             thisKmAltitudeAdd = self.altitudeAdd - lastKm.totalAltitudeAdd;
             thisKmAltitudeReduce = self.altitudeReduce - lastKm.totalAltitudeReduce;
@@ -263,7 +265,7 @@
         [dataKm addObject:[[OneKMInfo alloc]initWithNumber:targetKM
                                                     andLon:gpsPoint.lon
                                                     andLat:gpsPoint.lat
-                                          andTotalDistance:(int) (self.distance + 0.5)
+                                          andTotalDistance:self.distance
                                                andDisTance:thisKmDistance
                                             andTotalDuring:[self during]
                                                  andDuring:thisKmDuring
@@ -279,13 +281,13 @@
         double thisMileAltitudeAdd = 0;
         double thisMileAltitudeReduce = 0;
         if ([self.dataMile count] == 0) {
-            thisMileDistance = (int) (self.distance + 0.5);
+            thisMileDistance = self.distance;
             thisMileDuring = [self during];
             thisMileAltitudeAdd = self.altitudeAdd;
             thisMileAltitudeReduce = self.altitudeReduce;
         } else {
             OneMileInfo* lastMile = [dataMile lastObject];
-            thisMileDistance = (int) (self.distance + 0.5) - lastMile.totalDistance;
+            thisMileDistance = self.distance - lastMile.totalDistance;
             thisMileDuring = [self during] - lastMile.totalDuring;
             thisMileAltitudeAdd = self.altitudeAdd - lastMile.totalAltitudeAdd;
             thisMileAltitudeReduce = self.altitudeReduce - lastMile.totalAltitudeReduce;
@@ -293,7 +295,7 @@
         [dataMile addObject:[[OneMileInfo alloc]initWithNumber:targetMile
                                                     andLon:gpsPoint.lon
                                                     andLat:gpsPoint.lat
-                                          andTotalDistance:(int) (self.distance + 0.5)
+                                          andTotalDistance:self.distance
                                                andDisTance:thisMileDistance
                                             andTotalDuring:[self during]
                                                  andDuring:thisMileDuring
@@ -310,13 +312,13 @@
         double thisMinAltitudeAdd = 0;
         double thisMinAltitudeReduce = 0;
         if ([self.dataMin count] == 0) {
-            thisMinDistance = (int) (self.distance + 0.5);
+            thisMinDistance = self.distance;
             thisMinDuring = [self during];
             thisMinAltitudeAdd = self.altitudeAdd;
             thisMinAltitudeReduce = self.altitudeReduce;
         } else {
             OneMinuteInfo* lastMinute = [dataMin lastObject];
-            thisMinDistance = (int) (self.distance + 0.5) - lastMinute.totalDistance;
+            thisMinDistance = self.distance - lastMinute.totalDistance;
             thisMinDuring = [self during] - lastMinute.totalDuring;
             thisMinAltitudeAdd = self.altitudeAdd - lastMinute.totalAltitudeAdd;
             thisMinAltitudeReduce = self.altitudeReduce - lastMinute.totalAltitudeReduce;
@@ -324,7 +326,7 @@
         [dataMin addObject:[[OneMinuteInfo alloc]initWithNumber:targetMinute
                                                         andLon:gpsPoint.lon
                                                         andLat:gpsPoint.lat
-                                              andTotalDistance:(int) (self.distance + 0.5)
+                                              andTotalDistance:self.distance
                                                    andDisTance:thisMinDistance
                                                 andTotalDuring:[self during]
                                                      andDuring:thisMinDuring

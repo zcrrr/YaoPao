@@ -18,6 +18,7 @@
 #import "CNRunManager.h"
 #import "BinaryIOManager.h"
 #import "Toast+UIView.h"
+#import "CNCloudRecord.h"
 
 
 @interface CNRunMoodViewController ()
@@ -64,22 +65,19 @@
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:@"M月d日"];
     NSString* strDate2 = [dateFormatter stringFromDate:date];
-    NSString* filePath = [CNPersistenceHandler getDocument:@"runSetting.plist"];
-    NSMutableDictionary* runSettingDic = [NSMutableDictionary dictionaryWithContentsOfFile:filePath];
-    int type = [[runSettingDic objectForKey:@"type"]intValue];
     NSString* typeDes = @"";
-    switch (type) {
-        case 0:
-        {
-            typeDes = @"步行";
-            break;
-        }
+    switch (kApp.runManager.howToMove) {
         case 1:
         {
             typeDes = @"跑步";
             break;
         }
         case 2:
+        {
+            typeDes = @"步行";
+            break;
+        }
+        case 3:
         {
             typeDes = @"自行车骑行";
             break;
@@ -117,7 +115,7 @@
     int tag = [sender tag];
     NSString* imageName = [NSString stringWithFormat:@"way%i_h.png",tag];
     [(UIButton*)sender setBackgroundImage:[UIImage imageNamed:imageName] forState:UIControlStateNormal];
-    kApp.runManager.way = tag;
+    kApp.runManager.runway = tag;
 }
 - (void)resetMoodButtonStatus{
     [self.button_mood1 setBackgroundImage:[UIImage imageNamed:@"mood1.png"] forState:UIControlStateNormal];
@@ -142,52 +140,60 @@
     self.button_save.backgroundColor = [UIColor clearColor];
     //先保存，然后跳转
     [self saveRun];
-//    CNShareViewController* shareVC = [[CNShareViewController alloc]init];
-//    shareVC.dataSource = @"this";
-//    [self.navigationController pushViewController:shareVC animated:YES];
-    CNRunRecordViewController* recordVC = [[CNRunRecordViewController alloc]init];
-    [self.navigationController pushViewController:recordVC animated:YES];
+    CNShareViewController* shareVC = [[CNShareViewController alloc]init];
+    shareVC.dataSource = @"this";
+    [self.navigationController pushViewController:shareVC animated:YES];
+//    CNRunRecordViewController* recordVC = [[CNRunRecordViewController alloc]init];
+//    [self.navigationController pushViewController:recordVC animated:YES];
 }
 - (void)saveRun{
     long long nowTime = [CNUtil getNowTime1000];
     kApp.runManager.remark = self.textfield_feel.text;
-    
-    //通过plist获取运动类型等参数
-    NSString* filePath = [CNPersistenceHandler getDocument:@"runSetting.plist"];
-    NSMutableDictionary* runSettingDic = [NSMutableDictionary dictionaryWithContentsOfFile:filePath];
-    //通过全局变量获取运动属性等参数
     //存储到数据库
     RunClass * runClass  = [NSEntityDescription insertNewObjectForEntityForName:@"RunClass" inManagedObjectContext:kApp.managedObjectContext];
-    runClass.rid = [NSString stringWithFormat:@"%lli",nowTime];
-    runClass.runtar = [NSNumber numberWithInt:[[runSettingDic objectForKey:@"target"]intValue]];
-    runClass.runty = [NSNumber numberWithInt:[[runSettingDic objectForKey:@"type"]intValue]];
-    runClass.mind = [NSNumber numberWithInt:kApp.runManager.feeling];
-    runClass.runway = [NSNumber numberWithInt:kApp.runManager.way];
-    runClass.aheart = [NSNumber numberWithInt:0];
-    runClass.mheart = [NSNumber numberWithInt:0];
-    runClass.weather = [NSNumber numberWithInt:0];
-    runClass.temp = [NSNumber numberWithInt:0];
+    runClass.averageHeart = [NSNumber numberWithInt:0];
+    runClass.dbVersion = [NSNumber numberWithInt:2];
     runClass.distance = [NSNumber numberWithFloat:kApp.runManager.distance];
-    runClass.utime = [NSNumber numberWithInt:[kApp.runManager during]];
-    runClass.pspeed = [NSNumber numberWithFloat:kApp.runManager.paceKm];
-    runClass.hspeed = [NSNumber numberWithInt:0];
-    runClass.heat = [NSNumber numberWithInt:0];
-    runClass.remarks = kApp.runManager.remark;
-    runClass.ismatch = [NSNumber numberWithInt:0];
-    CNGPSPoint* firstPoint = [kApp.runManager.GPSList firstObject];
-    long long stamp = firstPoint.time;
-    runClass.stamp = [NSNumber numberWithLongLong:stamp];
-    runClass.score = [NSNumber numberWithInt:kApp.runManager.score];
-    //版本2.0新增
-    runClass.uid = [kApp.userInfoDic objectForKey:@"uid"];
-    runClass.version = [NSNumber numberWithInt:2];
+    runClass.duration = [NSNumber numberWithInt:[kApp.runManager during]];
+    runClass.feeling = [NSNumber numberWithInt:kApp.runManager.feeling];
+    if(kApp.cloudManager.isSynServerTime){
+        runClass.generateTime = [NSNumber numberWithLongLong:(nowTime+kApp.cloudManager.deltaMiliSecond)];
+    }else{
+        runClass.generateTime = [NSNumber numberWithLongLong:0];
+    }
     runClass.gpsCount = [NSNumber numberWithLongLong:[kApp.runManager.GPSList count]];
+    runClass.gpsString = @"";
+    runClass.heat = [NSNumber numberWithInt:0];
+    runClass.howToMove = [NSNumber numberWithInt:kApp.runManager.howToMove];
+    runClass.isMatch = [NSNumber numberWithInt:0];
+    runClass.jsonParam = @"";
     runClass.kmCount = [NSNumber numberWithLongLong:[kApp.runManager.dataKm count]];
+    runClass.maxHeart = [NSNumber numberWithInt:0];
     runClass.mileCount = [NSNumber numberWithLongLong:[kApp.runManager.dataMile count]];
     runClass.minCount = [NSNumber numberWithLongLong:[kApp.runManager.dataMin count]];
-    runClass.gt = [NSNumber numberWithLongLong:nowTime];
-    runClass.ut = [NSNumber numberWithLongLong:nowTime];
-    runClass.stp = @"";
+    runClass.remark = kApp.runManager.remark;
+    runClass.rid = [NSString stringWithFormat:@"%lli",nowTime];
+    runClass.runway = [NSNumber numberWithInt:kApp.runManager.runway];
+    runClass.score = [NSNumber numberWithInt:kApp.runManager.score];
+    runClass.secondPerKm = [NSNumber numberWithFloat:kApp.runManager.secondPerKm];
+    CNGPSPoint* firstPoint = [kApp.runManager.GPSList firstObject];
+    long long stamp = firstPoint.time;
+    runClass.startTime = [NSNumber numberWithLongLong:stamp];
+    runClass.targetType = [NSNumber numberWithInt:kApp.runManager.targetType];
+    runClass.targetValue = [NSNumber numberWithInt:kApp.runManager.targetValue];
+    runClass.temp = [NSNumber numberWithInt:0];
+    if(kApp.userInfoDic == nil){
+        runClass.uid = @"";
+    }else{
+        runClass.uid = [NSString stringWithFormat:@"%i",[[kApp.userInfoDic objectForKey:@"uid"]intValue]];
+    }
+    if(kApp.cloudManager.isSynServerTime){
+        runClass.updateTime = [NSNumber numberWithLongLong:(nowTime+kApp.cloudManager.deltaMiliSecond)];
+    }else{
+        runClass.updateTime = [NSNumber numberWithLongLong:0];
+    }
+    runClass.weather = [NSNumber numberWithInt:0];
+
     //存储2进制文件
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
@@ -198,7 +204,8 @@
         NSLog(@"filename is %@",filename);
         BinaryIOManager* ioManager = [[BinaryIOManager alloc]init];
         [ioManager writeBinary:filename];
-        runClass.ctp = filename;
+        runClass.clientBinaryFilePath = filename;
+        runClass.serverBinaryFilePath = @"";
     }else{
         [kApp.window makeToast:@"保存运动轨迹文件出错"];
         return;
@@ -212,20 +219,23 @@
         NSLog(@"filePath_small is %@",filePath_small);
         if ([UIImagePNGRepresentation(self.imageview_photo.image) writeToFile: filePath_big atomically:YES]) {
             [UIImagePNGRepresentation(self.image_small) writeToFile: filePath_small atomically:YES];
-            runClass.cips = [NSString stringWithFormat:@"%@/%lli_big.jpg",[CNUtil getYearMonth:nowTime/1000],nowTime];
-            runClass.c120ips = [NSString stringWithFormat:@"%@/%lli_small.jpg",[CNUtil getYearMonth:nowTime/1000],nowTime];
-            runClass.sips = @"";
-            runClass.s120ips = @"";
-            runClass.image_count = [NSNumber numberWithInt:1];
+            runClass.clientImagePaths = [NSString stringWithFormat:@"%@/%lli_big.jpg",[CNUtil getYearMonth:nowTime/1000],nowTime];
+            runClass.clientImagePathsSmall = [NSString stringWithFormat:@"%@/%lli_small.jpg",[CNUtil getYearMonth:nowTime/1000],nowTime];
+            runClass.serverImagePaths = @"";
+            runClass.serverImagePathsSmall = @"";
         }else{
-            runClass.image_count = [NSNumber numberWithInt:0];
+            runClass.clientImagePaths = @"";
+            runClass.clientImagePathsSmall = @"";
+            runClass.serverImagePaths = @"";
+            runClass.serverImagePathsSmall = @"";
         }
     }else{
         NSLog(@"没有图片");
-        runClass.image_count = [NSNumber numberWithInt:0];
+        runClass.clientImagePaths = @"";
+        runClass.clientImagePathsSmall = @"";
+        runClass.serverImagePaths = @"";
+        runClass.serverImagePathsSmall = @"";
     }
-    
-    
     NSError *error = nil;
     if (![kApp.managedObjectContext save:&error]) {
         NSLog(@"Unresolved error %@", error);
@@ -332,9 +342,9 @@
 }
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info{
     UIImage *image = [info objectForKey:@"UIImagePickerControllerEditedImage"];
-    UIImage* image_compressed = [image rescaleImageToSize:CGSizeMake(640, 640)];
-    self.image_small = [image rescaleImageToSize:CGSizeMake(100, 100)];
-    self.imageview_photo.image = image_compressed;
+    UIImage* image_big = [image rescaleImageToSize:CGSizeMake(640, 640)];
+    self.image_small = [image rescaleImageToSize:CGSizeMake(120, 120)];
+    self.imageview_photo.image = image;
     self.imageview_photo.contentMode = UIViewContentModeScaleAspectFill;
     self.hasPhoto = YES;
     [picker dismissViewControllerAnimated:YES completion:nil];

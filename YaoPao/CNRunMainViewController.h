@@ -15,7 +15,6 @@
 
 @interface CNRunMainViewController : UIViewController<MBSliderViewDelegate,UIAlertViewDelegate,UIActionSheetDelegate>
 
-@property (strong, nonatomic) NSMutableDictionary* runSettingDic;
 @property (strong, nonatomic) IBOutlet MBSliderView *sliderview;
 @property (strong, nonatomic) IBOutlet UIView *view_bottom_bar;
 @property (strong, nonatomic) IBOutlet UIButton *button_complete;

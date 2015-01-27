@@ -13,6 +13,7 @@
 @class CNGPSPoint4Match;
 @class CNVoiceHandler;
 @class CNRunManager;
+@class CNCloudRecord;
 
 @interface CNAppDelegate : UIResponder <UIApplicationDelegate>
 
@@ -22,6 +23,7 @@
 @property (nonatomic, strong) CNLocationHandler* locationHandler;
 @property (strong ,nonatomic) CNVoiceHandler* voiceHandler;
 @property (strong ,nonatomic) CNRunManager* runManager;
+@property (strong, nonatomic) CNCloudRecord* cloudManager;
 
 @property (nonatomic, strong) NSString* pid;
 @property (nonatomic, strong) NSString* ua;
@@ -74,7 +76,6 @@
 
 + (CNAppDelegate*)getApplicationDelegate;
 + (void)initRun;//初始化各种跑步参数
-- (void)lookup;
 + (void)makeTest;//构建一个测试数据
 
 
@@ -140,6 +141,7 @@
 + (void)popupWarningBackground;
 + (void)popupWarningNotInStartZone;
 + (void)popupWarningCheckTime;
++ (void)popupWarningCloud;
 
 //用与测试
 @property (assign, nonatomic) int testIndex;

@@ -10,7 +10,7 @@
 #import "RunClass.h"
 #import <MAMapKit/MAMapKit.h>
 
-@interface CNRecordDetailViewController : UIViewController<MAMapViewDelegate>
+@interface CNRecordDetailViewController : UIViewController<MAMapViewDelegate,UITextFieldDelegate>
 
 @property (nonatomic, strong) MAMapView *mapView;
 @property (strong ,nonatomic) RunClass* oneRun;
@@ -25,6 +25,7 @@
 @property (strong, nonatomic) IBOutlet UILabel *label_date2;
 @property (strong, nonatomic) IBOutlet UILabel *label_date3;
 @property (strong, nonatomic) IBOutlet UILabel *label_date4;
+@property (strong, nonatomic) IBOutlet UITextField *textfield_remark;
 
 @property (strong, nonatomic) IBOutlet UILabel *label_during;
 @property (strong, nonatomic) IBOutlet UILabel *label_pspeed;

@@ -14,7 +14,7 @@
 @property (assign, nonatomic) int targetType;// 设定的目标类型：1-自由；2-距离；3-时间
 @property (assign, nonatomic) int targetValue;// 设定的目标对应的值，毫秒或者米
 @property (assign, nonatomic) int runStatus;// 跑步状态：1：运动，2：暂停 3：赛道内，4：偏离赛道
-@property (assign, nonatomic) int way;// 跑道1，2，3，4，5
+@property (assign, nonatomic) int runway;// 跑道1，2，3，4，5
 @property (assign, nonatomic) int feeling;// 心情1，2，3，4，5
 @property (strong, nonatomic) NSString* remark;// 说说
 @property (strong, nonatomic) UIImage* pictrue;// 图片
@@ -32,9 +32,9 @@
 @property (assign, nonatomic) int targetMinute;// 下一个要到达的分钟数，为了计算整分钟的数据
 @property (assign, nonatomic) int pauseCount;//暂停时gps数组个数
 // 下面这些变量是在timer中每次根据新的gps刷新值,外部可以访问
-@property (assign, nonatomic) double distance;// 个人距离(米)
-@property (assign, nonatomic) int paceKm;// 每公里配速（秒）
-@property (assign, nonatomic) int paceMile;// 每英里配速
+@property (assign, nonatomic) int distance;// 个人距离(米)
+@property (assign, nonatomic) int secondPerKm;// 每公里配速（秒）
+@property (assign, nonatomic) int secondPerMile;// 每英里配速
 @property (assign, nonatomic) int averSpeedKm;// 平均速度（km/h）
 @property (assign, nonatomic) int averSpeedMile;// 平均速度（mile/h)
 @property (assign, nonatomic) int score;// 积分

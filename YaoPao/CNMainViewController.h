@@ -13,8 +13,9 @@
 @class CNSpeedImageView;
 @class CNNumImageView;
 #import "GADBannerView.h"
+#import "ASIHTTPRequest.h"
 
-@interface CNMainViewController : UIViewController
+@interface CNMainViewController : UIViewController<ASIProgressDelegate>
 @property (strong, nonatomic) IBOutlet UILabel *label_username;
 @property (strong, nonatomic) IBOutlet UILabel *label_des;
 @property (strong, nonatomic) IBOutlet UIButton *button_goLogin;

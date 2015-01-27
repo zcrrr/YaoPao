@@ -11,6 +11,7 @@
 #import "CNMainViewController.h"
 #import "SMS_SDK/SMS_SDK.h"
 #import "SectionsViewController.h"
+#import "CNCloudRecord.h"
 
 
 @interface CNForgetPwdViewController ()
@@ -324,6 +325,7 @@
 #pragma mark- find pwd delegate
 - (void)findPwdDidSuccess:(NSDictionary *)resultDic{
     //登录、注册之后的一系列操作
+    [CNCloudRecord ClearRecordAfterUserLogin];
     CNMainViewController* mainVC = [[CNMainViewController alloc]init];
     [self.navigationController pushViewController:mainVC animated:YES];
 }

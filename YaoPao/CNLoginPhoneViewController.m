@@ -16,6 +16,7 @@
 #import "CNRegisterPhoneViewController.h"
 #import "SMS_SDK/SMS_SDK.h"
 #import "SectionsViewController.h"
+#import "CNCloudRecord.h"
 
 @interface CNLoginPhoneViewController ()
 
@@ -334,6 +335,8 @@
     //登录、注册之后的一系列操作
     CNMainViewController* mainVC = [[CNMainViewController alloc]init];
     [self.navigationController pushViewController:mainVC animated:YES];
+    
+    [CNCloudRecord ClearRecordAfterUserLogin];
     
 //    CNUserinfoViewController* userInfoVC = [[CNUserinfoViewController alloc]init];
 //    [self.navigationController pushViewController:userInfoVC animated:YES];

@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 @class ASINetworkQueue;
 @class ASIFormDataRequest;
+#import "ASIHTTPRequest.h";
 
 @protocol verifyCodeDelegate <NSObject>
 //获取验证码
@@ -153,10 +154,15 @@
 - (void)downloadRecordDidSuccess:(NSDictionary*)resultDic;
 - (void)downloadRecordDidFailed:(NSString*)mes;
 @end
+@protocol downloadOneFileDelegate<NSObject>
+//下载记录
+- (void)downloadOneFileDidSuccess:(NSData*)data;
+- (void)downloadOneFileDidFailed:(NSString*)mes;
+@end
 
 
 
-@interface CNNetworkHandler : NSObject
+@interface CNNetworkHandler : NSObject<ASIProgressDelegate,ASIHTTPRequestDelegate>
 
 @property (nonatomic, strong) ASINetworkQueue* networkQueue;
 
@@ -164,6 +170,7 @@
 
 @property (assign, nonatomic) long long startRequestTime;
 @property (assign, nonatomic) long long endRequestTime;
+@property (assign, nonatomic) float newprogress;
 
 //定义每个请求的delegate
 @property (nonatomic, strong) id<verifyCodeDelegate> delegate_verifyCode;
@@ -190,6 +197,7 @@
 @property (nonatomic, strong) id<deleteRecordDelegate> delegate_deleteRecord;
 @property (nonatomic, strong) id<uploadRecordDelegate> delegate_uploadRecord;
 @property (nonatomic, strong) id<downloadRecordDelegate> delegate_downloadRecord;
+@property (nonatomic, strong) id<downloadOneFileDelegate> delegate_downloadOneFile;
 
 //定义每个请求的request
 @property (nonatomic, strong) ASIFormDataRequest* verifyCodeRequest;
@@ -216,6 +224,7 @@
 @property (nonatomic, strong) ASIFormDataRequest* deleteRecordRequest;
 @property (nonatomic, strong) ASIFormDataRequest* uploadRecordRequest;
 @property (nonatomic, strong) ASIFormDataRequest* downloadRecordRequest;
+@property (nonatomic, strong) ASIHTTPRequest* downloadOneFileRequest;
 //每个请求的实现
 - (void)doRequest_verifyCode:(NSString*)phoneNO;
 - (void)doRequest_registerPhone:(NSMutableDictionary*)params;
@@ -241,5 +250,6 @@
 - (void)doRequest_DeleteRecord:(NSMutableDictionary*)params;
 - (void)doRequest_uploadRecord:(NSMutableDictionary*)params;
 - (void)doRequest_downloadRecord:(NSMutableDictionary*)params;
+- (void)doRequest_downloadOneFile:(NSString*)str_url;
 
 @end

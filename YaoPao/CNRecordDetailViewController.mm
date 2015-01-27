@@ -20,6 +20,7 @@
 #import "CNTestGEOS.h"
 #import "BinaryIOManager.h"
 #import "CNRunManager.h"
+#import "CNCloudRecord.h"
 
 @interface CNRecordDetailViewController ()
 
@@ -52,7 +53,44 @@
     self.mapView.scrollEnabled = NO;
     [self.view_map_container addSubview:self.mapView];
     [self.view_map_container sendSubviewToBack:self.mapView];
+    self.textfield_remark.delegate = self;
     [self initUI];
+}
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    //画轨迹
+    //区分是否是比赛
+    int ismatch = [self.oneRun.isMatch intValue];
+    if(ismatch == 0){
+        //加载轨迹
+        BinaryIOManager* ioManager = [[BinaryIOManager alloc]init];
+        [ioManager readBinary:oneRun.clientBinaryFilePath :[oneRun.gpsCount intValue] :[oneRun.kmCount intValue] :[oneRun.mileCount intValue] :[oneRun.minCount intValue]];
+        [self drawRunTrack];
+    }else if(ismatch == 1){
+        kApp.match_pointList = [[NSMutableArray alloc]init];
+        NSArray* pointDicList = [self.oneRun.gpsString componentsSeparatedByString:@","];
+        for(int i=0;i<[pointDicList count];i++){
+            CNGPSPoint4Match* point = [[CNGPSPoint4Match alloc]init];
+            NSArray* lonlat = [[pointDicList objectAtIndex:i]componentsSeparatedByString:@" "];
+            point.lon = [[lonlat objectAtIndex:0]doubleValue];
+            point.lat = [[lonlat objectAtIndex:1]doubleValue];
+            [kApp.match_pointList addObject:point];
+        }
+        [self drawMatchTrack];
+    }
+}
+
+- (void)viewWillDisappear:(BOOL)animated{
+    if(![self.textfield_remark.text isEqualToString:self.oneRun.remark]){
+        self.oneRun.remark = self.textfield_remark.text;
+        if(kApp.cloudManager.isSynServerTime){
+            self.oneRun.updateTime = [NSNumber numberWithLongLong:([CNUtil getNowTime1000]+kApp.cloudManager.deltaMiliSecond)];
+        }else{
+            self.oneRun.updateTime = [NSNumber numberWithLongLong:0];
+        }
+        NSError *error = nil;
+        [kApp.managedObjectContext save:&error];
+    }
 }
 - (void)button_blue_down:(id)sender{
     ((UIButton*)sender).backgroundColor = [UIColor colorWithRed:0 green:88.0/255.0 blue:142.0/255.0 alpha:1];
@@ -70,6 +108,9 @@
 }
 
 - (IBAction)button_share_clicked:(id)sender {
+    if(![self.textfield_remark.text isEqualToString:self.oneRun.remark]){
+        self.oneRun.remark = self.textfield_remark.text;
+    }
     self.button_share.backgroundColor = [UIColor clearColor];
     CNShareViewController* shareVC = [[CNShareViewController alloc]init];
     shareVC.dataSource = @"list";
@@ -77,7 +118,7 @@
     [self.navigationController pushViewController:shareVC animated:YES];
 }
 - (void)initUI{
-    NSDate *date = [NSDate dateWithTimeIntervalSince1970:[self.oneRun.stamp longLongValue]/1000];
+    NSDate *date = [NSDate dateWithTimeIntervalSince1970:[self.oneRun.startTime longLongValue]/1000];
     NSDateComponents *componets = [[NSCalendar autoupdatingCurrentCalendar] components:NSWeekdayCalendarUnit fromDate:date];
     int weekday = [componets weekday];
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
@@ -90,15 +131,9 @@
     self.label_date4.text = strDate;
     [dateFormatter setDateFormat:@"M月d日"];
     NSString* strDate2 = [dateFormatter stringFromDate:date];
-    int type = [self.oneRun.runty intValue];
+    int type = [self.oneRun.howToMove intValue];
     NSString* typeDes = @"";
     switch (type) {
-        case 0:
-        {
-            typeDes = @"步行";
-            self.imageview_type.image = [UIImage imageNamed:@"runtype_walk.png"];
-            break;
-        }
         case 1:
         {
             typeDes = @"跑步";
@@ -106,6 +141,12 @@
             break;
         }
         case 2:
+        {
+            typeDes = @"步行";
+            self.imageview_type.image = [UIImage imageNamed:@"runtype_walk.png"];
+            break;
+        }
+        case 3:
         {
             typeDes = @"自行车骑行";
             self.imageview_type.image = [UIImage imageNamed:@"runtype_ride.png"];
@@ -125,11 +166,12 @@
     image_km.image = [UIImage imageNamed:@"redkm.png"];
     [self.view addSubview:image_km];
     
-    self.label_during.text = [CNUtil duringTimeStringFromSecond:[self.oneRun.utime intValue]/1000];
-    self.label_pspeed.text = [CNUtil pspeedStringFromSecond:[self.oneRun.pspeed intValue]];
+    self.label_during.text = [CNUtil duringTimeStringFromSecond:[self.oneRun.duration intValue]/1000];
+    self.label_pspeed.text = [CNUtil pspeedStringFromSecond:[self.oneRun.secondPerKm intValue]];
     self.label_aver_speed.text = [NSString stringWithFormat:@"+%i",[self.oneRun.score intValue]];
-    self.label_feel.text = self.oneRun.remarks;
-    int mood = [self.oneRun.mind intValue];
+    self.label_feel.text = self.oneRun.remark;
+    self.textfield_remark.text = self.oneRun.remark;
+    int mood = [self.oneRun.feeling intValue];
     NSString* img_name_mood = [NSString stringWithFormat:@"mood%i_h.png",mood];
     self.image_mood.image = [UIImage imageNamed:img_name_mood];
     
@@ -137,11 +179,10 @@
     NSString* img_name_way = [NSString stringWithFormat:@"way%i_h.png",way];
     self.image_way.image = [UIImage imageNamed:img_name_way];
     //判断是否有图片
-    int imagecount = [self.oneRun.image_count intValue];
-    if(imagecount!=0){
+    if(![oneRun.clientImagePaths isEqualToString:@""]){
         //去沙盒读取图片
         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask, YES);
-        NSString *filePath = [[paths objectAtIndex:0] stringByAppendingPathComponent:oneRun.cips];
+        NSString *filePath = [[paths objectAtIndex:0] stringByAppendingPathComponent:oneRun.clientImagePaths];
         BOOL blHave=[[NSFileManager defaultManager] fileExistsAtPath:filePath];
         if (blHave) {//图片存在
             [self.scrollview setContentSize:CGSizeMake(640, 150)];
@@ -154,28 +195,6 @@
             photo.image = [[UIImage alloc] initWithData:data];
         }
     }
-    
-    //区分是否是比赛
-    int ismatch = [self.oneRun.ismatch intValue];
-    if(ismatch == 0){
-        //加载轨迹
-        BinaryIOManager* ioManager = [[BinaryIOManager alloc]init];
-        [ioManager readBinary:oneRun.ctp :[oneRun.gpsCount intValue] :[oneRun.kmCount intValue] :[oneRun.mileCount intValue] :[oneRun.minCount intValue]];
-        [self drawRunTrack];
-    }else if(ismatch == 1){
-        kApp.match_pointList = [[NSMutableArray alloc]init];
-        NSArray* pointDicList = [self.oneRun.runtra componentsSeparatedByString:@","];
-        for(int i=0;i<[pointDicList count];i++){
-            CNGPSPoint4Match* point = [[CNGPSPoint4Match alloc]init];
-            NSArray* lonlat = [[pointDicList objectAtIndex:i]componentsSeparatedByString:@" "];
-            point.lon = [[lonlat objectAtIndex:0]doubleValue];
-            point.lat = [[lonlat objectAtIndex:1]doubleValue];
-            [kApp.match_pointList addObject:point];
-        }
-        [self drawMatchTrack];
-    }
-    
-    
 }
 - (void)drawRunTrack{
     int j = 0;
@@ -290,7 +309,7 @@
     CLLocationCoordinate2D center = CLLocationCoordinate2DMake((min_lat+max_lat)/2, (min_lon+max_lon)/2);
     MACoordinateSpan span = MACoordinateSpanMake(max_lat-min_lat+0.005, max_lon-min_lon+0.005);
     MACoordinateRegion region = MACoordinateRegionMake(center, span);
-    [self.mapView setRegion:region animated:NO];
+    [self.mapView setRegion:region animated:YES];
 }
 - (MAOverlayView *)mapView:(MAMapView *)mapView viewForOverlay:(id)overlay
 {
@@ -432,5 +451,50 @@
     MACoordinateSpan span = MACoordinateSpanMake(max_lat-min_lat+0.005, max_lon-min_lon+0.005);
     MACoordinateRegion region = MACoordinateRegionMake(center, span);
     [self.mapView setRegion:region animated:NO];
+}
+#pragma mark- textfiled delegate
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [textField resignFirstResponder];
+    [self resetViewFrame];
+    return YES;
+}
+- (void)keyboardWillShow:(NSNotification *)noti
+{
+    //键盘输入的界面调整
+    //键盘的高度
+    float height = 216.0;
+    CGRect frame = self.view.frame;
+    frame.size = CGSizeMake(frame.size.width, frame.size.height - height);
+    [UIView beginAnimations:@"Curl" context:nil];//动画开始
+    [UIView setAnimationDuration:0.30];
+    [UIView setAnimationDelegate:self];
+    [self.view setFrame:frame];
+    [UIView commitAnimations];
+    
+}
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    CGPoint point = [textField.superview convertPoint:textField.frame.origin toView:nil];
+    int offset = point.y + 80 - (self.view.frame.size.height - 216.0);//键盘高度216
+    NSTimeInterval animationDuration = 0.30f;
+    [UIView beginAnimations:@"ResizeForKeyBoard" context:nil];
+    [UIView setAnimationDuration:animationDuration];
+    float width = self.view.frame.size.width;
+    float height = self.view.frame.size.height;
+    if(offset > 0)
+    {
+        CGRect rect = CGRectMake(0.0f, -offset,width,height);
+        self.view.frame = rect;
+    }
+    [UIView commitAnimations];
+}
+- (void)resetViewFrame{
+    NSTimeInterval animationDuration = 0.30f;
+    [UIView beginAnimations:@"ResizeForKeyboard" context:nil];
+    [UIView setAnimationDuration:animationDuration];
+    CGRect rect = CGRectMake(0.0f, 0.0f, self.view.frame.size.width, self.view.frame.size.height);
+    self.view.frame = rect;
+    [UIView commitAnimations];
 }
 @end

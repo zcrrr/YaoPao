@@ -10,14 +10,14 @@
 //#import "GADBannerView.h"
 
 
-@interface CNRunRecordViewController : UIViewController<UIScrollViewDelegate>
+@interface CNRunRecordViewController : UIViewController<UIScrollViewDelegate,UITableViewDataSource,UITableViewDelegate>
+@property (assign, nonatomic) int page;
+@property (strong, nonatomic) IBOutlet UITableView *tableview;
 @property (strong, nonatomic) NSString* from;
 @property (strong, nonatomic) NSMutableArray* recordList;
-@property (assign, nonatomic) int y_used;
 @property (assign, nonatomic) int pageNumber;
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollview;
 @property (strong, nonatomic) IBOutlet UIPageControl *pageControl;
-@property (strong, nonatomic) IBOutlet UIScrollView *scrollview_list;
 @property (strong, nonatomic) IBOutlet UILabel *label_dis;
 @property (strong, nonatomic) IBOutlet UILabel *label_count;
 @property (strong, nonatomic) IBOutlet UILabel *label_total_time;

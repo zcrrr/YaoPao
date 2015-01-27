@@ -16,6 +16,8 @@
     [self drawInRect:rect];
     UIImage *resImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
-    return resImage;
+    NSData* imageData = UIImageJPEGRepresentation(resImage, 0.2);
+    UIImage* image_compressed = [UIImage imageWithData:imageData];
+    return image_compressed;
 }
 @end

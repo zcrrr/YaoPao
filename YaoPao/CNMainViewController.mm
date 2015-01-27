@@ -34,6 +34,8 @@
 #import "CNRunMapGoogleViewController.h"
 #import "CNRunManager.h"
 #import "BinaryIOManager.h"
+#import "CNCloudRecord.h"
+#import "ASIHTTPRequest.h"
 
 @interface CNMainViewController ()
 
@@ -55,11 +57,19 @@
     }
     return self;
 }
-
+- (void)setProgress:(float)newProgress{
+    NSLog(@"newProgress is %f",newProgress);
+}
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
-    
+//    [super viewDidLoad];
+//    NSURL* url = [NSURL URLWithString:@"http://image.yaopao.net//image/20150126/640_200FE5D0A20011E4A5D095DA5121D0B7.png"];
+//    ASIHTTPRequest* downloadOneFileRequest = [ASIHTTPRequest requestWithURL:url];
+//    [downloadOneFileRequest addRequestHeader:@"X-PID" value:kApp.pid];
+//    [downloadOneFileRequest addRequestHeader:@"ua" value:kApp.ua];
+//    downloadOneFileRequest.showAccurateProgress = YES;
+//    [downloadOneFileRequest setDownloadProgressDelegate:self];
+//    [downloadOneFileRequest startAsynchronous];
     
     
     //测试代码
@@ -181,9 +191,8 @@
     
 //    NSMutableDictionary* params = [[NSMutableDictionary alloc]init];
 //    [params setObject:@"54" forKey:@"uid"];
-//    [params setObject:@"[\"rid2\",\"rid3\"]" forKey:@"downrecordIDs"];
+//    [params setObject:@"[\"54_1421829641872\",\"54_1421829680281\"]" forKey:@"downrecordIDs"];
 //    [kApp.networkHandler doRequest_downloadRecord:params];
-//
     
     
 
@@ -355,15 +364,10 @@
     switch ([sender tag]) {
         case 0:
         {
-//            [kApp.runManager finishOneRun];
-//            //写文件
-//            BinaryIOManager* ioManager = [[BinaryIOManager alloc]init];
-//            [ioManager writeBinary:@"test"];
-//            [ioManager readBinary:@"test" :[kApp.runManager.GPSList count] :[kApp.runManager.dataKm count] :[kApp.runManager.dataMile count] :[kApp.runManager.dataMin count]];
-            
-            self.button_setting.backgroundColor = [UIColor clearColor];
-            CNSettingViewController* settingVC = [[CNSettingViewController alloc]init];
-            [self.navigationController pushViewController:settingVC animated:YES];
+            [CNAppDelegate popupWarningCloud];
+//            self.button_setting.backgroundColor = [UIColor clearColor];
+//            CNSettingViewController* settingVC = [[CNSettingViewController alloc]init];
+//            [self.navigationController pushViewController:settingVC animated:YES];
             break;
         }
         case 1:
