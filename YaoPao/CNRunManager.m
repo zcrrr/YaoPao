@@ -305,7 +305,7 @@
                                          andAltitudeReduce:thisMileAltitudeReduce]];
         self.targetMile++;
     }
-    if ([self during] > self.targetMinute * everyXMinute * 60 * 1000) {// 刚到达整分钟
+    if ([self during] > self.targetMinute * everyXMinute * 60 * 1000 && self.runStatus == 1) {// 刚到达整分钟，切正在运动的时候
         NSLog(@"during is %i",[self during]);
         int thisMinDistance = 0;
         int thisMinDuring = 0;
@@ -370,10 +370,7 @@
     if (minute < 12) {
         return 4;
     }
-    if (minute < 13) {
-        return 3;
-    }
-    return 0;
+    return 3;
 }
 
 

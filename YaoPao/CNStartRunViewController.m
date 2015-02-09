@@ -179,8 +179,10 @@
             }
             if(self.switch_voice.on){
                 [self.runSettingDic setObject:@"1" forKey:@"voice"];
+                kApp.voiceOn = 1;
             }else{
                 [self.runSettingDic setObject:@"0" forKey:@"voice"];
+                kApp.voiceOn = 0;
             }
             NSString* filePath = [CNPersistenceHandler getDocument:@"runSetting.plist"];
             [self.runSettingDic writeToFile:filePath atomically:YES];
@@ -213,7 +215,11 @@
 }
 - (BOOL)prepareRun{
     //测试代码
+#ifdef SIMULATORTEST
     return YES;
+#else
+# endif
+    
     if (0.001 > fabs(kApp.locationHandler.userLocation_lon) || 0.001 > fabs(kApp.locationHandler.userLocation_lat))
     {
         NSLog(@"异常提示：gps信号弱");
@@ -228,7 +234,6 @@
             [CNAppDelegate popupWarningGPSWeak];
             return NO;
         }
-        
     }
 }
 - (void)showAlert:(NSString*) content{

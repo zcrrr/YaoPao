@@ -28,11 +28,11 @@
                     <rect key="frame" x="60" y="147" width="200" height="159"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="red1.png" id="OPY-6I-2Sl">
+                        <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="red1.png" id="OPY-6I-2Sl">
                             <rect key="frame" x="0.0" y="0.0" width="100" height="159"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         </imageView>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="red0.png" id="50c-Am-It0">
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="red5.png" id="50c-Am-It0">
                             <rect key="frame" x="100" y="0.0" width="100" height="159"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         </imageView>
@@ -59,8 +59,8 @@
         </view>
     </objects>
     <resources>
-        <image name="red0.png" width="100" height="159"/>
         <image name="red1.png" width="100" height="159"/>
+        <image name="red5.png" width="100" height="159"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>

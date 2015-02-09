@@ -56,7 +56,6 @@
     if ([kApp.managedObjectContext save:&error]) {
         NSLog(@"Error:%@,%@",error,[error userInfo]);
     }
-    
     //然后查看同步记录文件，将uid赋值或者重置文件
     NSString* filePath_cloud = [CNPersistenceHandler getDocument:@"cloudDiary.plist"];
     NSMutableDictionary* cloudDiary = [NSMutableDictionary dictionaryWithContentsOfFile:filePath_cloud];
@@ -102,6 +101,32 @@
     [record_dic setObject:[NSString stringWithFormat:@"%i",total_time] forKey:@"total_time"];
     [record_dic setObject:[NSString stringWithFormat:@"%i",total_score] forKey:@"total_score"];
     [record_dic writeToFile:filePath_record atomically:YES];
+    
+    //再删除文件
+    if(![runclass.clientBinaryFilePath isEqualToString:@""]){
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask, YES);
+        NSString *filePath = [[paths objectAtIndex:0] stringByAppendingPathComponent:runclass.clientBinaryFilePath];
+        BOOL blHave=[[NSFileManager defaultManager] fileExistsAtPath:filePath];
+        if(blHave){
+            [CNPersistenceHandler DeleteSingleFile:filePath];
+        }
+    }
+    if(![runclass.clientImagePaths isEqualToString:@""]){
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask, YES);
+        NSString *filePath = [[paths objectAtIndex:0] stringByAppendingPathComponent:runclass.clientImagePaths];
+        BOOL blHave=[[NSFileManager defaultManager] fileExistsAtPath:filePath];
+        if(blHave){
+            [CNPersistenceHandler DeleteSingleFile:filePath];
+        }
+    }
+    if(![runclass.clientImagePathsSmall isEqualToString:@""]){
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask, YES);
+        NSString *filePath = [[paths objectAtIndex:0] stringByAppendingPathComponent:runclass.clientImagePathsSmall];
+        BOOL blHave=[[NSFileManager defaultManager] fileExistsAtPath:filePath];
+        if(blHave){
+            [CNPersistenceHandler DeleteSingleFile:filePath];
+        }
+    }
 }
 + (void)addPlistRecord:(RunClass*)runclass{
     //更新plist中个人总记录：
@@ -130,46 +155,8 @@
 }
 + (void)deleteOneRecord:(RunClass*)runclass{
     [self deletePlistRecord:runclass];
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    //设置要检索哪种类型的实体对象
-    NSEntityDescription *entity = [NSEntityDescription entityForName:@"RunClass" inManagedObjectContext:kApp.managedObjectContext];
-    //设置请求实体
-    [request setEntity:entity];
-    NSPredicate* predicate=[NSPredicate predicateWithFormat:@"rid==%@",runclass.rid];
-    [request setPredicate:predicate];
     NSError* error=nil;
-    NSMutableArray* mutableFetchResult=[[kApp.managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
-    if (mutableFetchResult==nil) {
-        NSLog(@"Error:%@",error);
-    }
-    for(RunClass* runclass in mutableFetchResult){
-        //先删除文件
-        if(![runclass.clientBinaryFilePath isEqualToString:@""]){
-            NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask, YES);
-            NSString *filePath = [[paths objectAtIndex:0] stringByAppendingPathComponent:runclass.clientBinaryFilePath];
-            BOOL blHave=[[NSFileManager defaultManager] fileExistsAtPath:filePath];
-            if(blHave){
-                [CNPersistenceHandler DeleteSingleFile:filePath];
-            }
-        }
-        if(![runclass.clientImagePaths isEqualToString:@""]){
-            NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask, YES);
-            NSString *filePath = [[paths objectAtIndex:0] stringByAppendingPathComponent:runclass.clientImagePaths];
-            BOOL blHave=[[NSFileManager defaultManager] fileExistsAtPath:filePath];
-            if(blHave){
-                [CNPersistenceHandler DeleteSingleFile:filePath];
-            }
-        }
-        if(![runclass.clientImagePathsSmall isEqualToString:@""]){
-            NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask, YES);
-            NSString *filePath = [[paths objectAtIndex:0] stringByAppendingPathComponent:runclass.clientImagePathsSmall];
-            BOOL blHave=[[NSFileManager defaultManager] fileExistsAtPath:filePath];
-            if(blHave){
-                [CNPersistenceHandler DeleteSingleFile:filePath];
-            }
-        }
-        [kApp.managedObjectContext deleteObject:runclass];
-    }
+    [kApp.managedObjectContext deleteObject:runclass];
     if ([kApp.managedObjectContext save:&error]) {
         NSLog(@"Error:%@,%@",error,[error userInfo]);
     }
@@ -232,22 +219,23 @@
         }else{
             self.forCloud = 1;
             [self synTimeWithServer];
+            self.stepDes = [NSString stringWithFormat:@"正在和服务器同步时间"];
         }
     }else{
         UIAlertView* alert = [[UIAlertView alloc]initWithTitle:@"" message:@"请检查网络再同步记录" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
         [alert show];
     }
-    
-    
 }
 - (void)cloud_step12{
     //第一步
-    if(!kApp.isLogin){//是否登录
+    if(kApp.isLogin != 1){//是否登录
         UIAlertView* alert = [[UIAlertView alloc]initWithTitle:@"" message:@"请先登录再同步记录" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
         [alert show];
+        self.stepDes = @"请先登录";
         return;
     }
     self.downLoadRecordArray = [[NSMutableArray alloc]init];
+    self.addRecordArray = [[NSMutableArray alloc]init];
     self.fileArray = [[NSMutableArray alloc]init];
     NSString* filePath_cloud = [CNPersistenceHandler getDocument:@"cloudDiary.plist"];
     self.userCancel = NO;
@@ -307,6 +295,7 @@
         NSLog(@"没有新增记录，跳过第三步上传文件步骤");
         [self cloud_step4];
     }else{
+        self.stepDes = @"正在查找要上传的文件";
         self.addRecordArray = mutableFetchResult;
         NSLog(@"新增记录个数：%i",[mutableFetchResult count]);
         for(int i = 0;i<[mutableFetchResult count];i++){
@@ -646,7 +635,9 @@
     NSLog(@"同步全部完成");
     self.stepDes = @"同步完毕！";
     //重置cloudDiray
-//    [CNCloudRecord createCloudDiary:self.synTimeNew];
+    [CNCloudRecord createCloudDiary:self.synTimeNew];
+    NSString* NOTIFICATION_REFRESH = @"REFRESH";
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_REFRESH object:nil];
 }
 - (void)cloudFailed:(NSString*)error{
     NSLog(@"同步失败：%@",error);
@@ -703,7 +694,7 @@ withFilterContext:(id)filterContext
         int deltaTime = (int)(serverTime-(self.startRequestTime+self.endRequestTime)/2);//取得毫秒数
         NSLog(@"deltaTime is %i",deltaTime);
         NSLog(@"endRequestTime is %lli",self.endRequestTime);
-        if(self.endRequestTime - self.startRequestTime < 1){//间隔小于1秒,就直接使用算出来的deltaTime
+        if(self.endRequestTime - self.startRequestTime < 1000){//间隔小于800毫秒,就直接使用算出来的deltaTime
             self.deltaMiliSecond = deltaTime;
             self.isSynServerTime = YES;
             if(self.forCloud == 1){

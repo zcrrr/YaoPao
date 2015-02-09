@@ -24,6 +24,24 @@
     int mileCount = [kApp.runManager.dataMile count];
     int minCount = [kApp.runManager.dataMin count];
     
+//    NSLog(@"------------------------写之前:");
+//    for(i=0;i<pointCount;i++){
+//        CNGPSPoint* point = [kApp.runManager.GPSList objectAtIndex:i];
+//        NSLog(@"lat is %f, lon is %f",point.lat,point.lon);
+//    }
+//    for(i=0;i<kmCount;i++){
+//        OneKMInfo* kminfo = [kApp.runManager.dataKm objectAtIndex:i];
+//        NSLog(@"km:lat is %f, lon is %f",kminfo.lat,kminfo.lon);
+//    }
+//    for(i=0;i<mileCount;i++){
+//        OneMileInfo* kminfo = [kApp.runManager.dataMile objectAtIndex:i];
+//        NSLog(@"mile:lat is %f, lon is %f",kminfo.lat,kminfo.lon);
+//    }
+//    for(i=0;i<minCount;i++){
+//        OneMinuteInfo* kminfo = [kApp.runManager.dataMin objectAtIndex:i];
+//        NSLog(@"min:lat is %f, lon is %f",kminfo.lat,kminfo.lon);
+//    }
+    
     //元数据
     //赋值
     ST_METADATA stTest;
@@ -114,9 +132,9 @@
     memcpy(pBuf4,mileArray,size4);
     
     //minute数组
-    ST_MILEDATA minArray[minCount];
+    ST_MINUTEDATA minArray[minCount];
     for(i = 0;i<minCount;i++){
-        OneMileInfo* oneMin = [kApp.runManager.dataMin objectAtIndex:(minCount-1-i)];
+        OneMinuteInfo* oneMin = [kApp.runManager.dataMin objectAtIndex:(minCount-1-i)];
         minArray[i].lon = (int) ((oneMin.lon + 180) * 1000000);
         minArray[i].lat = (int) ((oneMin.lat + 90) * 1000000);
         minArray[i].distance = oneMin.distance;
@@ -128,12 +146,16 @@
         minArray[i].blank = 0;
     }
     int byteCount5 = sizeof(ST_MINUTEDATA);
-    int arrayCount5 = mileCount;
+    int arrayCount5 = minCount;
     int size5 = byteCount5*arrayCount5;
     char pBuf5[size5];
     memcpy(pBuf5,minArray,size5);
-    
     int size = size1 + size2 + size3 + size4 + size5;
+//    NSLog(@"size1=%i",size1);
+//    NSLog(@"size2=%i",size2);
+//    NSLog(@"size3=%i",size3);
+//    NSLog(@"size4=%i",size4);
+//    NSLog(@"size5=%i",size5);
     char pBuf[size];
     int j = 0;
     for( i = 0 ; i < size5 ; i ++,j++){
@@ -178,7 +200,11 @@
     
     int byteCount5 = sizeof(ST_MINUTEDATA);
     int size5 = byteCount5*minCount;
-    
+//    NSLog(@"size1=%i",size1);
+//    NSLog(@"size2=%i",size2);
+//    NSLog(@"size3=%i",size3);
+//    NSLog(@"size4=%i",size4);
+//    NSLog(@"size5=%i",size5);
     int size = size1 + size2 + size3 + size4 + size5;
     char pBuf[size];
     readBinaryFile(str, pBuf, size);
@@ -214,38 +240,38 @@
     memcpy(&stTest,pBuf1,size1);
     NSLog(@"%d",stTest.version);
     if(stTest.version == 1){//解析版本1
-        NSLog(@"%d",stTest.pointCount);
-        NSLog(@"%d",stTest.coor);
+//        NSLog(@"%d",stTest.pointCount);
+//        NSLog(@"%d",stTest.coor);
         startTimeStamp = stTest.startTime;
-        NSLog(@"%llu",stTest.startTime);
-        NSLog(@"%d",stTest.distance);
-        NSLog(@"%d",stTest.during);
-        NSLog(@"%d",stTest.step);
-        NSLog(@"%d",stTest.calorie);
-        NSLog(@"%d",stTest.altAdd);
-        NSLog(@"%d",stTest.altRed);
-        NSLog(@"%d",stTest.kmCount);
-        NSLog(@"%d",stTest.mileCount);
-        NSLog(@"%d",stTest.minuteCount);
+//        NSLog(@"%llu",stTest.startTime);
+//        NSLog(@"%d",stTest.distance);
+//        NSLog(@"%d",stTest.during);
+//        NSLog(@"%d",stTest.step);
+//        NSLog(@"%d",stTest.calorie);
+//        NSLog(@"%d",stTest.altAdd);
+//        NSLog(@"%d",stTest.altRed);
+//        NSLog(@"%d",stTest.kmCount);
+//        NSLog(@"%d",stTest.mileCount);
+//        NSLog(@"%d",stTest.minuteCount);
         
         kApp.runManager.distance = stTest.distance;
         kApp.runManager.altitudeAdd = stTest.altAdd;
         kApp.runManager.altitudeReduce = stTest.altRed;
-        NSLog(@"----------");
+//        NSLog(@"----------");
         
         ST_GPSDATA gpsArray[gpsCount];
         memcpy(gpsArray,pBuf2,size2);
         for(i=0;i<gpsCount;i++){
-            ST_GPSDATA gps = gpsArray[i];
-            NSLog(@"%d",gps.lon);
-            NSLog(@"%d",gps.lat);
-            NSLog(@"%d",gps.status);
-            NSLog(@"%d",gps.timeAdd);
-            NSLog(@"%d",gps.course);
-            NSLog(@"%d",gps.altitude);
-            NSLog(@"%d",gps.speed);
-            NSLog(@"%d",gps.blank);
-            NSLog(@"----------");
+            ST_GPSDATA gps = gpsArray[gpsCount-i-1];
+//            NSLog(@"%d",gps.lon);
+//            NSLog(@"%d",gps.lat);
+//            NSLog(@"%d",gps.status);
+//            NSLog(@"%d",gps.timeAdd);
+//            NSLog(@"%d",gps.course);
+//            NSLog(@"%d",gps.altitude);
+//            NSLog(@"%d",gps.speed);
+//            NSLog(@"%d",gps.blank);
+//            NSLog(@"----------");
             
             double lon = gps.lon/1000000.0-180;
             double lat = gps.lat/1000000.0-90;
@@ -269,16 +295,16 @@
         ST_KMDATA kmArray[kmCount];
         memcpy(kmArray,pBuf3,size3);
         for(i=0;i<kmCount;i++){
-            ST_KMDATA oneKm = kmArray[i];
-            NSLog(@"%d",oneKm.lon);
-            NSLog(@"%d",oneKm.lat);
-            NSLog(@"%d",oneKm.distance);
-            NSLog(@"%d",oneKm.time);
-            NSLog(@"%d",oneKm.step);
-            NSLog(@"%d",oneKm.calorie);
-            NSLog(@"%d",oneKm.altAdd);
-            NSLog(@"%d",oneKm.altRed);
-            NSLog(@"----------");
+            ST_KMDATA oneKm = kmArray[kmCount-i-1];
+//            NSLog(@"%d",oneKm.lon);
+//            NSLog(@"%d",oneKm.lat);
+//            NSLog(@"%d",oneKm.distance);
+//            NSLog(@"%d",oneKm.time);
+//            NSLog(@"%d",oneKm.step);
+//            NSLog(@"%d",oneKm.calorie);
+//            NSLog(@"%d",oneKm.altAdd);
+//            NSLog(@"%d",oneKm.altRed);
+//            NSLog(@"----------");
             
             double lon = oneKm.lon/1000000.0-180;
             double lat = oneKm.lat/1000000.0-90;
@@ -293,16 +319,16 @@
         ST_MILEDATA mileArray[mileCount];
         memcpy(mileArray,pBuf4,size4);
         for(i=0;i<mileCount;i++){
-            ST_MILEDATA oneMile = mileArray[i];
-            NSLog(@"%d",oneMile.lon);
-            NSLog(@"%d",oneMile.lat);
-            NSLog(@"%d",oneMile.distance);
-            NSLog(@"%d",oneMile.time);
-            NSLog(@"%d",oneMile.step);
-            NSLog(@"%d",oneMile.calorie);
-            NSLog(@"%d",oneMile.altAdd);
-            NSLog(@"%d",oneMile.altRed);
-            NSLog(@"----------");
+            ST_MILEDATA oneMile = mileArray[mileCount-i-1];
+//            NSLog(@"%d",oneMile.lon);
+//            NSLog(@"%d",oneMile.lat);
+//            NSLog(@"%d",oneMile.distance);
+//            NSLog(@"%d",oneMile.time);
+//            NSLog(@"%d",oneMile.step);
+//            NSLog(@"%d",oneMile.calorie);
+//            NSLog(@"%d",oneMile.altAdd);
+//            NSLog(@"%d",oneMile.altRed);
+//            NSLog(@"----------");
             
             double lon = oneMile.lon/1000000.0-180;
             double lat = oneMile.lat/1000000.0-90;
@@ -317,16 +343,16 @@
         ST_MINUTEDATA minArray[minCount];
         memcpy(minArray,pBuf5,size5);
         for(i=0;i<minCount;i++){
-            ST_MINUTEDATA oneMin = minArray[i];
-            NSLog(@"%d",oneMin.lon);
-            NSLog(@"%d",oneMin.lat);
-            NSLog(@"%d",oneMin.distance);
-            NSLog(@"%d",oneMin.time);
-            NSLog(@"%d",oneMin.step);
-            NSLog(@"%d",oneMin.calorie);
-            NSLog(@"%d",oneMin.altAdd);
-            NSLog(@"%d",oneMin.altRed);
-            NSLog(@"----------");
+            ST_MINUTEDATA oneMin = minArray[minCount-i-1];
+//            NSLog(@"%d",oneMin.lon);
+//            NSLog(@"%d",oneMin.lat);
+//            NSLog(@"%d",oneMin.distance);
+//            NSLog(@"%d",oneMin.time);
+//            NSLog(@"%d",oneMin.step);
+//            NSLog(@"%d",oneMin.calorie);
+//            NSLog(@"%d",oneMin.altAdd);
+//            NSLog(@"%d",oneMin.altRed);
+//            NSLog(@"----------");
             
             double lon = oneMin.lon/1000000.0-180;
             double lat = oneMin.lat/1000000.0-90;
@@ -338,6 +364,24 @@
             [kApp.runManager.dataMin addObject:oneMinInfo];
         }
     }
+    
+//    NSLog(@"------------------------读之后:");
+//    for(i=0;i<gpsCount;i++){
+//        CNGPSPoint* point = [kApp.runManager.GPSList objectAtIndex:i];
+//        NSLog(@"lat is %f, lon is %f",point.lat,point.lon);
+//    }
+//    for(i=0;i<kmCount;i++){
+//        OneKMInfo* kminfo = [kApp.runManager.dataKm objectAtIndex:i];
+//        NSLog(@"km:lat is %f, lon is %f",kminfo.lat,kminfo.lon);
+//    }
+//    for(i=0;i<mileCount;i++){
+//        OneMileInfo* kminfo = [kApp.runManager.dataMile objectAtIndex:i];
+//        NSLog(@"mile:lat is %f, lon is %f",kminfo.lat,kminfo.lon);
+//    }
+//    for(i=0;i<minCount;i++){
+//        OneMinuteInfo* kminfo = [kApp.runManager.dataMin objectAtIndex:i];
+//        NSLog(@"min:lat is %f, lon is %f",kminfo.lat,kminfo.lon);
+//    }
 }
 
 @end

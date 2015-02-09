@@ -24,6 +24,9 @@
 @synthesize recordList;
 @synthesize from;
 @synthesize page;
+@synthesize frame_dis;
+@synthesize frame_count;
+@synthesize frame_time;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -38,7 +41,10 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    NSString* NOTIFICATION_REFRESH = @"REFRESH";
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refreshData) name:NOTIFICATION_REFRESH object:nil];
     [self.button_back addTarget:self action:@selector(button_blue_down:) forControlEvents:UIControlEventTouchDown];
+    [self.button_cloud addTarget:self action:@selector(button_blue_down:) forControlEvents:UIControlEventTouchDown];
     self.scrollview.delegate = self;
     self.scrollview.contentSize = CGSizeMake(960, 120);
     self.scrollview.showsHorizontalScrollIndicator=NO; //不显示水平滑动线
@@ -51,6 +57,22 @@
     self.pageControl.currentPageIndicatorTintColor = [UIColor blackColor];
     self.pageControl.pageIndicatorTintColor = [UIColor grayColor];
     
+    
+    //表格尾部
+    self.tableview.tableFooterView = nil;
+    UIView *tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.tableview.bounds.size.width, 40.0f)];
+    UILabel *loadMoreText = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 116.0f, 40.0f)];
+    [loadMoreText setCenter:tableFooterView.center];
+    [loadMoreText setFont:[UIFont fontWithName:@"Helvetica Neue" size:14]];
+    [loadMoreText setText:@"上拉显示更多数据"];
+    [tableFooterView addSubview:loadMoreText];
+    self.tableview.tableFooterView = tableFooterView;
+    
+    self.frame_dis = self.view_dis.frame;
+    
+    [self refreshData];
+}
+- (void)refreshData{
     NSString* filePath_record = [CNPersistenceHandler getDocument:@"all_record.plist"];
     NSMutableDictionary* record_dic = [NSMutableDictionary dictionaryWithContentsOfFile:filePath_record];
     if(record_dic == nil){
@@ -66,19 +88,8 @@
     int total_second = [[record_dic objectForKey:@"total_time"]intValue];
     [self setTimeNumImage:total_second];
     self.recordList = [[NSMutableArray alloc]init];
+    self.page = 0;
     [self lookup];
-    //表格尾部
-    self.tableview.tableFooterView = nil;
-    UIView *tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.tableview.bounds.size.width, 40.0f)];
-    UILabel *loadMoreText = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 116.0f, 40.0f)];
-    [loadMoreText setCenter:tableFooterView.center];
-    [loadMoreText setFont:[UIFont fontWithName:@"Helvetica Neue" size:14]];
-    [loadMoreText setText:@"上拉显示更多数据"];
-    [tableFooterView addSubview:loadMoreText];
-    
-    
-    
-    self.tableview.tableFooterView = tableFooterView;
 }
 - (void)button_blue_down:(id)sender{
     ((UIButton*)sender).backgroundColor = [UIColor colorWithRed:0 green:88.0/255.0 blue:142.0/255.0 alpha:1];
@@ -114,7 +125,7 @@
         NSLog(@"Error: %@,%@",error,[error userInfo]);
     }
     NSLog(@"mutableFetchResult count is %i",[mutableFetchResult count]);
-    if([mutableFetchResult count] == 0){
+    if(page != 0 && [mutableFetchResult count] == 0){
         UIAlertView* alert = [[UIAlertView alloc]initWithTitle:nil message:@"已经没有更多数据了" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
         [alert show];
         return;
@@ -123,6 +134,11 @@
     [self.tableview reloadData];
     page++;
 }
+- (IBAction)button_cloud_clicked:(id)sender {
+    self.button_cloud.backgroundColor = [UIColor clearColor];
+    [CNAppDelegate popupWarningCloud];
+}
+
 - (IBAction)button_back_clicked:(id)sender {
     self.button_back.backgroundColor = [UIColor clearColor];
     if([self.from isEqual:@"match"]){
@@ -159,6 +175,7 @@
     return img_name_type;
 }
 - (void)setDisNumImage:(double)distance{
+    self.view_dis.frame = self.frame_dis;
     int distance100 = distance*100;
     int dis1num = distance100/100000;
     distance100 = distance100 - dis1num*100000;

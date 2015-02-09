@@ -145,6 +145,7 @@
                 NSLog(@"获取验证码");
                 self.button_vcode.backgroundColor = [UIColor colorWithRed:143.0/255.0 green:195.0/255.0 blue:31.0/255.0 alpha:1];
                 [self getVCode];
+                [self displayLoading];
             }
             break;
         }
@@ -156,6 +157,7 @@
     NSString* str2=[self.label_code.text stringByReplacingOccurrencesOfString:@"+" withString:@""];
     NSLog(@"code is %@",str2);
     [SMS_SDK getVerifyCodeByPhoneNumber:self.textfield_phone.text AndZone:str2 result:^(enum SMS_GetVerifyCodeResponseState state) {
+        [self hideLoading];
         if (1==state) {
             NSLog(@"block 获取验证码成功");
             UIAlertView* alert=[[UIAlertView alloc] initWithTitle:@"" message:@"获取验证码成功" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
@@ -328,15 +330,17 @@
 }
 - (void)loginPhoneDidSuccess:(NSDictionary *)resultDic{
     //测试账号：18611101410
-    if([self.textfield_phone.text isEqualToString:@"18611101410"]){
-        [CNAppDelegate saveRun];
-    }
+//    if([self.textfield_phone.text isEqualToString:@"18611101410"]){
+//        [CNAppDelegate saveRun];
+//    }
     [self hideLoading];
     //登录、注册之后的一系列操作
     CNMainViewController* mainVC = [[CNMainViewController alloc]init];
     [self.navigationController pushViewController:mainVC animated:YES];
     
     [CNCloudRecord ClearRecordAfterUserLogin];
+    //用户登录之后先同步
+    [CNAppDelegate popupWarningCloud];
     
 //    CNUserinfoViewController* userInfoVC = [[CNUserinfoViewController alloc]init];
 //    [self.navigationController pushViewController:userInfoVC animated:YES];

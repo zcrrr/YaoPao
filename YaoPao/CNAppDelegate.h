@@ -51,6 +51,7 @@
 @property (assign, nonatomic) int gpsLevel;//gps采用的等级
 @property (assign, nonatomic) BOOL isInChina;//是否在中国
 @property (assign, nonatomic) BOOL isKnowCountry;//是否已经判断了国家
+@property (strong, nonatomic) NSTimer* timer_playVoice;
 //下面是一次运动的一些实时数据
 @property (assign, nonatomic) float distance;//一次运动的累计距离
 @property (assign, nonatomic) int perMileSecond;//一次运动的平均配速，用秒表示

@@ -25,6 +25,7 @@
 @property (strong, nonatomic) IBOutlet UIView *view_total_score;
 @property (strong, nonatomic) IBOutlet UIImageView *imageview_dot;
 @property (strong, nonatomic) IBOutlet UIButton *button_setting;
+@property (strong, nonatomic) IBOutlet UIButton *button_cloud;
 @property (strong, nonatomic) IBOutlet UIView *view_record;
 @property (strong, nonatomic) IBOutlet UIButton *button_record;
 

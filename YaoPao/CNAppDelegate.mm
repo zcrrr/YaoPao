@@ -134,6 +134,7 @@
 @synthesize hasCheckTimeFromServer;
 @synthesize isInChina;
 @synthesize isKnowCountry;
+@synthesize timer_playVoice;
 
 @synthesize managedObjectModel=_managedObjectModel;
 @synthesize managedObjectContext=_managedObjectContext;
@@ -168,7 +169,7 @@
     self.showad = [MobClick getConfigParams:@"showad"];
     NSLog(@"self.showad is %@",self.showad);
     if (self.showad == nil || ([NSNull null] == (NSNull *)self.showad)) {
-        self.showad = @"1.0.5,1";
+        self.showad = @"1.0.6,1";
     }
 //#ifdef SIMULATORTEST
 //
@@ -354,7 +355,6 @@
 - (void)initVar{
     self.networkHandler = [[CNNetworkHandler alloc]init];
     [self.networkHandler startQueue];//开启队列
-    NSLog(@"test------------");
     self.locationHandler = [[CNLocationHandler alloc]init];
     self.voiceHandler = [[CNVoiceHandler alloc]init];
     [self.voiceHandler initPlayer];

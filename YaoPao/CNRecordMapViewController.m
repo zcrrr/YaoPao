@@ -96,12 +96,6 @@
     int type = [oneRun.howToMove intValue];
     NSString* typeDes = @"";
     switch (type) {
-        case 0:
-        {
-            typeDes = @"步行";
-            self.image_type.image = [UIImage imageNamed:@"runtype_walk.png"];
-            break;
-        }
         case 1:
         {
             typeDes = @"跑步";
@@ -109,6 +103,12 @@
             break;
         }
         case 2:
+        {
+            typeDes = @"步行";
+            self.image_type.image = [UIImage imageNamed:@"runtype_walk.png"];
+            break;
+        }
+        case 3:
         {
             typeDes = @"自行车骑行";
             self.image_type.image = [UIImage imageNamed:@"runtype_ride.png"];

@@ -319,7 +319,6 @@
 		9A2CCB4D199D06B4002E8AF0 /* Makefile.in in Resources */ = {isa = PBXBuildFile; fileRef = 9A2CCABA199D06B4002E8AF0 /* Makefile.in */; };
 		9A2CCB4E199D06B4002E8AF0 /* version.h.in in Resources */ = {isa = PBXBuildFile; fileRef = 9A2CCAC1199D06B4002E8AF0 /* version.h.in */; };
 		9A2CCB4F199D06B4002E8AF0 /* version.h.vc in Resources */ = {isa = PBXBuildFile; fileRef = 9A2CCAC2199D06B4002E8AF0 /* version.h.vc */; };
-		9A2CCE37199D0E27002E8AF0 /* liblibgeos.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A2CCE36199D0E27002E8AF0 /* liblibgeos.a */; };
 		9A2CE59D19E0E94700FDF49D /* CNWarningNotInStartZoneViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A2CE59B19E0E94700FDF49D /* CNWarningNotInStartZoneViewController.m */; };
 		9A2CE59E19E0E94700FDF49D /* CNWarningNotInStartZoneViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9A2CE59C19E0E94700FDF49D /* CNWarningNotInStartZoneViewController.xib */; };
 		9A2CE5A219E1407400FDF49D /* CNWarningCheckTimeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A2CE5A019E1407400FDF49D /* CNWarningCheckTimeViewController.m */; };
@@ -370,7 +369,6 @@
 		9A4A13D61973FFD500F2EF04 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A4A13B81973FFD500F2EF04 /* UIKit.framework */; };
 		9A4A13DE1973FFD600F2EF04 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9A4A13DC1973FFD600F2EF04 /* InfoPlist.strings */; };
 		9A4A13E01973FFD600F2EF04 /* YaoPaoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A4A13DF1973FFD600F2EF04 /* YaoPaoTests.m */; };
-		9A4A140B1974028D00F2EF04 /* libasirequest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A4A14091974028D00F2EF04 /* libasirequest.a */; };
 		9A4A1426197402C600F2EF04 /* NSObject+SBJson.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A4A140E197402C600F2EF04 /* NSObject+SBJson.m */; };
 		9A4A1427197402C600F2EF04 /* SBJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A4A1411197402C600F2EF04 /* SBJsonParser.m */; };
 		9A4A1428197402C600F2EF04 /* SBJsonStreamParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A4A1413197402C600F2EF04 /* SBJsonStreamParser.m */; };
@@ -542,6 +540,7 @@
 		9A835BA21A70EA8D00B30174 /* MAMapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A835BA11A70EA8D00B30174 /* MAMapKit.framework */; };
 		9A835BA41A70EAB700B30174 /* AMap.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 9A835BA31A70EAB700B30174 /* AMap.bundle */; };
 		9A835BA81A71077700B30174 /* GCDAsyncUdpSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A835BA71A71077700B30174 /* GCDAsyncUdpSocket.m */; };
+		9A86A94C1A7B5768008ABDAE /* libASIHTTPRequest_support64.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A86A94B1A7B5768008ABDAE /* libASIHTTPRequest_support64.a */; };
 		9A86B8B7197BF34600701324 /* CNRegisterPhoneViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A86B8B5197BF34600701324 /* CNRegisterPhoneViewController.m */; };
 		9A86B8B8197BF34600701324 /* CNRegisterPhoneViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9A86B8B6197BF34600701324 /* CNRegisterPhoneViewController.xib */; };
 		9A86B8BC197BFB8500701324 /* CNLoginPhoneViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A86B8BA197BFB8500701324 /* CNLoginPhoneViewController.m */; };
@@ -1326,7 +1325,6 @@
 		9A2CCAC1199D06B4002E8AF0 /* version.h.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = version.h.in; sourceTree = "<group>"; };
 		9A2CCAC2199D06B4002E8AF0 /* version.h.vc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = version.h.vc; sourceTree = "<group>"; };
 		9A2CCAC3199D06B4002E8AF0 /* geos.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = geos.h; sourceTree = "<group>"; };
-		9A2CCE36199D0E27002E8AF0 /* liblibgeos.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = liblibgeos.a; sourceTree = "<group>"; };
 		9A2CE59A19E0E94700FDF49D /* CNWarningNotInStartZoneViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CNWarningNotInStartZoneViewController.h; sourceTree = "<group>"; };
 		9A2CE59B19E0E94700FDF49D /* CNWarningNotInStartZoneViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CNWarningNotInStartZoneViewController.m; sourceTree = "<group>"; };
 		9A2CE59C19E0E94700FDF49D /* CNWarningNotInStartZoneViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CNWarningNotInStartZoneViewController.xib; sourceTree = "<group>"; };
@@ -1406,7 +1404,6 @@
 		9A4A14061974028D00F2EF04 /* ASIInputStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASIInputStream.h; sourceTree = "<group>"; };
 		9A4A14071974028D00F2EF04 /* ASINetworkQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASINetworkQueue.h; sourceTree = "<group>"; };
 		9A4A14081974028D00F2EF04 /* ASIProgressDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASIProgressDelegate.h; sourceTree = "<group>"; };
-		9A4A14091974028D00F2EF04 /* libasirequest.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libasirequest.a; sourceTree = "<group>"; };
 		9A4A140A1974028D00F2EF04 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		9A4A140D197402C600F2EF04 /* NSObject+SBJson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+SBJson.h"; sourceTree = "<group>"; };
 		9A4A140E197402C600F2EF04 /* NSObject+SBJson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+SBJson.m"; sourceTree = "<group>"; };
@@ -1630,6 +1627,7 @@
 		9A835BA31A70EAB700B30174 /* AMap.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = AMap.bundle; sourceTree = "<group>"; };
 		9A835BA61A71077700B30174 /* GCDAsyncUdpSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDAsyncUdpSocket.h; sourceTree = "<group>"; };
 		9A835BA71A71077700B30174 /* GCDAsyncUdpSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDAsyncUdpSocket.m; sourceTree = "<group>"; };
+		9A86A94B1A7B5768008ABDAE /* libASIHTTPRequest_support64.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libASIHTTPRequest_support64.a; sourceTree = "<group>"; };
 		9A86B8B4197BF34600701324 /* CNRegisterPhoneViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CNRegisterPhoneViewController.h; sourceTree = "<group>"; };
 		9A86B8B5197BF34600701324 /* CNRegisterPhoneViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CNRegisterPhoneViewController.m; sourceTree = "<group>"; };
 		9A86B8B6197BF34600701324 /* CNRegisterPhoneViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CNRegisterPhoneViewController.xib; sourceTree = "<group>"; };
@@ -1769,9 +1767,9 @@
 				9A72E14519D3EA0D008533F5 /* AudioToolbox.framework in Frameworks */,
 				9A5F49A5198F67DF00D990F0 /* CoreText.framework in Frameworks */,
 				9A6740611989F252006E12CC /* Security.framework in Frameworks */,
-				9A2CCE37199D0E27002E8AF0 /* liblibgeos.a in Frameworks */,
 				9A67405F1989F24B006E12CC /* libstdc++.6.0.9.dylib in Frameworks */,
 				9A835B9C1A70E4E800B30174 /* libWeChatSDK.a in Frameworks */,
+				9A86A94C1A7B5768008ABDAE /* libASIHTTPRequest_support64.a in Frameworks */,
 				9A835B911A70E4E800B30174 /* QZoneConnection.framework in Frameworks */,
 				9A835BA01A70E4E800B30174 /* ShareSDKShareActionSheet.framework in Frameworks */,
 				9A3B850D19AED88300BEA2E3 /* libMobClickLibrary.a in Frameworks */,
@@ -1787,7 +1785,6 @@
 				9A835B981A70E4E800B30174 /* TencentOpenAPI.framework in Frameworks */,
 				9A4A13B51973FFD500F2EF04 /* Foundation.framework in Frameworks */,
 				9ACC09731A3558760037E6BB /* SMS_SDK.framework in Frameworks */,
-				9A4A140B1974028D00F2EF04 /* libasirequest.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3153,6 +3150,7 @@
 		9A4A13FC1974027600F2EF04 /* ASIHTTPRequest */ = {
 			isa = PBXGroup;
 			children = (
+				9A86A94B1A7B5768008ABDAE /* libASIHTTPRequest_support64.a */,
 				9A4A13FD1974028D00F2EF04 /* ASIAuthenticationDialog.h */,
 				9A4A13FE1974028D00F2EF04 /* ASICacheDelegate.h */,
 				9A4A13FF1974028D00F2EF04 /* ASIDataCompressor.h */,
@@ -3165,7 +3163,6 @@
 				9A4A14061974028D00F2EF04 /* ASIInputStream.h */,
 				9A4A14071974028D00F2EF04 /* ASINetworkQueue.h */,
 				9A4A14081974028D00F2EF04 /* ASIProgressDelegate.h */,
-				9A4A14091974028D00F2EF04 /* libasirequest.a */,
 				9A4A140A1974028D00F2EF04 /* Reachability.h */,
 			);
 			name = ASIHTTPRequest;
@@ -3652,7 +3649,6 @@
 		9AF348291999EB5900D2E37C /* geos */ = {
 			isa = PBXGroup;
 			children = (
-				9A2CCE36199D0E27002E8AF0 /* liblibgeos.a */,
 				9A2CC8AD199D06B4002E8AF0 /* geos */,
 				9A2CCAC3199D06B4002E8AF0 /* geos.h */,
 			);
@@ -4465,7 +4461,7 @@
 		9A4A13E41973FFD600F2EF04 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = armv7;
+				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -4502,12 +4498,12 @@
 					"$(PROJECT_DIR)/YaoPao/Extend/SinaWeiboSDK",
 					"$(PROJECT_DIR)/YaoPao/Extend/WeChatSDK",
 				);
-				ONLY_ACTIVE_ARCH = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
-				VALID_ARCHS = armv7;
+				VALID_ARCHS = "armv7 arm64";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -4515,7 +4511,7 @@
 		9A4A13E51973FFD600F2EF04 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = armv7;
+				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -4552,12 +4548,12 @@
 					"$(PROJECT_DIR)/YaoPao/Extend/SinaWeiboSDK",
 					"$(PROJECT_DIR)/YaoPao/Extend/WeChatSDK",
 				);
-				ONLY_ACTIVE_ARCH = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
-				VALID_ARCHS = armv7;
+				VALID_ARCHS = "armv7 arm64";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

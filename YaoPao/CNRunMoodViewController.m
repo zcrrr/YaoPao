@@ -45,19 +45,6 @@
     kApp.gpsLevel = 1;
     // Do any additional setup after loading the view from its nib.
     
-    //测试代码
-//    NSMutableString* trackRecord = [[NSMutableString alloc]initWithString:@""];
-//    for(int i=0;i<[kApp.oneRunPointList count];i++){
-//        CNGPSPoint* point = [kApp.oneRunPointList objectAtIndex:i];
-//        [trackRecord appendString:[NSString stringWithFormat:@"%0.6f %0.6f,",point.lon,point.lat]];
-//    }
-//    NSLog(@"trackRecord is %@",trackRecord);
-//    NSString* filename = [NSString stringWithFormat:@"%lli.plist",[CNUtil getNowTime]];
-//    NSString* filePathTrackRecord = [CNPersistenceHandler getDocument:filename];
-//    NSDictionary* trackdic = [[NSDictionary alloc]initWithObjectsAndKeys:trackRecord,@"track",nil];
-//    [trackdic writeToFile:filePathTrackRecord atomically:YES];
-    
-    
     self.textfield_feel.delegate = self;
     [self.button_delete addTarget:self action:@selector(button_blue_down:) forControlEvents:UIControlEventTouchDown];
     [self.button_save addTarget:self action:@selector(button_blue_down:) forControlEvents:UIControlEventTouchDown];
@@ -143,6 +130,10 @@
     CNShareViewController* shareVC = [[CNShareViewController alloc]init];
     shareVC.dataSource = @"this";
     [self.navigationController pushViewController:shareVC animated:YES];
+    if(kApp.isLogin == 1){
+        [CNAppDelegate popupWarningCloud];
+    }
+    
 //    CNRunRecordViewController* recordVC = [[CNRunRecordViewController alloc]init];
 //    [self.navigationController pushViewController:recordVC animated:YES];
 }

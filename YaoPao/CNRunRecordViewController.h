@@ -21,6 +21,7 @@
 @property (strong, nonatomic) IBOutlet UILabel *label_dis;
 @property (strong, nonatomic) IBOutlet UILabel *label_count;
 @property (strong, nonatomic) IBOutlet UILabel *label_total_time;
+- (IBAction)button_cloud_clicked:(id)sender;
 - (IBAction)button_back_clicked:(id)sender;
 @property (strong, nonatomic) IBOutlet UIView *view_dis;
 @property (strong, nonatomic) IBOutlet UIImageView *image_dis1;
@@ -40,5 +41,9 @@
 @property (strong, nonatomic) IBOutlet UIImageView *image_time4;
 @property (strong, nonatomic) IBOutlet UIImageView *image_time5;
 @property (strong, nonatomic) IBOutlet UIButton *button_back;
+@property (strong, nonatomic) IBOutlet UIButton *button_cloud;
 @property (strong, nonatomic) IBOutlet UIImageView *image_time6;
+@property (assign, nonatomic) CGRect frame_dis;
+@property (assign, nonatomic) CGRect frame_count;
+@property (assign, nonatomic) CGRect frame_time;
 @end

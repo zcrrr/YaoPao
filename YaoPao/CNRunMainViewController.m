@@ -145,15 +145,28 @@
     if(kApp.runManager.targetType == 1){
         self.label_target.text = @"自由运动";
     }
+    kApp.timer_playVoice = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(checkPlayVoice) userInfo:nil repeats:YES];
 }
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-- (void)displayTime{
-    int duringMiliSecond = [kApp.runManager during];
-    if(kApp.runManager.targetType == 3){
+- (void)checkPlayVoice{
+    int distance = kApp.runManager.distance;
+    if(kApp.runManager.targetType == 1 || kApp.runManager.targetType == 2){//目标是距离
+        if(kApp.runManager.targetType == 2){
+            if(self.playTarget == NO && distance > kApp.runManager.targetValue){
+                self.reachTarget = YES;//达到目标了
+            }
+            if(self.playHalf == NO && distance > kApp.runManager.targetValue/2){//达到目标一半
+                self.reachHalf = YES;
+            }
+            if(kApp.runManager.distance > kApp.runManager.targetValue - 2000){//快达到目标
+                self.closeToTarget = YES;
+            }
+        }
+        if(distance > (self.pass_km+1)*1000){
+            self.pass_km++;
+            self.playkm = YES;
+        }
+    }else{//目标是时间
+        int duringMiliSecond = [kApp.runManager during];
         if(self.playTarget == NO && duringMiliSecond > kApp.runManager.targetValue){
             self.reachTarget = YES;//达到目标了
         }
@@ -163,6 +176,21 @@
         if(duringMiliSecond > kApp.runManager.targetValue - 10*60*1000){//快达到目标
             self.closeToTarget = YES;
         }
+        if(duringMiliSecond > (self.pass_5munite + 1)*kVoiceTimeInterval*60*1000){//过了5分钟
+            self.pass_5munite++;
+            self.play5munite = YES;
+        }
+    }
+    [self playVoice];
+}
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+- (void)displayTime{
+    int duringMiliSecond = [kApp.runManager during];
+    if(kApp.runManager.targetType == 3){
         float width = kApp.runManager.completePercent*300.0;
         CGRect newFrame = self.view_progress.frame;
         newFrame.size = CGSizeMake(width, 3);
@@ -173,13 +201,9 @@
         self.tiv.time = duringMiliSecond/1000;
         [self.tiv fitToSize];
     }
-    if(duringMiliSecond > (self.pass_5munite + 1)*kVoiceTimeInterval*60*1000){//过了5分钟
-        self.pass_5munite++;
-        self.play5munite = YES;
-    }
-    [self playVoice];
 }
 - (IBAction)button_map_clicked:(id)sender {
+    kApp.isInChina = YES;
     if(kApp.isInChina){
         CNRunMapViewController* mapVC = [[CNRunMapViewController alloc]init];
         [self.navigationController pushViewController:mapVC animated:YES];
@@ -238,6 +262,7 @@
         {
             kApp.isRunning = 0;
             [kApp.runManager finishOneRun];
+            [kApp.timer_playVoice invalidate];
             if(kApp.runManager.distance < 50){
                 kApp.gpsLevel = 1;
                 //弹出框，距离小于50
@@ -459,15 +484,6 @@
         NSLog(@"distance is %i",kApp.runManager.distance);
         if(kApp.runManager.targetType == 1 || kApp.runManager.targetType == 2){//目标是距离
             if(kApp.runManager.targetType == 2){
-                if(self.playTarget == NO && distance > kApp.runManager.targetValue){
-                    self.reachTarget = YES;//达到目标了
-                }
-                if(self.playHalf == NO && distance > kApp.runManager.targetValue/2){//达到目标一半
-                    self.reachHalf = YES;
-                }
-                if(kApp.runManager.distance > kApp.runManager.targetValue - 2000){//快达到目标
-                    self.closeToTarget = YES;
-                }
                 float width = kApp.runManager.completePercent*300.0;
                 CGRect newFrame = self.view_progress.frame;
                 newFrame.size = CGSizeMake(width, 3);
@@ -479,11 +495,6 @@
             self.div.distance = distance/1000.0;
             [self.div fitToSize];
         }
-        if(distance > (self.pass_km+1)*1000){
-            self.pass_km++;
-            self.playkm = YES;
-        }
-        [self playVoice];
     }
     if([keyPath isEqualToString:@"secondPerKm"])
     {

@@ -64,7 +64,7 @@ typedef struct mileData {//144位 18
     unsigned int lon:29;
 } ST_MILEDATA;
 
-typedef struct minuteData {//144位 18
+typedef struct minuteData {//128位 16
     unsigned int blank:4;
     unsigned int altRed:10;
     unsigned int altAdd:10;

@@ -328,6 +328,8 @@
     [CNCloudRecord ClearRecordAfterUserLogin];
     CNMainViewController* mainVC = [[CNMainViewController alloc]init];
     [self.navigationController pushViewController:mainVC animated:YES];
+    //用户登录之后先同步
+    [CNAppDelegate popupWarningCloud];
 }
 - (void)findPwdDidFailed:(NSString *)mes{
     

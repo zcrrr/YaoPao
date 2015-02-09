@@ -12,6 +12,7 @@
 #import "CNUserinfoViewController.h"
 #import "CNADViewController.h"
 #import "CNServiceViewController.h"
+#import "CNLoginPhoneViewController.h"
 
 @interface CNSettingViewController ()
 
@@ -86,8 +87,8 @@
             self.view_user.backgroundColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:1];
             if(kApp.isLogin == 0){
                 [self showAlert:@"请先登录"];
-                CNRegisterPhoneViewController* registerVC = [[CNRegisterPhoneViewController alloc]init];
-                [self.navigationController pushViewController:registerVC animated:YES];
+                CNLoginPhoneViewController* loginVC = [[CNLoginPhoneViewController alloc]init];
+                [self.navigationController pushViewController:loginVC animated:YES];
             }else{
                 CNUserinfoViewController* userInfoVC = [[CNUserinfoViewController alloc]init];
                 userInfoVC.from = @"setting";

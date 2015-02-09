@@ -201,7 +201,9 @@
         case TAG_AUTO_LOGIN:
         {
             [[NSNotificationCenter defaultCenter] postNotificationName:@"loginDone" object:nil];
-            [kApp.cloudManager synTimeWithServer];
+//            [kApp.cloudManager synTimeWithServer];
+            //用户登录之后先同步
+            [CNAppDelegate popupWarningCloud];
             break;
         }
         case TAG_FIND_PWD_VCODE:
@@ -945,6 +947,15 @@
     NSDictionary* stateDic = [result objectForKey:@"state"];
     if(stateDic == nil)return;
     int code = [[stateDic objectForKey:@"code"] intValue];
+    if(code == -7){//用户已经在其他手机登录
+        [self showAlert:@"用户在其他手机登录，请重新登录"];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"loginDone" object:nil];
+        CNLoginPhoneViewController* loginVC = [[CNLoginPhoneViewController alloc]init];
+        [kApp.navigationController pushViewController:loginVC animated:YES];
+        kApp.cloudManager.stepDes = @"用户在其他手机登录，请重新登录";
+        [self user_logout];
+//        return;
+    }
     NSString* desc = [stateDic objectForKey:@"desc"];
     BOOL isSuccess = (code == 0)?YES:NO;
     switch ([request tag]) {

@@ -116,6 +116,7 @@
     NSString* str2=[self.label_code.text stringByReplacingOccurrencesOfString:@"+" withString:@""];
     NSLog(@"code is %@",str2);
     [SMS_SDK getVerifyCodeByPhoneNumber:self.textfield_phone.text AndZone:str2 result:^(enum SMS_GetVerifyCodeResponseState state) {
+        [self hideLoading];
         if (1==state) {
             NSLog(@"block 获取验证码成功");
             UIAlertView* alert=[[UIAlertView alloc] initWithTitle:@"" message:@"获取验证码成功" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
@@ -184,6 +185,7 @@
                 NSLog(@"获取验证码");
 //                [kApp.networkHandler doRequest_verifyCode:self.textfield_phone.text];
                 [self getVCode];
+                [self displayLoading];
             }
             break;
         }

@@ -29,16 +29,17 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    count = 10;
+    count = 5;
     // Do any additional setup after loading the view from its nib.
     self.timer_countdown = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(countdown) userInfo:nil repeats:YES];
+    [self offLeft];
 }
 - (void)countdown{
     count--;
-    if(count == 9){
-        self.image1.hidden = YES;
-        [self offLeft];
-    }
+//    if(count == 9){
+//        self.image1.hidden = YES;
+//        [self offLeft];
+//    }
     self.image2.image = [UIImage imageNamed:[NSString stringWithFormat:@"red%i.png",count]];
     if(count == 0){
         CNRunMainViewController* runVC = [[CNRunMainViewController alloc]init];

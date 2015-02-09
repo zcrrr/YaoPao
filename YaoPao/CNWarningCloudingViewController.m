@@ -22,7 +22,7 @@
     // Do any additional setup after loading the view from its nib.
     [self.button_back addTarget:self action:@selector(button_green_down:) forControlEvents:UIControlEventTouchDown];
     [self.view setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.5]];
-    [kApp.cloudManager startCloud];
+    
     [self.progress setProgress:0];
 }
 - (void)viewWillAppear:(BOOL)animated{
@@ -30,6 +30,7 @@
     [self.navigationController setNavigationBarHidden:YES animated:NO];
     [kApp.cloudManager addObserver:self forKeyPath:@"stepDes" options:NSKeyValueObservingOptionNew context:nil];
     [kApp.networkHandler addObserver:self forKeyPath:@"newprogress" options:NSKeyValueObservingOptionNew context:nil];
+    [kApp.cloudManager startCloud];
 }
 - (void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:animated];
@@ -64,6 +65,11 @@
     if([keyPath isEqualToString:@"stepDes"]){
         self.label_step.text = kApp.cloudManager.stepDes;
         NSLog(@"stepDes is %@",kApp.cloudManager.stepDes);
+        if([kApp.cloudManager.stepDes isEqualToString:@"同步完毕！"]){
+            [self performSelector:@selector(button_back_clicked:) withObject:nil afterDelay:2];
+        }else if([kApp.cloudManager.stepDes isEqualToString:@"请先登录"]||[kApp.cloudManager.stepDes isEqualToString:@"用户在其他手机登录，请重新登录"]){
+            [self button_back_clicked:nil];
+        }
     }else if([keyPath isEqualToString:@"newprogress"]){
         [self.progress setProgress:kApp.networkHandler.newprogress];
     }

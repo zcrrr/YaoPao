@@ -320,7 +320,10 @@
 }
 - (void)voiceOfapp:(NSString*)occasion :(NSDictionary*)params{
     //测试代码
+#ifdef SIMULATORTEST
     return;
+#else
+# endif
     if(kApp.voiceOn == 0){
         return;
     }

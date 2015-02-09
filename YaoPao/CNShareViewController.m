@@ -87,7 +87,7 @@
         int way = kApp.runManager.runway;
         NSString* img_name_way = [NSString stringWithFormat:@"way%i_h.png",way];
         self.image_way.image = [UIImage imageNamed:img_name_way];
-        
+        self.button_jump.titleLabel.text = @"跳过";
     }else{
         int type = [self.oneRun.howToMove intValue];
         NSString* typeDes = @"";
@@ -112,7 +112,7 @@
         }
         self.label_distance.text = [NSString stringWithFormat:@"我刚刚%@了%0.2f公里",typeDes, [oneRun.distance doubleValue]/1000.0];
         self.label_feel.text = oneRun.remark;
-        self.label_time.text = [CNUtil duringTimeStringFromSecond:[oneRun.duration intValue]];
+        self.label_time.text = [CNUtil duringTimeStringFromSecond:[oneRun.duration intValue]/1000];
         self.label_pspeed.text = [CNUtil pspeedStringFromSecond:[oneRun.secondPerKm intValue]];
         self.label_hspeed.text = [NSString stringWithFormat:@"+%i",[oneRun.score intValue]];
         int mood = [oneRun.feeling intValue];
@@ -122,8 +122,8 @@
         int way = [oneRun.runway intValue];
         NSString* img_name_way = [NSString stringWithFormat:@"way%i_h.png",way];
         self.image_way.image = [UIImage imageNamed:img_name_way];
+        self.button_jump.titleLabel.text = @"返回";
     }
-    
 }
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
@@ -143,9 +143,13 @@
 }
 - (IBAction)button_jump_clicked:(id)sender {
     self.button_jump.backgroundColor = [UIColor clearColor];
-    [CNAppDelegate initRun];
-    CNRunRecordViewController* recordVC = [[CNRunRecordViewController alloc]init];
-    [self.navigationController pushViewController:recordVC animated:YES];
+    if([self.dataSource isEqualToString:@"this"]){
+        CNRunRecordViewController* recordVC = [[CNRunRecordViewController alloc]init];
+        [self.navigationController pushViewController:recordVC animated:YES];
+    }else{
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+    
 }
 - (IBAction)button_share_clicked:(id)sender {
     NSLog(@"share");
@@ -263,7 +267,7 @@
         }
     }
     CLLocationCoordinate2D center = CLLocationCoordinate2DMake((min_lat+max_lat)/2, (min_lon+max_lon)/2);
-    MACoordinateSpan span = MACoordinateSpanMake(max_lat-min_lat+0.005, max_lon-min_lon+0.005);
+    MACoordinateSpan span = MACoordinateSpanMake(max_lat-min_lat+0.005, max_lon-min_lon+0.01);
     MACoordinateRegion region = MACoordinateRegionMake(center, span);
     [self.mapView setRegion:region animated:NO];
 }
@@ -313,12 +317,12 @@
     return nil;
 }
 - (void)sharetest{
-    id<ISSContent> publishContent = [ShareSDK content:@"test"
-                                       defaultContent:@"默认分享内容，没内容时显示"
+    id<ISSContent> publishContent = [ShareSDK content:self.label_distance.text
+                                       defaultContent:self.label_distance.text
                                                 image:[ShareSDK pngImageWithImage:[self getWeiboImage]]
                                                 title:@"要跑"
-                                                  url:@"http://www.sharesdk.cn"
-                                          description:@"这是一条测试信息"
+                                                  url:@"http://image.yaopao.net/html/redirect.html"
+                                          description:self.label_distance.text
                                             mediaType:SSPublishContentMediaTypeImage];
     [ShareSDK showShareActionSheet:nil
                          shareList:nil

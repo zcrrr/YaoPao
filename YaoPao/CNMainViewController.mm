@@ -208,7 +208,10 @@
         }
     }
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(loginDone) name:@"loginDone" object:nil];
+    NSString* NOTIFICATION_REFRESH = @"REFRESH";
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(initData) name:NOTIFICATION_REFRESH object:nil];
     [self.button_setting addTarget:self action:@selector(button_blue_down:) forControlEvents:UIControlEventTouchDown];
+    [self.button_cloud addTarget:self action:@selector(button_blue_down:) forControlEvents:UIControlEventTouchDown];
     [self.button_record addTarget:self action:@selector(button_white_down:) forControlEvents:UIControlEventTouchDown];
     [self.button_message addTarget:self action:@selector(button_white_down:) forControlEvents:UIControlEventTouchDown];
     [self.button_match addTarget:self action:@selector(button_white_down:) forControlEvents:UIControlEventTouchDown];
@@ -364,10 +367,10 @@
     switch ([sender tag]) {
         case 0:
         {
-            [CNAppDelegate popupWarningCloud];
-//            self.button_setting.backgroundColor = [UIColor clearColor];
-//            CNSettingViewController* settingVC = [[CNSettingViewController alloc]init];
-//            [self.navigationController pushViewController:settingVC animated:YES];
+//            [CNAppDelegate popupWarningCloud];
+            self.button_setting.backgroundColor = [UIColor clearColor];
+            CNSettingViewController* settingVC = [[CNSettingViewController alloc]init];
+            [self.navigationController pushViewController:settingVC animated:YES];
             break;
         }
         case 1:
@@ -448,6 +451,10 @@
             userInfoVC.from = @"setting";
             [self.navigationController pushViewController:userInfoVC animated:YES];
         }
+        case 7:{
+            self.button_cloud.backgroundColor = [UIColor clearColor];
+            [CNAppDelegate popupWarningCloud];
+        }
         default:
             break;
     }
@@ -496,6 +503,8 @@
 }
 
 - (void)addAd{
+    //测试代码
+//    return;
     //广告
     self.bannerView_ = [[GADBannerView alloc] initWithAdSize:kGADAdSizeBanner];
     if(iPhone5){

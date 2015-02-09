@@ -102,7 +102,7 @@
 }
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    switch (kApp.runStatus) {
+    switch (kApp.runManager.runStatus) {
         case 1:
         {
             self.view_bottom_slider.hidden = NO;
@@ -165,8 +165,6 @@
     }
 }
 - (void)drawRunTrack{
-    //测试代码
-//    [CNAppDelegate makeTest];
     int j = 0;
     int i = 0;
     int n = 0;
@@ -322,7 +320,6 @@ updatingLocation:(BOOL)updatingLocation
     NSLog(@"滑动");
     [kApp.runManager changeRunStatus:2];
     self.view_bottom_slider.hidden = YES;
-    [kApp.timer_secondplusplus invalidate];
 }
 
 - (void)setGPSImage{
@@ -336,8 +333,8 @@ updatingLocation:(BOOL)updatingLocation
         {
             NSLog(@"是的，完成了");
             kApp.isRunning = 0;
-            [kApp.timer_one_point invalidate];
             [kApp.runManager finishOneRun];
+            [kApp.timer_playVoice invalidate];
             if(kApp.runManager.distance < 50){
                 kApp.gpsLevel = 1;
                 //弹出框，距离小于50
@@ -346,8 +343,8 @@ updatingLocation:(BOOL)updatingLocation
                 [self.navigationController pushViewController:mainVC animated:YES];
             }else{
                 NSMutableDictionary* voice_params = [[NSMutableDictionary alloc]init];
-                [voice_params setObject:[NSString stringWithFormat:@"%f",kApp.distance] forKey:@"distance"];
-                [voice_params setObject:[NSString stringWithFormat:@"%i",kApp.totalSecond] forKey:@"second"];
+                [voice_params setObject:[NSString stringWithFormat:@"%i",kApp.runManager.distance] forKey:@"distance"];
+                [voice_params setObject:[NSString stringWithFormat:@"%i",[kApp.runManager during]/1000] forKey:@"second"];
                 [kApp.voiceHandler voiceOfapp:@"run_complete" :voice_params];
                 CNRunMoodViewController* moodVC = [[CNRunMoodViewController alloc]init];
                 [self.navigationController pushViewController:moodVC animated:YES];
@@ -357,7 +354,5 @@ updatingLocation:(BOOL)updatingLocation
         default:
             break;
     }
-    
-    
 }
 @end
